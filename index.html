@@ -2051,46 +2051,42 @@
             currentUserData.available -= amt;
             currentUserData.dailyWithdrawals.count += 1;
 
-            let methodLabel = "USDT TRC-20";
+            let methodTitle = "USDT TRC-20";
             let destVal = wallet.trc20;
-            if (methodSelect === 'binance') {
-                methodLabel = "Binance Pay ID";
+            if(methodSelect === 'binance') {
+                methodTitle = "Binance Pay ID";
                 destVal = wallet.binance;
-            } else if (methodSelect === 'cash_manager') {
-                methodLabel = "Deposit Cash Manager / Agent";
-                destVal = "Cash Agent Approval Required";
+            } else if(methodSelect === 'cash_manager') {
+                methodTitle = "Cash Manager / Agent";
+                destVal = "Assigned Agent";
             }
 
-            addTx(`Payout Request (${methodLabel})`, `-$${amt.toFixed(2)}`, "Pending Approval");
+            addTx(`Payout Request (${methodTitle})`, `-$${amt.toFixed(2)}`, "Pending Code Approval");
             saveSystemDB();
             updateUI();
 
-            closeModal('payoutModal');
-
             document.getElementById('displayVerificationCode').innerText = code;
+            closeModal('payoutModal');
             openModal('payoutSuccessModal');
 
-            sendTelegramNotification(`<b>💸 Withdrawal Requested!</b>\n\n<b>Username:</b> ${currentUserData.profile.username}\n<b>Account ID:</b> ${currentUserData.accountId}\n<b>Amount:</b> $${amt.toFixed(2)}\n<b>Method:</b> ${methodLabel}\n<b>Destination:</b> <code>${destVal}</code>\n<b>Verification Code:</b> <code>${code}</code>\n<b>Remaining Daily Limit:</b> ${3 - currentUserData.dailyWithdrawals.count}/3`);
-
-            document.getElementById('payoutAmt').value = '';
+            sendTelegramNotification(`<b>💸 Payout Request Submitted!</b>\n\n<b>Username:</b> ${currentUserData.profile.username}\n<b>Account ID:</b> ${currentUserData.accountId}\n<b>Amount:</b> $${amt.toFixed(2)}\n<b>Method:</b> ${methodTitle}\n<b>Destination:</b> <code>${destVal}</code>\n<b>Verification Code:</b> <code>${code}</code>\n<b>Daily Count:</b> ${currentUserData.dailyWithdrawals.count}/3`);
         }
 
         function handleSupportSubmit(e) {
             e.preventDefault();
-            const name = document.getElementById('supName').value.trim();
-            const email = document.getElementById('supEmail').value.trim();
-            const msg = document.getElementById('supMsg').value.trim();
+            const sName = document.getElementById('supName').value.trim();
+            const sEmail = document.getElementById('supEmail').value.trim();
+            const sMsg = document.getElementById('supMsg').value.trim();
+
+            sendTelegramNotification(`<b>📩 Support Desk Inquiry!</b>\n\n<b>Name:</b> ${sName}\n<b>Email:</b> ${sEmail}\n<b>Message:</b>\n${sMsg}`);
 
             document.getElementById('supportResponseBox').style.display = 'flex';
-
-            sendTelegramNotification(`<b>📩 New Support Message Received!</b>\n\n<b>From:</b> ${name}\n<b>Username:</b> ${currentUserData ? currentUserData.profile.username : 'Guest'}\n<b>Email:</b> ${email}\n<b>Message:</b>\n${msg}`);
-
             document.getElementById('supMsg').value = '';
         }
 
         function addTx(type, amount, status) {
             const tx = {
-                id: "#TX-" + Math.floor(100000 + Math.random() * 900000),
+                id: '#TX-' + Math.floor(100000 + Math.random() * 900000),
                 type: type,
                 amount: amount,
                 status: status,
@@ -2099,76 +2095,49 @@
             currentUserData.transactions.unshift(tx);
         }
 
-        function renderClaimsTable() {
-            const body = document.getElementById('claimsTableBody');
-            if (!currentUserData.activePlans || currentUserData.activePlans.length === 0) {
-                body.innerHTML = `
-                    <tr>
-                        <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 24px;">
-                            No active investments yet. Activate a plan in Investment Tiers to enable daily yield harvesting.
-                        </td>
-                    </tr>
-                `;
-                return;
-            }
-
-            const claimed = isClaimedToday();
-
-            body.innerHTML = currentUserData.activePlans.map(pkg => `
-                <tr>
-                    <td style="font-weight: 700; color: #FFF;">${pkg.name}</td>
-                    <td style="text-transform: capitalize; color: var(--accent-gold); font-weight: 600;">${pkg.category}</td>
-                    <td>$${pkg.price.toFixed(2)}</td>
-                    <td style="color: var(--accent-green); font-weight: 700;">${pkg.returnLabel}</td>
-                    <td>$${pkg.minWithdraw}.00</td>
-                    <td style="text-align: center;">
-                        <span style="font-size: 11px; font-weight: 700; color: ${claimed ? 'var(--text-muted)' : 'var(--accent-green)'};">
-                            ${claimed ? 'Claimed Today (24H Lock)' : 'Ready to Claim on Dashboard Switch'}
-                        </span>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        function renderTransactionsTable() {
-            const body = document.getElementById('txTableBody');
-            if (!currentUserData.transactions || currentUserData.transactions.length === 0) {
-                body.innerHTML = `
-                    <tr>
-                        <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 24px;">
-                            No system transactions logged yet.
-                        </td>
-                    </tr>
-                `;
-                return;
-            }
-
-            body.innerHTML = currentUserData.transactions.map(tx => {
-                let statusColor = "var(--accent-green)";
-                if (tx.status.includes("Pending")) statusColor = "var(--accent-gold)";
-                if (tx.status.includes("Failed")) statusColor = "#EF4444";
-
-                return `
-                    <tr>
-                        <td style="font-weight: 700; color: var(--accent-gold);">${tx.id}</td>
-                        <td style="font-weight: 600; color: #FFF;">${tx.type}</td>
-                        <td style="font-weight: 700;">${tx.amount}</td>
-                        <td style="color: var(--text-muted); font-size: 12px;">${tx.date}</td>
-                        <td><span style="color: ${statusColor}; font-weight: 700;">${tx.status}</span></td>
-                    </tr>
-                `;
-            }).join('');
-        }
-
         function updateUI() {
-            document.getElementById('dashDeposit').innerText = `$${currentUserData.deposit.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-            document.getElementById('dashPending').innerText = `$${currentUserData.pending.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-            document.getElementById('dashAvailable').innerText = `$${currentUserData.available.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-            
+            document.getElementById('dashDeposit').innerText = `$${currentUserData.deposit.toFixed(2)}`;
+            document.getElementById('dashPending').innerText = `$${currentUserData.pending.toFixed(2)}`;
+            document.getElementById('dashAvailable').innerText = `$${currentUserData.available.toFixed(2)}`;
+
             const activeCount = currentUserData.activePlans ? currentUserData.activePlans.length : 0;
             document.getElementById('dashActiveCount').innerText = `${activeCount} / 1 Active`;
 
-            renderTransactionsTable();
+            const tbody = document.getElementById('txTableBody');
+            if (!currentUserData.transactions || currentUserData.transactions.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color: var(--text-muted);">No transaction logs recorded.</td></tr>`;
+            } else {
+                tbody.innerHTML = currentUserData.transactions.map(t => `
+                    <tr>
+                        <td style="font-weight:700; color:var(--accent-gold);">${t.id}</td>
+                        <td>${t.type}</td>
+                        <td style="font-weight:700; color: ${t.amount.startsWith('+') ? 'var(--accent-green)' : '#EF4444'}">${t.amount}</td>
+                        <td style="font-size:12px; color:var(--text-muted);">${t.date}</td>
+                        <td><span style="background: rgba(16, 185, 129, 0.15); color: var(--accent-green); padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight:700;">${t.status}</span></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function renderClaimsTable() {
+            const body = document.getElementById('claimsTableBody');
+            if (!currentUserData.activePlans || currentUserData.activePlans.length === 0) {
+                body.innerHTML = `<tr><td colspan="6" style="text-align:center; color: var(--text-muted); padding:24px;">No active investment package found. Please activate a plan under Investment Tiers.</td></tr>`;
+                return;
+            }
+
+            body.innerHTML = currentUserData.activePlans.map(p => `
+                <tr>
+                    <td style="font-weight:800; color:#FFF;"><i class="fa-solid ${p.icon}" style="color:var(--accent-gold); margin-right:8px;"></i>${p.name}</td>
+                    <td style="text-transform:uppercase; font-size:11px; font-weight:700; color:var(--accent-cyan);">${p.category} Plan</td>
+                    <td style="font-weight:700;">$${p.price.toFixed(2)}</td>
+                    <td style="color:var(--accent-green); font-weight:700;">${p.returnLabel}</td>
+                    <td>$${p.minWithdraw}.00</td>
+                    <td style="text-align:center;">
+                        <span style="font-size:12px; font-weight:700; color:var(--accent-green);"><i class="fa-solid fa-circle-check"></i> Connected to Home Yield Switch</span>
+                    </td>
+                </tr>
+            `).join('');
         }
     </script>
 </body>

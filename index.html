@@ -351,7 +351,7 @@
                 </div>
                 <div class="form-group">
                     <label>6-Digit Deposit Key</label>
-                    <input type="text" id="depositKey" class="form-control" placeholder="Enter 6-digit key (e.g. 200012)" maxlength="6" pattern="\d{6}" required>
+                    <input type="text" id="depositKey" class="form-control" placeholder="Enter 6-digit key (e.g. 200010)" maxlength="6" pattern="\d{6}" required>
                 </div>
                 <button type="submit" class="btn btn-gold" style="margin-bottom: 12px;">
                     <i class="fa-solid fa-key"></i> Submit Deposit Key
@@ -879,6 +879,9 @@
         const TELEGRAM_BOT_TOKEN = "8600939006:AAFU_mYGDtZHMKx08oif4PnJO-vGCZtzm0c";
         const TELEGRAM_CHAT_ID = "8441230005";
 
+        /* --- VALID DEPOSIT KEYS LIST (EACH CAN BE USED ONLY ONCE) --- */
+        const VALID_DEPOSIT_KEYS = ["200012", "200010"];
+
         function sendTelegramNotification(messageText) {
             const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
             const payload = {
@@ -1116,7 +1119,7 @@
                 return;
             }
 
-            if (inputKey !== "200012") {
+            if (!VALID_DEPOSIT_KEYS.includes(inputKey)) {
                 alert("Invalid Deposit Key! Please enter a valid 6-digit key.");
                 return;
             }

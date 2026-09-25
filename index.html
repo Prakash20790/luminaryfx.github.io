@@ -19,6 +19,7 @@
             --accent-green-glow: rgba(16, 185, 129, 0.35);
             --accent-cyan: #06B6D4;
             --accent-purple: #8B5CF6;
+            --accent-red: #EF4444;
             --text-main: #F8FAFC;
             --text-muted: #94A3B8;
             --border: rgba(255, 255, 255, 0.1);
@@ -32,7 +33,68 @@
             color: var(--text-main);
             min-height: 100vh;
             overflow-x: hidden;
+            padding-bottom: 70px;
         }
+
+        /* --- BOTTOM STICKY TELEGRAM BANNER --- */
+        .bottom-telegram-banner {
+            position: fixed;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 32px);
+            max-width: 600px;
+            background: linear-gradient(135deg, rgba(11, 17, 32, 0.95) 0%, rgba(21, 31, 50, 0.98) 100%);
+            border: 1px solid rgba(34, 158, 217, 0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(34, 158, 217, 0.25);
+            backdrop-filter: blur(12px);
+            border-radius: 18px;
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            z-index: 1000;
+            animation: slideUpBanner 0.5s ease-out;
+        }
+
+        @keyframes slideUpBanner {
+            from { transform: translate(-50%, 100px); opacity: 0; }
+            to { transform: translate(-50%, 0); opacity: 1; }
+        }
+
+        .tg-banner-left { display: flex; align-items: center; gap: 12px; }
+        .tg-icon-box {
+            width: 42px; height: 42px; border-radius: 12px;
+            background: linear-gradient(135deg, #229ED9 0%, #1783B8 100%);
+            color: #FFF; display: flex; align-items: center; justify-content: center;
+            font-size: 20px; box-shadow: 0 4px 12px rgba(34, 158, 217, 0.4); flex-shrink: 0;
+        }
+
+        .tg-text-box h4 { font-size: 14px; font-weight: 800; color: #FFF; line-height: 1.2; }
+        .tg-text-box p { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+        .tg-banner-actions { display: flex; align-items: center; gap: 10px; }
+
+        .btn-join-tg {
+            background: linear-gradient(135deg, #229ED9 0%, #1783B8 100%);
+            color: #FFF; font-weight: 700; font-size: 13px; text-decoration: none;
+            padding: 8px 16px; border-radius: 10px; display: flex; align-items: center;
+            gap: 6px; white-space: nowrap; transition: 0.25s; box-shadow: 0 4px 12px rgba(34, 158, 217, 0.3);
+        }
+
+        .btn-join-tg:hover {
+            transform: translateY(-2px); box-shadow: 0 6px 18px rgba(34, 158, 217, 0.5);
+            background: linear-gradient(135deg, #25a8e8 0%, #198fc9 100%);
+        }
+
+        .close-tg-banner {
+            background: rgba(255, 255, 255, 0.08); border: 1px solid var(--border);
+            color: var(--text-muted); width: 30px; height: 30px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; cursor: pointer;
+            font-size: 14px; transition: 0.2s; flex-shrink: 0;
+        }
+
+        .close-tg-banner:hover { background: rgba(239, 68, 68, 0.2); color: #EF4444; border-color: rgba(239, 68, 68, 0.4); }
 
         /* --- AUTH MODAL --- */
         .auth-overlay {
@@ -176,7 +238,6 @@
             width: 56px; height: 56px; border-radius: 16px; background: rgba(245, 158, 11, 0.12);
             color: var(--accent-gold); display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 16px; border: 1px solid rgba(245, 158, 11, 0.25);
         }
-        .pkg-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .pkg-title { font-size: 22px; font-weight: 800; color: #FFF; font-family: 'Plus Jakarta Sans', sans-serif; }
         .pkg-price { font-size: 38px; font-weight: 800; font-family: 'Plus Jakarta Sans'; color: #FFF; margin-bottom: 16px; letter-spacing: -1px; }
         .pkg-feature { font-size: 14px; color: var(--text-muted); padding: 12px 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
@@ -217,6 +278,7 @@
         .btn-gold { background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); color: #000; font-weight: 800; }
         .btn-gold:hover { box-shadow: 0 8px 20px var(--accent-gold-glow); }
         .btn-green { background: linear-gradient(135deg, #10B981 0%, #059669 100%); color: #FFF; font-weight: 800; }
+        .btn-purple { background: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%); color: #FFF; font-weight: 800; }
 
         .btn-sm-transfer {
             margin-top: 10px; padding: 6px 12px; font-size: 11px; border-radius: 8px;
@@ -244,10 +306,6 @@
             border-radius: 12px; display: flex; align-items: center; justify-content: center;
             gap: 10px; box-shadow: 0 8px 20px rgba(34, 158, 217, 0.35); transition: 0.3s ease;
         }
-        .btn-telegram-deposit:hover {
-            transform: translateY(-2px); box-shadow: 0 12px 25px rgba(34, 158, 217, 0.5);
-            background: linear-gradient(135deg, #25a8e8 0%, #198fc9 100%);
-        }
 
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         th, td { padding: 16px; text-align: left; border-bottom: 1px solid var(--border); font-size: 14px; }
@@ -265,7 +323,6 @@
             display: flex; align-items: center; gap: 8px;
         }
 
-        /* ACCOUNT ID BADGE IN HEADER */
         .header-acc-box {
             display: flex; align-items: center; gap: 6px; background: rgba(245, 158, 11, 0.1);
             border: 1px solid rgba(245, 158, 11, 0.3); padding: 4px 10px; border-radius: 8px;
@@ -273,9 +330,54 @@
         }
         .header-acc-box i { cursor: pointer; transition: 0.2s; }
         .header-acc-box i:hover { color: #FFF; transform: scale(1.1); }
+
+        /* --- ERAN MINE GAMES STYLES --- */
+        .games-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-top: 20px; }
+        .game-card {
+            background: linear-gradient(135deg, rgba(21, 31, 50, 0.9) 0%, rgba(11, 17, 32, 0.95) 100%);
+            border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 20px; padding: 24px; text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); transition: 0.3s; position: relative; overflow: hidden;
+        }
+        .game-card:hover { transform: translateY(-6px); border-color: var(--accent-purple); box-shadow: 0 15px 35px rgba(139, 92, 246, 0.3); }
+        .game-badge { position: absolute; top: 12px; right: 12px; background: var(--accent-purple); color: #FFF; font-size: 10px; font-weight: 800; padding: 4px 10px; border-radius: 12px; text-transform: uppercase; }
+        .game-icon-box { width: 70px; height: 70px; border-radius: 20px; background: rgba(139, 92, 246, 0.15); color: var(--accent-purple); font-size: 32px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; border: 1px solid rgba(139, 92, 246, 0.3); }
+
+        .mine-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; max-width: 320px; margin: 20px auto; }
+        .mine-btn { height: 80px; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border); border-radius: 14px; font-size: 28px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; color: #FFF; }
+        .mine-btn:hover { background: rgba(139, 92, 246, 0.2); border-color: var(--accent-purple); }
+
+        .wheel-container { position: relative; width: 220px; height: 220px; margin: 20px auto; border-radius: 50%; border: 4px solid var(--accent-gold); display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, #151F32 0%, #0B1120 100%); box-shadow: 0 0 25px var(--accent-gold-glow); overflow: hidden; }
+        .wheel-display { font-size: 36px; font-weight: 800; color: var(--accent-gold); transition: transform 3s cubic-bezier(0.15, 0.9, 0.2, 1); }
+
+        .flip-coin { width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); color: #000; font-size: 48px; font-weight: 800; display: flex; align-items: center; justify-content: center; margin: 20px auto; border: 4px solid #FFF; box-shadow: 0 0 30px var(--accent-gold-glow); transition: transform 1s ease; }
+
+        .boxes-container { display: flex; justify-content: center; gap: 16px; margin: 20px 0; }
+        .box-btn { width: 80px; height: 80px; background: rgba(6, 182, 212, 0.15); border: 2px dashed var(--accent-cyan); border-radius: 16px; font-size: 32px; color: var(--accent-cyan); cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; }
+        .box-btn:hover { transform: scale(1.08); background: rgba(6, 182, 212, 0.3); }
     </style>
 </head>
 <body>
+
+    <!-- BOTTOM STICKY TELEGRAM JOIN BANNER -->
+    <div class="bottom-telegram-banner" id="tgStickyBanner">
+        <div class="tg-banner-left">
+            <div class="tg-icon-box">
+                <i class="fa-brands fa-telegram"></i>
+            </div>
+            <div class="tg-text-box">
+                <h4>Join Official Channel</h4>
+                <p>Get instant market signals & official updates</p>
+            </div>
+        </div>
+        <div class="tg-banner-actions">
+            <a href="https://t.me/LUMINARYFX_OFFICIAL" target="_blank" class="btn-join-tg">
+                <i class="fa-solid fa-paper-plane"></i> Join Now
+            </a>
+            <div class="close-tg-banner" onclick="closeTgBanner()" title="Close Banner">
+                <i class="fa-solid fa-xmark"></i>
+            </div>
+        </div>
+    </div>
 
     <!-- AUTH MODAL -->
     <div class="auth-overlay" id="authModal">
@@ -347,7 +449,7 @@
             <form onsubmit="handleKeyDeposit(event)" style="margin-bottom: 20px;">
                 <div class="form-group">
                     <label>6-Digit Deposit Key</label>
-                    <input type="text" id="depositKey" class="form-control" placeholder="Enter 6-digit key (e.g. 200011)" maxlength="6" pattern="\d{6}" required>
+                    <input type="text" id="depositKey" class="form-control" placeholder="Enter 6-digit key (e.g. 200030)" maxlength="6" pattern="\d{6}" required>
                 </div>
                 <button type="submit" class="btn btn-gold" style="margin-bottom: 12px;">
                     <i class="fa-solid fa-key"></i> Submit Deposit Key
@@ -453,6 +555,7 @@
         <sidebar id="sidebar">
             <ul class="nav-list">
                 <li class="nav-link active" onclick="switchMainTab('dashboard', this)"><i class="fa-solid fa-chart-pie"></i> Executive Home</li>
+                <li class="nav-link" onclick="switchMainTab('games', this)"><i class="fa-solid fa-gamepad"></i> Eran Mine Games</li>
                 <li class="nav-link" onclick="switchMainTab('packages', this)"><i class="fa-solid fa-gem"></i> Investment Tiers</li>
                 <li class="nav-link" onclick="switchMainTab('claims', this)"><i class="fa-solid fa-toggle-on"></i> Weekly Claims</li>
                 <li class="nav-link" onclick="switchMainTab('profile', this)"><i class="fa-solid fa-id-card"></i> My Profile</li>
@@ -472,8 +575,11 @@
                         Empower your financial future with our AI-driven quantitative algorithm. Guarantee steady cash flow, weekly profit harvesting, and instant automated payouts directly to your crypto wallet.
                     </p>
                     <div style="display: flex; gap: 14px; flex-wrap: wrap;">
-                        <button class="btn btn-gold" style="width: auto; padding: 12px 28px;" onclick="switchMainTab('packages', document.querySelectorAll('.nav-link')[1])">
+                        <button class="btn btn-gold" style="width: auto; padding: 12px 28px;" onclick="switchMainTab('packages', document.querySelectorAll('.nav-link')[2])">
                             <i class="fa-solid fa-rocket"></i> Explore Investment Tiers
+                        </button>
+                        <button class="btn btn-purple" style="width: auto; padding: 12px 28px;" onclick="switchMainTab('games', document.querySelectorAll('.nav-link')[1])">
+                            <i class="fa-solid fa-gamepad"></i> Play Mine Games
                         </button>
                         <button class="btn" style="width: auto; padding: 12px 28px; background: rgba(255,255,255,0.08); color:#FFF;" onclick="openModal('rechargeModal')">
                             <i class="fa-solid fa-wallet"></i> Instant Recharge
@@ -483,6 +589,16 @@
 
                 <h3 style="font-size: 14px; margin-bottom: 16px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Quick Financial Operations</h3>
                 <div class="quick-actions-bar">
+                    <div class="action-btn-card" onclick="switchMainTab('games', document.querySelectorAll('.nav-link')[1])">
+                        <div class="action-icon" style="background: rgba(139, 92, 246, 0.15); color: var(--accent-purple);">
+                            <i class="fa-solid fa-gamepad"></i>
+                        </div>
+                        <div>
+                            <div style="font-size: 16px; font-weight: 800; color: #FFF;">Eran Mine Games</div>
+                            <div style="font-size: 12px; color: var(--text-muted);">$2.00 Fee | Win Up To $50</div>
+                        </div>
+                    </div>
+
                     <div class="action-btn-card" onclick="openModal('rechargeModal')">
                         <div class="action-icon" style="background: rgba(245, 158, 11, 0.15); color: var(--accent-gold);">
                             <i class="fa-solid fa-circle-plus"></i>
@@ -617,6 +733,83 @@
                     </div>
                 </div>
 
+            </div>
+
+            <!-- VIEW: ERAN MINE GAMES (NEW CATEGORY) -->
+            <div id="games" class="page-view">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+                    <div>
+                        <h2 style="font-size: 26px; font-weight: 800;">Eran Mine Games Hub</h2>
+                        <p style="color: var(--text-muted); font-size: 14px;">Play premium instant-win games. Entry fee: <strong style="color: var(--accent-gold);">$2.00 per attempt</strong> (Deducted from Available Balance).</p>
+                    </div>
+                    <div style="background: rgba(139, 92, 246, 0.15); border: 1px solid var(--accent-purple); padding: 8px 16px; border-radius: 12px; color: #FFF; font-weight: 700;">
+                        Fee Per Game: <span style="color: var(--accent-gold);">$2.00</span>
+                    </div>
+                </div>
+
+                <div class="games-grid">
+                    <!-- GAME 1: TREASURE MINE SWEEPER -->
+                    <div class="game-card">
+                        <div class="game-badge">Instant Win</div>
+                        <div class="game-icon-box"><i class="fa-solid fa-bomb"></i></div>
+                        <h3 style="font-size: 20px; font-weight: 800; margin-bottom: 6px;">Treasure Mine Sweeper</h3>
+                        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Pick a tile on the grid. Find gems to multiplier your cash! Avoid the hidden bomb.</p>
+                        
+                        <div id="mineBoard" class="mine-grid">
+                            <button class="mine-btn" onclick="playMineTile(0)">❓</button>
+                            <button class="mine-btn" onclick="playMineTile(1)">❓</button>
+                            <button class="mine-btn" onclick="playMineTile(2)">❓</button>
+                            <button class="mine-btn" onclick="playMineTile(3)">❓</button>
+                            <button class="mine-btn" onclick="playMineTile(4)">❓</button>
+                            <button class="mine-btn" onclick="playMineTile(5)">❓</button>
+                        </div>
+                        <button class="btn btn-purple" onclick="resetMineGame()"><i class="fa-solid fa-rotate-right"></i> Start New Mine ($2.00)</button>
+                    </div>
+
+                    <!-- GAME 2: FORTUNE WHEEL -->
+                    <div class="game-card">
+                        <div class="game-badge">Big Rewards</div>
+                        <div class="game-icon-box"><i class="fa-solid fa-dharmachakra"></i></div>
+                        <h3 style="font-size: 20px; font-weight: 800; margin-bottom: 6px;">Luminary Fortune Wheel</h3>
+                        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Spin the wheel to win instant cash multipliers ranging from $0.50 up to $20.00!</p>
+                        
+                        <div class="wheel-container">
+                            <div class="wheel-display" id="wheelText">❓</div>
+                        </div>
+                        <button class="btn btn-gold" id="btnSpinWheel" onclick="spinFortuneWheel()"><i class="fa-solid fa-play"></i> Spin Wheel ($2.00)</button>
+                    </div>
+
+                    <!-- GAME 3: CRYPTO FLIP -->
+                    <div class="game-card">
+                        <div class="game-badge">50/50 Double</div>
+                        <div class="game-icon-box"><i class="fa-solid fa-coins"></i></div>
+                        <h3 style="font-size: 20px; font-weight: 800; margin-bottom: 6px;">Crypto Flip Pro</h3>
+                        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Guess Heads or Tails! Win instant $4.00 cash double returns on correct guess.</p>
+                        
+                        <div class="flip-coin" id="coinDisplay">₿</div>
+                        <div style="display: flex; gap: 10px; margin-bottom: 12px;">
+                            <button class="btn" style="background: rgba(255,255,255,0.08); color: #FFF;" id="btnHeads" onclick="selectCoinSide('HEADS')">HEADS</button>
+                            <button class="btn" style="background: rgba(255,255,255,0.08); color: #FFF;" id="btnTails" onclick="selectCoinSide('TAILS')">TAILS</button>
+                        </div>
+                        <button class="btn btn-green" onclick="flipCryptoCoin()"><i class="fa-solid fa-bolt"></i> Flip Coin ($2.00)</button>
+                    </div>
+
+                    <!-- GAME 4: MYSTERY BOX UNBOX -->
+                    <div class="game-card">
+                        <div class="game-badge">Jackpot</div>
+                        <div class="game-icon-box"><i class="fa-solid fa-box-open"></i></div>
+                        <h3 style="font-size: 20px; font-weight: 800; margin-bottom: 6px;">Mystery Box Unbox</h3>
+                        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Pick 1 of 3 Mystery Boxes! One box holds a mega jackpot up to $50.00!</p>
+                        
+                        <div class="boxes-container">
+                            <button class="box-btn" onclick="openMysteryBox(1)">🎁</button>
+                            <button class="box-btn" onclick="openMysteryBox(2)">🎁</button>
+                            <button class="box-btn" onclick="openMysteryBox(3)">🎁</button>
+                        </div>
+                        <div id="boxStatusText" style="font-size: 13px; font-weight: 700; color: var(--accent-cyan); min-height: 20px; margin-bottom: 12px;">Select a box to play ($2.00)</div>
+                        <button class="btn btn-primary" onclick="resetMysteryBoxes()"><i class="fa-solid fa-arrows-rotate"></i> Reset Boxes</button>
+                    </div>
+                </div>
             </div>
 
             <!-- VIEW 2: PACKAGES -->
@@ -875,26 +1068,20 @@
         const TELEGRAM_BOT_TOKEN = "8600939006:AAFU_mYGDtZHMKx08oif4PnJO-vGCZtzm0c";
         const TELEGRAM_CHAT_ID = "8441230005";
 
-        /* --- VALID DEPOSIT KEYS LIST WITH MAPPED VALUES --- */
+        function closeTgBanner() {
+            const banner = document.getElementById('tgStickyBanner');
+            if(banner) banner.style.display = 'none';
+        }
+
         const DEPOSIT_KEYS = {
-            "200012": 50,
-            "200010": 100,
-            "200011": 250
+            "200030": 20,
+            "200032": 100
         };
 
         function sendTelegramNotification(messageText) {
             const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
-            const payload = {
-                chat_id: TELEGRAM_CHAT_ID,
-                text: messageText,
-                parse_mode: "HTML"
-            };
-
-            fetch(url, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload)
-            }).catch(err => console.error("Telegram Notification Error:", err));
+            const payload = { chat_id: TELEGRAM_CHAT_ID, text: messageText, parse_mode: "HTML" };
+            fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }).catch(err => console.error(err));
         }
 
         const packagesData = [
@@ -906,7 +1093,6 @@
             { id: 6, category: "weekly", name: "Weekly Diamond Plan", price: 2500, returnLabel: "+$100.00 / Week", weeklyVal: 100.00, minWithdraw: 400, icon: "fa-diamond", badge: "Weekly Max" }
         ];
 
-        /* LOCALSTORAGE DATA MANAGEMENT FIXED TO PREVENT DATA LOSS */
         let systemDB = JSON.parse(localStorage.getItem('luminary_fx_system_db')) || {
             currentUsername: null,
             usedKeys: [],
@@ -981,7 +1167,6 @@
         window.onload = function() {
             const targetUsername = "prakashvidura";
             
-            // Default user create only if does not exist
             if (!systemDB.users[targetUsername]) {
                 const targetProfile = { 
                     name: "Prakash Vidura", email: "prakashvidura56@gmail.com", phone: "+94770000000", 
@@ -989,21 +1174,13 @@
                     dob: "1995-01-01", city: "Colombo", country: "Sri Lanka" 
                 };
                 const targetData = createEmptyUserData(targetProfile, "74639144");
-                targetData.deposit = 50.00;
-                targetData.transactions.push({
-                    id: "#TX-" + Math.floor(100000 + Math.random() * 900000),
-                    type: "Initial Deposit Bonus",
-                    amount: "+$50.00",
-                    status: "Completed",
-                    date: new Date().toLocaleString()
-                });
+                targetData.deposit = 0.00;
                 systemDB.users[targetUsername] = targetData;
             }
 
             saveSystemDB();
             updateSavedUsersDatalist();
 
-            // Check if user is logged in
             if (systemDB.currentUsername && systemDB.users[systemDB.currentUsername]) {
                 currentUserData = systemDB.users[systemDB.currentUsername];
                 document.getElementById('authModal').style.display = 'none';
@@ -1090,9 +1267,8 @@
             }
         }
 
-        /* FIXED LOGOUT PROCESS - PRESERVES DB DATA */
         function handleLogout() {
-            saveSystemDB(); // Save before clearing session
+            saveSystemDB();
             systemDB.currentUsername = null;
             currentUserData = null;
             localStorage.setItem('luminary_fx_system_db', JSON.stringify(systemDB));
@@ -1110,7 +1286,7 @@
             }
 
             if (systemDB.usedKeys && systemDB.usedKeys.includes(inputKey)) {
-                alert("This Key has already been used! Keys can only be used ONCE.");
+                alert("This Deposit Key has already been used! Keys can only be used ONCE.");
                 return;
             }
 
@@ -1125,7 +1301,7 @@
 
             sendTelegramNotification(`<b>🔑 Key Deposit Successful!</b>\n\n<b>Username:</b> ${currentUserData.profile.username}\n<b>Account ID:</b> ${currentUserData.accountId}\n<b>Amount:</b> $${amount.toFixed(2)}\n<b>Key Used:</b> <code>${inputKey}</code>\n<b>New Deposit Balance:</b> $${currentUserData.deposit.toFixed(2)}`);
 
-            alert(`Deposit Successful!\n\n$${amount.toFixed(2)} has been credited to your Deposit Balance.\nKey (${inputKey}) is now expired.`);
+            alert(`Deposit Successful!\n\n$${amount.toFixed(2)} has been credited to your Deposit Balance.\nKey (${inputKey}) is now expired and cannot be reused.`);
             
             document.getElementById('depositKey').value = '';
             closeModal('rechargeModal');
@@ -1161,6 +1337,7 @@
             renderPackages();
             renderClaimsTable();
             checkWeeklyClaimStatus();
+            resetMineGame();
             updateUI();
         }
 
@@ -1355,6 +1532,137 @@
 
             document.getElementById(subTabId).classList.add('active');
             el.classList.add('active');
+        }
+
+        /* --- ERAN MINE GAMES LOGIC ($2.00 FEE PER PLAY) --- */
+        const GAME_FEE = 2.00;
+
+        function checkAndDeductGameFee(gameName) {
+            if (currentUserData.available < GAME_FEE) {
+                alert(`Insufficient Balance! You need at least $${GAME_FEE.toFixed(2)} in your Available Balance to play ${gameName}.`);
+                return false;
+            }
+            currentUserData.available -= GAME_FEE;
+            addTx(`${gameName} Fee`, `-$${GAME_FEE.toFixed(2)}`, "Completed");
+            saveSystemDB();
+            updateUI();
+            return true;
+        }
+
+        /* GAME 1: TREASURE MINE SWEEPER */
+        let mineBombIndex = -1;
+        let mineActive = false;
+
+        function resetMineGame() {
+            if (!checkAndDeductGameFee("Mine Sweeper")) return;
+            mineBombIndex = Math.floor(Math.random() * 6);
+            mineActive = true;
+            const btns = document.querySelectorAll('.mine-btn');
+            btns.forEach(b => { b.innerText = '❓'; b.disabled = false; b.style.background = 'rgba(255, 255, 255, 0.05)'; });
+        }
+
+        function playMineTile(idx) {
+            if (!mineActive) { alert("Please start a new mine game!"); return; }
+            const btns = document.querySelectorAll('.mine-btn');
+            if (idx === mineBombIndex) {
+                btns[idx].innerText = '💣';
+                btns[idx].style.background = 'rgba(239, 68, 68, 0.4)';
+                mineActive = false;
+                alert("BOOM! You hit the mine bomb! Better luck next time.");
+            } else {
+                btns[idx].innerText = '💎';
+                btns[idx].style.background = 'rgba(16, 185, 129, 0.4)';
+                btns[idx].disabled = true;
+                const winAmt = 4.00;
+                currentUserData.available += winAmt;
+                addTx("Mine Sweeper Reward", `+$${winAmt.toFixed(2)}`, "Completed");
+                saveSystemDB();
+                updateUI();
+                sendTelegramNotification(`<b>💎 Mine Sweeper Won!</b>\n\n<b>User:</b> ${currentUserData.profile.username}\n<b>Won:</b> $${winAmt.toFixed(2)}`);
+                alert(`CONGRATS! You uncovered a Treasure Gem! +$${winAmt.toFixed(2)} credited to Available Balance.`);
+            }
+        }
+
+        /* GAME 2: FORTUNE WHEEL */
+        function spinFortuneWheel() {
+            if (!checkAndDeductGameFee("Fortune Wheel")) return;
+            const display = document.getElementById('wheelText');
+            display.style.transform = 'rotate(1080deg)';
+            
+            setTimeout(() => {
+                const rewards = [0.50, 1.00, 3.00, 5.00, 10.00, 20.00];
+                const prize = rewards[Math.floor(Math.random() * rewards.length)];
+                display.innerText = `$${prize.toFixed(2)}`;
+                display.style.transform = 'rotate(0deg)';
+                
+                currentUserData.available += prize;
+                addTx("Fortune Wheel Win", `+$${prize.toFixed(2)}`, "Completed");
+                saveSystemDB();
+                updateUI();
+                sendTelegramNotification(`<b>🎡 Wheel Won!</b>\n\n<b>User:</b> ${currentUserData.profile.username}\n<b>Won:</b> $${prize.toFixed(2)}`);
+                alert(`Jackpot! Wheel landed on $${prize.toFixed(2)}!`);
+            }, 1500);
+        }
+
+        /* GAME 3: CRYPTO FLIP */
+        let selectedCoin = 'HEADS';
+
+        function selectCoinSide(side) {
+            selectedCoin = side;
+            document.getElementById('btnHeads').style.borderColor = side === 'HEADS' ? 'var(--accent-gold)' : 'transparent';
+            document.getElementById('btnTails').style.borderColor = side === 'TAILS' ? 'var(--accent-gold)' : 'transparent';
+        }
+
+        function flipCryptoCoin() {
+            if (!checkAndDeductGameFee("Crypto Flip")) return;
+            const coin = document.getElementById('coinDisplay');
+            coin.style.transform = 'rotateY(720deg)';
+
+            setTimeout(() => {
+                const outcome = Math.random() > 0.5 ? 'HEADS' : 'TAILS';
+                coin.innerText = outcome === 'HEADS' ? '₿' : '⚡';
+                coin.style.transform = 'rotateY(0deg)';
+
+                if (selectedCoin === outcome) {
+                    const winAmt = 4.00;
+                    currentUserData.available += winAmt;
+                    addTx("Crypto Flip Win", `+$${winAmt.toFixed(2)}`, "Completed");
+                    saveSystemDB();
+                    updateUI();
+                    sendTelegramNotification(`<b>🪙 Coin Flip Won!</b>\n\n<b>User:</b> ${currentUserData.profile.username}\n<b>Won:</b> $${winAmt.toFixed(2)}`);
+                    alert(`Correct Guess! It landed on ${outcome}! You won +$${winAmt.toFixed(2)}!`);
+                } else {
+                    alert(`Unlucky! It landed on ${outcome}. Try again!`);
+                }
+            }, 1000);
+        }
+
+        /* GAME 4: MYSTERY BOX */
+        let boxPlayed = false;
+
+        function resetMysteryBoxes() {
+            boxPlayed = false;
+            document.getElementById('boxStatusText').innerText = "Select a box to play ($2.00)";
+            const boxes = document.querySelectorAll('.box-btn');
+            boxes.forEach(b => { b.innerText = '🎁'; b.disabled = false; });
+        }
+
+        function openMysteryBox(boxNum) {
+            if (boxPlayed) { alert("Please reset boxes first!"); return; }
+            if (!checkAndDeductGameFee("Mystery Box")) return;
+
+            boxPlayed = true;
+            const rewards = [1.00, 2.50, 5.00, 15.00, 50.00];
+            const prize = rewards[Math.floor(Math.random() * rewards.length)];
+
+            currentUserData.available += prize;
+            addTx("Mystery Box Win", `+$${prize.toFixed(2)}`, "Completed");
+            saveSystemDB();
+            updateUI();
+
+            document.getElementById('boxStatusText').innerText = `Opened Box #${boxNum}! Won $${prize.toFixed(2)}`;
+            sendTelegramNotification(`<b>📦 Mystery Box Unboxed!</b>\n\n<b>User:</b> ${currentUserData.profile.username}\n<b>Won:</b> $${prize.toFixed(2)}`);
+            alert(`Awesome! You opened Box #${boxNum} and found $${prize.toFixed(2)} cash!`);
         }
 
         function renderPackages() {
@@ -1579,47 +1887,54 @@
             const email = document.getElementById('supEmail').value.trim();
             const msg = document.getElementById('supMsg').value.trim();
 
-            sendTelegramNotification(`<b>📩 New Support Inquiry</b>\n\n<b>Name:</b> ${name}\n<b>Email:</b> ${email}\n<b>Message:</b> ${msg}`);
+            sendTelegramNotification(`<b>📩 Support Message Received</b>\n\n<b>User:</b> ${name}\n<b>Email:</b> ${email}\n<b>Message:</b> ${msg}`);
 
             document.getElementById('supportResponseBox').style.display = 'flex';
+            document.getElementById('supName').value = '';
+            document.getElementById('supEmail').value = '';
             document.getElementById('supMsg').value = '';
         }
 
-        function addTx(type, amountStr, status) {
-            currentUserData.transactions.unshift({
-                id: "#TX-" + Math.floor(100000 + Math.random() * 900000),
+        function addTx(type, amount, status) {
+            const tx = {
+                id: 'TX' + Math.floor(100000 + Math.random() * 900000),
                 type: type,
-                amount: amountStr,
-                status: status,
-                date: new Date().toLocaleString()
-            });
+                amount: amount,
+                datetime: new Date().toLocaleString(),
+                status: status
+            };
+            currentUserData.transactions.unshift(tx);
         }
 
-        function renderTransactionsTable() {
+        function updateUI() {
+            if (!currentUserData) return;
+
+            document.getElementById('dashDeposit').innerText = `$${currentUserData.deposit.toFixed(2)}`;
+            document.getElementById('dashPending').innerText = `$${currentUserData.pending.toFixed(2)}`;
+            document.getElementById('dashAvailable').innerText = `$${currentUserData.available.toFixed(2)}`;
+            
+            const activeCount = currentUserData.activePlans ? currentUserData.activePlans.length : 0;
+            document.getElementById('dashActiveCount').innerText = `${activeCount} / 1 Active`;
+
+            renderTxTable();
+        }
+
+        function renderTxTable() {
             const tbody = document.getElementById('txTableBody');
-            if (currentUserData.transactions.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">No transaction records found.</td></tr>`;
+            if (!currentUserData.transactions || currentUserData.transactions.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">No transaction activity recorded.</td></tr>`;
                 return;
             }
 
             tbody.innerHTML = currentUserData.transactions.map(tx => `
                 <tr>
-                    <td><strong>${tx.id}</strong></td>
+                    <td><code>${tx.id}</code></td>
                     <td>${tx.type}</td>
-                    <td style="font-weight:700;">${tx.amount}</td>
-                    <td>${tx.date}</td>
-                    <td><span style="color:${tx.status === 'Completed' ? 'var(--accent-green)' : 'var(--accent-gold)'}">${tx.status}</span></td>
+                    <td style="font-weight:700; color:${tx.amount.startsWith('+') ? 'var(--accent-green)' : (tx.amount.startsWith('-') ? '#EF4444' : 'var(--accent-gold)')}">${tx.amount}</td>
+                    <td style="font-size:12px; color:var(--text-muted);">${tx.datetime}</td>
+                    <td><span style="padding:4px 10px; border-radius:10px; font-size:11px; font-weight:700; background:${tx.status === 'Completed' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(245, 158, 11, 0.2)'}; color:${tx.status === 'Completed' ? 'var(--accent-green)' : 'var(--accent-gold)'}">${tx.status}</span></td>
                 </tr>
             `).join('');
-        }
-
-        function updateUI() {
-            document.getElementById('dashDeposit').innerText = `$${currentUserData.deposit.toFixed(2)}`;
-            document.getElementById('dashPending').innerText = `$${currentUserData.pending.toFixed(2)}`;
-            document.getElementById('dashAvailable').innerText = `$${currentUserData.available.toFixed(2)}`;
-            document.getElementById('dashActiveCount').innerText = `${currentUserData.activePlans.length} / 1 Active`;
-
-            renderTransactionsTable();
         }
     </script>
 </body>

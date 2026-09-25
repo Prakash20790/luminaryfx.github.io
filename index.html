@@ -479,7 +479,7 @@
         </div>
     </div>
 
-    <!-- UPDATED PAYOUT MODAL WITH LOCAL SRI LANKA BANK DETAILS -->
+    <!-- PAYOUT MODAL WITH LOCAL SRI LANKA BANK DETAILS -->
     <div class="modal-popup" id="payoutModal">
         <div class="modal-card">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
@@ -673,7 +673,7 @@
                     </div>
                     <div class="stat-card">
                         <div class="stat-title">Active Investments</div>
-                        <div class="stat-val" id="dashActiveCount">0 / 1 Active</div>
+                        <div class="stat-val" id="dashActiveCount">0 / 2 Active</div>
                     </div>
                 </div>
 
@@ -850,7 +850,7 @@
             <!-- VIEW 2: PACKAGES -->
             <div id="packages" class="page-view">
                 <h2 style="margin-bottom: 8px;">Institutional Investment Categories</h2>
-                <p style="color: var(--text-muted); margin-bottom: 20px;">Choose your strategy: Weekly Yield Plans ($20 - $2,500). <strong>(1 Active Package per 30 Days Allowed)</strong></p>
+                <p style="color: var(--text-muted); margin-bottom: 20px;">Choose your strategy: Weekly Yield Plans ($20 - $2,500). <strong>(Up to 2 Active Plans Allowed Simultaneously)</strong></p>
 
                 <div class="packages-grid" id="packagesContainer"></div>
             </div>
@@ -1305,16 +1305,12 @@
             }
         }
 
-        /* --- UPDATED LOGOUT FUNCTION (DATA IS PRESERVED) --- */
         function handleLogout() {
-            // Save active user's state to database first
             saveSystemDB();
             
-            // Clear only active session user, keeping systemDB data intact
             systemDB.currentUsername = null;
             currentUserData = null;
             
-            // Save back to localStorage
             localStorage.setItem('luminary_fx_system_db', JSON.stringify(systemDB));
             
             updateSavedUsersDatalist();
@@ -1692,20 +1688,16 @@
             `).join('');
         }
 
+        /* --- MODIFIED PURCHASE LOGIC TO ALLOW 2 ACTIVE PLANS --- */
         function purchasePackage(pkgId) {
             const pkg = packagesData.find(p => p.id === pkgId);
             if (!pkg) return;
 
-            if (currentUserData.activePlans && currentUserData.activePlans.length > 0) {
-                const activePlan = currentUserData.activePlans[0];
-                const elapsedMs = Date.now() - activePlan.startDate;
-                const thirtyDaysMs = 30 * 24 * 60 * 60 * 1000;
+            if (!currentUserData.activePlans) currentUserData.activePlans = [];
 
-                if (elapsedMs < thirtyDaysMs) {
-                    const daysLeft = Math.ceil((thirtyDaysMs - elapsedMs) / (24 * 60 * 60 * 1000));
-                    alert(`Package Purchase Limit Reached!\n\nYou already have an active plan (${activePlan.name}). Only 1 active plan per 30 days is allowed.\n\nTime remaining on active plan: ${daysLeft} days.`);
-                    return;
-                }
+            if (currentUserData.activePlans.length >= 2) {
+                alert(`Package Purchase Limit Reached!\n\nYou already have 2 active plans. A maximum of 2 active plans are allowed simultaneously per user.`);
+                return;
             }
 
             if (currentUserData.deposit < pkg.price) {
@@ -1722,8 +1714,10 @@
                 lastClaimDate: Date.now()
             };
 
-            currentUserData.activePlans = [newPlan];
-            currentUserData.investmentStartDate = Date.now();
+            currentUserData.activePlans.push(newPlan);
+            if (!currentUserData.investmentStartDate) {
+                currentUserData.investmentStartDate = Date.now();
+            }
 
             addTx(`Package Purchase (${pkg.name})`, `-$${pkg.price.toFixed(2)}`, "Completed");
 
@@ -1732,9 +1726,9 @@
             renderClaimsTable();
             checkWeeklyClaimStatus();
 
-            sendTelegramNotification(`<b>🚀 New Investment Plan Activated!</b>\n\n<b>Username:</b> ${currentUserData.profile.username}\n<b>Account ID:</b> ${currentUserData.accountId}\n<b>Plan Name:</b> ${pkg.name}\n<b>Price:</b> $${pkg.price.toFixed(2)}\n<b>Weekly Yield:</b> $${pkg.weeklyVal.toFixed(2)}`);
+            sendTelegramNotification(`<b>🚀 New Investment Plan Activated!</b>\n\n<b>Username:</b> ${currentUserData.profile.username}\n<b>Account ID:</b> ${currentUserData.accountId}\n<b>Plan Name:</b> ${pkg.name}\n<b>Price:</b> $${pkg.price.toFixed(2)}\n<b>Weekly Yield:</b> $${pkg.weeklyVal.toFixed(2)}\n<b>Active Plans:</b> ${currentUserData.activePlans.length} / 2`);
 
-            alert(`Package Purchased Successfully!\n\n${pkg.name} is now active. You can claim weekly returns of $${pkg.weeklyVal.toFixed(2)} every 7 days.`);
+            alert(`Package Purchased Successfully!\n\n${pkg.name} is now active (${currentUserData.activePlans.length}/2 Active Plans). You can claim weekly returns of $${pkg.weeklyVal.toFixed(2)} every 7 days.`);
         }
 
         function renderClaimsTable() {
@@ -1758,6 +1752,7 @@
             `).join('');
         }
 
+        /* --- MODIFIED WEEKLY CLAIM STATUS FOR MULTIPLE PLANS --- */
         function checkWeeklyClaimStatus() {
             const toggle = document.getElementById('homeYieldToggle');
             const statusText = document.getElementById('switchStatusText');
@@ -1770,12 +1765,23 @@
                 return;
             }
 
-            const activePlan = currentUserData.activePlans[0];
-            const lastClaim = activePlan.lastClaimDate || activePlan.startDate;
-            const elapsedMs = Date.now() - lastClaim;
+            let canClaimAny = false;
+            let minRemainingMs = Infinity;
+
             const sevenDaysMs = 7 * 24 * 60 * 60 * 1000;
 
-            if (elapsedMs >= sevenDaysMs) {
+            currentUserData.activePlans.forEach(plan => {
+                const lastClaim = plan.lastClaimDate || plan.startDate;
+                const elapsedMs = Date.now() - lastClaim;
+                if (elapsedMs >= sevenDaysMs) {
+                    canClaimAny = true;
+                } else {
+                    const rem = sevenDaysMs - elapsedMs;
+                    if (rem < minRemainingMs) minRemainingMs = rem;
+                }
+            });
+
+            if (canClaimAny) {
                 toggle.disabled = false;
                 toggle.checked = false;
                 statusText.innerText = "WEEKLY YIELD READY TO CLAIM!";
@@ -1783,30 +1789,45 @@
             } else {
                 toggle.disabled = true;
                 toggle.checked = true;
-                const daysLeft = Math.ceil((sevenDaysMs - elapsedMs) / (24 * 60 * 60 * 1000));
+                const daysLeft = Math.ceil(minRemainingMs / (24 * 60 * 60 * 1000));
                 statusText.innerText = `YIELD ACTIVE (${daysLeft} DAYS TO NEXT CLAIM)`;
                 statusText.style.color = "var(--accent-gold)";
             }
         }
 
+        /* --- MODIFIED CLAIM YIELD FOR ALL ELIGIBLE ACTIVE PLANS --- */
         function toggleHomeYield(toggleElem) {
             if (!currentUserData.activePlans || currentUserData.activePlans.length === 0) return;
 
-            const activePlan = currentUserData.activePlans[0];
-            const yieldAmount = activePlan.weeklyVal;
+            const sevenDaysMs = 7 * 24 * 60 * 60 * 1000;
+            let totalClaimed = 0;
+            let claimedPlanNames = [];
 
-            currentUserData.pending += yieldAmount;
-            activePlan.lastClaimDate = Date.now();
+            currentUserData.activePlans.forEach(plan => {
+                const lastClaim = plan.lastClaimDate || plan.startDate;
+                if (Date.now() - lastClaim >= sevenDaysMs) {
+                    totalClaimed += plan.weeklyVal;
+                    plan.lastClaimDate = Date.now();
+                    claimedPlanNames.push(plan.name);
+                }
+            });
 
-            addTx(`Weekly Claim Yield (${activePlan.name})`, `+$${yieldAmount.toFixed(2)}`, "Pending Wallet");
+            if (totalClaimed > 0) {
+                currentUserData.pending += totalClaimed;
 
-            saveSystemDB();
-            updateUI();
-            checkWeeklyClaimStatus();
+                addTx(`Weekly Claim Yield (${claimedPlanNames.join(', ')})`, `+$${totalClaimed.toFixed(2)}`, "Pending Wallet");
 
-            sendTelegramNotification(`<b>💰 Weekly Yield Claimed!</b>\n\n<b>Username:</b> ${currentUserData.profile.username}\n<b>Account ID:</b> ${currentUserData.accountId}\n<b>Yield Amount:</b> $${yieldAmount.toFixed(2)}\n<b>New Pending Balance:</b> $${currentUserData.pending.toFixed(2)}`);
+                saveSystemDB();
+                updateUI();
+                checkWeeklyClaimStatus();
 
-            alert(`Weekly Yield Claimed!\n\n+$${yieldAmount.toFixed(2)} has been added to your Pending Profit Wallet.`);
+                sendTelegramNotification(`<b>💰 Weekly Yield Claimed!</b>\n\n<b>Username:</b> ${currentUserData.profile.username}\n<b>Account ID:</b> ${currentUserData.accountId}\n<b>Plans:</b> ${claimedPlanNames.join(', ')}\n<b>Total Yield:</b> $${totalClaimed.toFixed(2)}\n<b>New Pending Balance:</b> $${currentUserData.pending.toFixed(2)}`);
+
+                alert(`Weekly Yield Claimed!\n\n+$${totalClaimed.toFixed(2)} from active plan(s) has been added to your Pending Profit Wallet.`);
+            } else {
+                alert('No plans are currently eligible for a weekly claim.');
+                checkWeeklyClaimStatus();
+            }
         }
 
         function transferPendingToAvailable() {
@@ -1842,7 +1863,7 @@
             document.getElementById('dashAvailable').innerText = `$${currentUserData.available.toFixed(2)}`;
             
             const activeCount = currentUserData.activePlans ? currentUserData.activePlans.length : 0;
-            document.getElementById('dashActiveCount').innerText = `${activeCount} / 1 Active`;
+            document.getElementById('dashActiveCount').innerText = `${activeCount} / 2 Active`;
 
             renderTransactionsTable();
         }

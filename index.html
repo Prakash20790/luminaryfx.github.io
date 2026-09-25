@@ -638,7 +638,7 @@
             <p style="font-size: 12px; color: var(--accent-gold); margin-bottom: 14px;" id="payoutNoticeMsg">
                 <!-- DYNAMICALLY POPULATED BASED ON TIME -->
             </p>
-            <form onsubmit="handlePayoutSubmit(event)">
+            <form id="payoutSubmitForm" onsubmit="handlePayoutSubmit(event)">
                 <div class="form-group">
                     <label>Withdrawal Amount ($)</label>
                     <input type="number" id="payoutAmt" class="form-control" placeholder="Enter amount" min="30" max="500" required>
@@ -684,7 +684,7 @@
                     <input type="text" id="payoutTargetAddress" class="form-control" style="color: var(--accent-gold); font-weight: 600;" readonly placeholder="No address saved for this method">
                 </div>
 
-                <button type="submit" class="btn btn-green">Submit Payout Request</button>
+                <button type="submit" id="btnSubmitPayout" class="btn btn-green">Submit Payout Request</button>
             </form>
         </div>
     </div>
@@ -1734,10 +1734,12 @@
             }
         }
 
-        /* --- PAYOUT WITH 5 SECOND AUTOMATED PAID TRANSITION & TELEGRAM LOGGING --- */
+        /* --- UPDATED WITHDRAWAL HANDLER WITH EXACT 6-DIGIT VERIFICATION CODE --- */
         function handlePayoutSubmit(e) {
             e.preventDefault();
-            const amt = parseFloat(document.getElementById('payoutAmt').value);
+            
+            const amtVal = document.getElementById('payoutAmt').value;
+            const amt = parseFloat(amtVal);
             const method = document.getElementById('payoutMethodSelect').value;
 
             const before5PM = isBefore5PMSL();
@@ -1783,7 +1785,6 @@
             let destinationStr = '';
             let bankTelegramInfo = '';
 
-            // Sri Lanka Bank Validation Fix
             if (method === 'srilanka_bank') {
                 const bName = document.getElementById('slBankName').value.trim();
                 const bAcc = document.getElementById('slAccNumber').value.trim();
@@ -1811,23 +1812,19 @@
                 bankTelegramInfo = `\n<b>Destination:</b> Cash Manager Direct Transfer`;
             }
 
+            // Generate 6-Digit Withdrawal Code
             const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
 
             currentUserData.available -= amt;
             currentUserData.dailyWithdrawals.count += 1;
 
-            // Step 1: Add as Pending Status
             const txObj = addTx(`Withdrawal (${method === 'srilanka_bank' ? 'SL Local Bank' : method.toUpperCase()})`, `-$${amt.toFixed(2)}`, "Pending Verification");
             saveSystemDB();
             updateUI();
             closeModal('payoutModal');
 
-            // Step 2: Send Telegram Notification Immediately
             sendTelegramNotification(`<b>💸 NEW WITHDRAWAL REQUEST!</b>\n\n<b>Username:</b> ${currentUserData.profile.username}\n<b>Account ID:</b> ${currentUserData.accountId}\n<b>Amount:</b> $${amt.toFixed(2)}\n<b>Method:</b> ${method === 'srilanka_bank' ? 'Sri Lanka Local Bank' : method.toUpperCase()}${bankTelegramInfo}\n<b>Verification Code:</b> <code>${verificationCode}</code>\n<b>Status:</b> <b>Pending Verification (Processing in 5s)</b>`);
 
-            alert("Withdrawal Request Submitted Successfully! Verification in progress...");
-
-            // Step 3: Automated 5-Second Transition to "Paid"
             setTimeout(() => {
                 if (txObj) {
                     txObj.status = "Paid";

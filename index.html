@@ -7,15 +7,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* --- DYNAMIC THEME VARIABLES --- */
+        /* --- DYNAMIC THEME VARIABLES (UPDATED TO RED ACCENT) --- */
         :root[data-theme="dark"] {
             --bg-base: #060913;
             --bg-surface: #0D1527;
             --bg-card: #141F36;
             --primary: #6366F1;
             --primary-hover: #4F46E5;
-            --accent-gold: #F59E0B;
-            --accent-gold-glow: rgba(245, 158, 11, 0.35);
+            --accent-gold: #EF4444; /* Changed from Gold to Red */
+            --accent-gold-glow: rgba(239, 68, 68, 0.35);
             --accent-green: #10B981;
             --accent-green-glow: rgba(16, 185, 129, 0.35);
             --accent-cyan: #06B6D4;
@@ -36,8 +36,8 @@
             --bg-card: #F8FAFC;
             --primary: #4F46E5;
             --primary-hover: #4338CA;
-            --accent-gold: #D97706;
-            --accent-gold-glow: rgba(217, 119, 6, 0.2);
+            --accent-gold: #DC2626; /* Changed from Gold to Red */
+            --accent-gold-glow: rgba(220, 38, 38, 0.2);
             --accent-green: #059669;
             --accent-green-glow: rgba(5, 150, 105, 0.2);
             --accent-cyan: #0891B2;
@@ -64,7 +64,7 @@
 
         /* --- THEME TOGGLE BUTTON --- */
         .theme-toggle-btn {
-            background: rgba(245, 158, 11, 0.15);
+            background: rgba(239, 68, 68, 0.15);
             border: 1px solid var(--accent-gold);
             color: var(--accent-gold);
             width: 42px;
@@ -170,7 +170,7 @@
         .header-left { display: flex; align-items: center; gap: 18px; }
         .menu-toggle {
             font-size: 20px; color: var(--accent-gold); cursor: pointer; padding: 10px 14px;
-            border-radius: 12px; background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.3); transition: 0.3s;
+            border-radius: 12px; background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.3); transition: 0.3s;
         }
         .menu-toggle:hover { background: var(--accent-gold); color: #FFF; box-shadow: 0 0 15px var(--accent-gold-glow); }
         
@@ -200,7 +200,7 @@
             display: flex; align-items: center; gap: 14px; cursor: pointer; transition: 0.2s;
         }
         .nav-link:hover, .nav-link.active { background: var(--bg-card); color: var(--text-main); }
-        .nav-link.active { border-left: 4px solid var(--accent-gold); background: linear-gradient(90deg, rgba(245, 158, 11, 0.15) 0%, var(--bg-card) 100%); }
+        .nav-link.active { border-left: 4px solid var(--accent-gold); background: linear-gradient(90deg, rgba(239, 68, 68, 0.15) 0%, var(--bg-card) 100%); }
 
         main { flex: 1; padding: 32px; max-width: 1400px; margin: 0 auto; width: 100%; }
 
@@ -210,13 +210,13 @@
 
         /* --- HERO BANNER --- */
         .hero-banner {
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(245, 158, 11, 0.1) 50%, var(--bg-surface) 100%);
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(239, 68, 68, 0.1) 50%, var(--bg-surface) 100%);
             border: 1px solid var(--accent-gold); border-radius: 24px; padding: 36px; margin-bottom: 32px;
             position: relative; overflow: hidden; box-shadow: var(--card-shadow);
         }
         .hero-tag {
-            display: inline-flex; align-items: center; gap: 8px; background: rgba(245, 158, 11, 0.15);
-            color: var(--accent-gold); border: 1px solid rgba(245, 158, 11, 0.3); padding: 6px 14px;
+            display: inline-flex; align-items: center; gap: 8px; background: rgba(239, 68, 68, 0.15);
+            color: var(--accent-gold); border: 1px solid rgba(239, 68, 68, 0.3); padding: 6px 14px;
             border-radius: 30px; font-size: 12px; font-weight: 700; text-transform: uppercase; margin-bottom: 16px;
         }
         .hero-title { font-size: 32px; font-weight: 800; font-family: 'Plus Jakarta Sans', sans-serif; line-height: 1.25; margin-bottom: 12px; color: var(--text-main); }
@@ -278,12 +278,12 @@
         }
         .pkg-card:hover { border-color: var(--accent-gold); transform: translateY(-6px); box-shadow: 0 15px 35px var(--accent-gold-glow); }
         .pkg-badge {
-            position: absolute; top: 18px; right: -30px; background: linear-gradient(135deg, var(--accent-gold), #D97706);
+            position: absolute; top: 18px; right: -30px; background: linear-gradient(135deg, var(--accent-gold), #B91C1C);
             color: #FFF; font-size: 10px; font-weight: 800; padding: 4px 30px; transform: rotate(45deg); text-transform: uppercase; letter-spacing: 0.5px;
         }
         .pkg-icon-wrap {
-            width: 56px; height: 56px; border-radius: 16px; background: rgba(245, 158, 11, 0.12);
-            color: var(--accent-gold); display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 16px; border: 1px solid rgba(245, 158, 11, 0.25);
+            width: 56px; height: 56px; border-radius: 16px; background: rgba(239, 68, 68, 0.12);
+            color: var(--accent-gold); display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 16px; border: 1px solid rgba(239, 68, 68, 0.25);
         }
         .pkg-title { font-size: 22px; font-weight: 800; color: var(--text-main); font-family: 'Plus Jakarta Sans', sans-serif; }
         .pkg-price { font-size: 38px; font-weight: 800; font-family: 'Plus Jakarta Sans'; color: var(--text-main); margin-bottom: 16px; letter-spacing: -1px; }
@@ -322,14 +322,14 @@
         }
         .btn-primary { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%); color: #FFF; }
         .btn-primary:hover { box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4); }
-        .btn-gold { background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); color: #FFF; font-weight: 800; }
+        .btn-gold { background: linear-gradient(135deg, #EF4444 0%, #B91C1C 100%); color: #FFF; font-weight: 800; }
         .btn-gold:hover { box-shadow: 0 8px 20px var(--accent-gold-glow); }
         .btn-green { background: linear-gradient(135deg, #10B981 0%, #059669 100%); color: #FFF; font-weight: 800; }
         .btn-purple { background: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%); color: #FFF; font-weight: 800; }
 
         .btn-sm-transfer {
             margin-top: 10px; padding: 6px 12px; font-size: 11px; border-radius: 8px;
-            background: rgba(245, 158, 11, 0.15); border: 1px solid var(--accent-gold); color: var(--accent-gold);
+            background: rgba(239, 68, 68, 0.15); border: 1px solid var(--accent-gold); color: var(--accent-gold);
             cursor: pointer; transition: 0.2s; width: 100%; text-align: center;
         }
         .btn-sm-transfer:hover { background: var(--accent-gold); color: #FFF; }
@@ -339,7 +339,7 @@
 
         /* DEPOSIT NOTICE STYLING */
         .deposit-notice-card {
-            background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.3);
+            background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.3);
             border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 20px;
         }
         .deposit-notice-title {
@@ -371,8 +371,8 @@
         }
 
         .header-acc-box {
-            display: flex; align-items: center; gap: 6px; background: rgba(245, 158, 11, 0.1);
-            border: 1px solid rgba(245, 158, 11, 0.3); padding: 4px 10px; border-radius: 8px;
+            display: flex; align-items: center; gap: 6px; background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3); padding: 4px 10px; border-radius: 8px;
             font-size: 12px; font-weight: 700; color: var(--accent-gold); margin-top: 3px;
         }
         .header-acc-box i { cursor: pointer; transition: 0.2s; }
@@ -383,7 +383,7 @@
         /* ========================================================= */
         .crash-wrapper {
             background: var(--bg-surface);
-            border: 1px solid rgba(245, 158, 11, 0.35);
+            border: 1px solid rgba(239, 68, 68, 0.35);
             border-radius: 28px;
             padding: 28px;
             box-shadow: var(--card-shadow);
@@ -509,10 +509,10 @@
             cursor: pointer;
             transition: 0.2s;
         }
-        .preset-btn:hover { background: rgba(245, 158, 11, 0.2); color: var(--accent-gold); border-color: var(--accent-gold); }
+        .preset-btn:hover { background: rgba(239, 68, 68, 0.2); color: var(--accent-gold); border-color: var(--accent-gold); }
 
         .btn-launch-bet {
-            background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+            background: linear-gradient(135deg, #EF4444 0%, #B91C1C 100%);
             color: #FFF;
             font-size: 18px;
             font-weight: 900;
@@ -541,7 +541,7 @@
 
         .bank-details-box {
             background: var(--input-bg);
-            border: 1px solid rgba(245, 158, 11, 0.25);
+            border: 1px solid rgba(239, 68, 68, 0.25);
             border-radius: 14px;
             padding: 16px;
             margin-bottom: 16px;
@@ -554,9 +554,9 @@
             border: 1px solid rgba(16, 185, 129, 0.5) !important;
         }
         .status-pending {
-            background: rgba(245, 158, 11, 0.2) !important;
-            color: #F59E0B !important;
-            border: 1px solid rgba(245, 158, 11, 0.5) !important;
+            background: rgba(239, 68, 68, 0.2) !important;
+            color: #EF4444 !important;
+            border: 1px solid rgba(239, 68, 68, 0.5) !important;
         }
 
         /* SUCCESS DEPOSIT DONE CARD STYLING */
@@ -738,14 +738,14 @@
                 <h3 style="font-size: 18px; font-weight: 800;">Payout & Withdraw Profits</h3>
                 <i class="fa-solid fa-xmark" style="cursor: pointer; font-size: 20px;" onclick="closeModal('payoutModal')"></i>
             </div>
-            <div style="font-size: 12px; color: var(--accent-gold); margin-bottom: 14px; background: rgba(245, 158, 11, 0.1); padding: 12px; border-radius: 10px; border: 1px solid rgba(245, 158, 11, 0.25);" id="payoutNoticeMsg">
-                * Minimum withdrawal amount: <strong>$50.00</strong><br>
-                * Withdrawal Interval: <strong>Allowed once every 3 days (72 Hours)</strong>
+            <div style="font-size: 12px; color: var(--accent-gold); margin-bottom: 14px; background: rgba(239, 68, 68, 0.1); padding: 12px; border-radius: 10px; border: 1px solid rgba(239, 68, 68, 0.25);" id="payoutNoticeMsg">
+                * Deposits over $300: Daily withdrawal fixed at <strong>$5.00</strong> (Once every 24 Hours)<br>
+                * Standard Accounts: Minimum withdrawal <strong>$50.00</strong> (Once every 2 days / 48 Hours)
             </div>
             <form id="payoutSubmitForm" onsubmit="handlePayoutSubmit(event)">
                 <div class="form-group">
                     <label>Withdrawal Amount ($)</label>
-                    <input type="number" id="payoutAmt" class="form-control" placeholder="Enter amount (Min $50)" min="50" max="500" step="any" required>
+                    <input type="number" id="payoutAmt" class="form-control" placeholder="Enter amount" min="1" step="any" required>
                 </div>
                 
                 <div class="form-group">
@@ -875,7 +875,7 @@
                     </div>
 
                     <div class="action-btn-card" onclick="openModal('rechargeModal')">
-                        <div class="action-icon" style="background: rgba(245, 158, 11, 0.15); color: var(--accent-gold);">
+                        <div class="action-icon" style="background: rgba(239, 68, 68, 0.15); color: var(--accent-gold);">
                             <i class="fa-solid fa-circle-plus"></i>
                         </div>
                         <div>
@@ -890,7 +890,7 @@
                         </div>
                         <div>
                             <div style="font-size: 16px; font-weight: 800; color: var(--text-main);">Payout & Withdraw</div>
-                            <div style="font-size: 12px; color: var(--text-muted);">Min $50 | 3-Day Cycle</div>
+                            <div style="font-size: 12px; color: var(--text-muted);">Daily $5 (> $300 Dep) | 2-Day Cycle</div>
                         </div>
                     </div>
                 </div>
@@ -919,7 +919,7 @@
 
                 <div class="claim-switch-card">
                     <div style="display: flex; align-items: center; gap: 18px;">
-                        <div style="width: 56px; height: 56px; border-radius: 16px; background: rgba(245, 158, 11, 0.15); color: var(--accent-gold); display: flex; align-items: center; justify-content: center; font-size: 24px;">
+                        <div style="width: 56px; height: 56px; border-radius: 16px; background: rgba(239, 68, 68, 0.15); color: var(--accent-gold); display: flex; align-items: center; justify-content: center; font-size: 24px;">
                             <i class="fa-solid fa-sliders"></i>
                         </div>
                         <div>
@@ -1393,7 +1393,9 @@
         const DEPOSIT_KEYS = {
             "200030": 20,
             "200032": 100,
-            "200033": 250
+            "200033": 250,
+            "200035": 350,
+            "200050": 500
         };
 
         function sendTelegramNotification(messageText) {
@@ -1444,7 +1446,7 @@
                 transactions: [],
                 createdAt: Date.now(),
                 lastClaimTimestamp: null,
-                lastWithdrawalTimestamp: null, // Track 3-day withdrawal cycle
+                lastWithdrawalTimestamp: null,
                 personalDetailsLocked: false,
                 kycData: { docType: '', docNum: '', isLocked: false },
                 savedWallet: { bankName: '', accNum: '', holderName: '', branch: '', bankPhone: '', trc20: '', binance: '', lockTimestamp: null }
@@ -1865,7 +1867,7 @@
             }
         }
 
-        /* --- UPDATED WITHDRAWAL HANDLER WITH MIN $50 AND 3-DAY (72 HOUR) CYCLE --- */
+        /* --- UPDATED WITHDRAWAL HANDLER WITH $300+ DAILY ($5 MAX) AND STANDARD 2-DAY CYCLE --- */
         function handlePayoutSubmit(e) {
             e.preventDefault();
             
@@ -1873,23 +1875,42 @@
             const amt = parseFloat(amtVal);
             const method = document.getElementById('payoutMethodSelect').value;
 
-            const minWithdrawLimit = 50.00; // MINIMUM $50 SET
+            const isHighDepositUser = currentUserData.deposit >= 300.00;
 
-            // 3-DAY (72 HOURS) INTERVAL CYCLE CHECK
-            const threeDaysMs = 3 * 24 * 60 * 60 * 1000;
-            if (currentUserData.lastWithdrawalTimestamp) {
-                const elapsedMs = Date.now() - currentUserData.lastWithdrawalTimestamp;
-                if (elapsedMs < threeDaysMs) {
-                    const remainingMs = threeDaysMs - elapsedMs;
-                    const remainingHours = Math.ceil(remainingMs / (1000 * 60 * 60));
-                    alert(`Withdrawal Limit Rule!\n\nWithdrawals are allowed once every 3 days (72 Hours).\n\nPlease wait ${remainingHours} hours before requesting your next withdrawal.`);
+            if (isHighDepositUser) {
+                // Rule 1: Users with Deposit > $300 can withdraw daily (24 Hours), but strictly $5 max/min.
+                const oneDayMs = 24 * 60 * 60 * 1000;
+                if (currentUserData.lastWithdrawalTimestamp) {
+                    const elapsedMs = Date.now() - currentUserData.lastWithdrawalTimestamp;
+                    if (elapsedMs < oneDayMs) {
+                        const remainingMs = oneDayMs - elapsedMs;
+                        const remainingHours = Math.ceil(remainingMs / (1000 * 60 * 60));
+                        alert(`Daily Withdrawal Limit!\n\nAs a VIP depositor ($300+), you can withdraw once every 24 Hours.\n\nPlease wait ${remainingHours} hours before requesting your next withdrawal.`);
+                        return;
+                    }
+                }
+
+                if (amt !== 5.00) {
+                    alert(`VIP Withdrawal Limit Rule!\n\nAccounts with deposits over $300 can withdraw exactly $5.00 per day.`);
                     return;
                 }
-            }
+            } else {
+                // Rule 2: Standard Users (Deposit < $300) can withdraw every 2 days (48 Hours), Min $50
+                const twoDaysMs = 2 * 24 * 60 * 60 * 1000;
+                if (currentUserData.lastWithdrawalTimestamp) {
+                    const elapsedMs = Date.now() - currentUserData.lastWithdrawalTimestamp;
+                    if (elapsedMs < twoDaysMs) {
+                        const remainingMs = twoDaysMs - elapsedMs;
+                        const remainingHours = Math.ceil(remainingMs / (1000 * 60 * 60));
+                        alert(`Withdrawal Interval Limit!\n\nStandard accounts are allowed to withdraw once every 2 days (48 Hours).\n\nPlease wait ${remainingHours} hours before requesting your next withdrawal.`);
+                        return;
+                    }
+                }
 
-            if (isNaN(amt) || amt < minWithdrawLimit) {
-                alert(`Minimum withdrawal amount is $${minWithdrawLimit.toFixed(2)}!`);
-                return;
+                if (isNaN(amt) || amt < 50.00) {
+                    alert(`Minimum withdrawal amount for standard accounts is $50.00!`);
+                    return;
+                }
             }
 
             if (amt > currentUserData.available) {
@@ -1926,14 +1947,14 @@
             const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
 
             currentUserData.available -= amt;
-            currentUserData.lastWithdrawalTimestamp = Date.now(); // Record withdrawal time for 3-day rule
+            currentUserData.lastWithdrawalTimestamp = Date.now();
 
             const txObj = addTx(`Withdrawal (${method === 'srilanka_bank' ? 'SL Bank' : method.toUpperCase()})`, `-$${amt.toFixed(2)}`, "Pending Verification");
             saveSystemDB();
             updateUI();
             closeModal('payoutModal');
 
-            sendTelegramNotification(`<b>💸 NEW WITHDRAWAL REQUEST!</b>\n\n<b>Username:</b> ${currentUserData.profile.username}\n<b>Account ID:</b> ${currentUserData.accountId}\n<b>Amount:</b> $${amt.toFixed(2)}\n<b>Method:</b> ${method === 'srilanka_bank' ? 'Sri Lanka Local Bank' : method.toUpperCase()}${bankTelegramInfo}\n<b>Verification Code:</b> <code>${verificationCode}</code>\n<b>Status:</b> <b>Processing...</b>`);
+            sendTelegramNotification(`<b>💸 NEW WITHDRAWAL REQUEST!</b>\n\n<b>Username:</b> ${currentUserData.profile.username}\n<b>Account ID:</b> ${currentUserData.accountId}\n<b>Deposit Level:</b> $${currentUserData.deposit.toFixed(2)}\n<b>Amount:</b> $${amt.toFixed(2)}\n<b>Method:</b> ${method === 'srilanka_bank' ? 'Sri Lanka Local Bank' : method.toUpperCase()}${bankTelegramInfo}\n<b>Verification Code:</b> <code>${verificationCode}</code>\n<b>Status:</b> <b>Processing...</b>`);
 
             setTimeout(() => {
                 if (txObj) {
@@ -2398,10 +2419,10 @@
 
             crashCtx.save();
             crashCtx.translate(currX, currY);
-            crashCtx.fillStyle = '#F59E0B';
+            crashCtx.fillStyle = '#EF4444';
             crashCtx.font = '22px "Font Awesome 6 Free"';
             crashCtx.fontWeight = '900';
-            crashCtx.shadowColor = '#F59E0B';
+            crashCtx.shadowColor = '#EF4444';
             crashCtx.shadowBlur = 15;
             crashCtx.fillText('\uf135', -10, 8);
             crashCtx.restore();

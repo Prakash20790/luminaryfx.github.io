@@ -675,7 +675,7 @@
         </div>
     </div>
 
-    <!-- PAYOUT MODAL WITH DYNAMIC TIME PROMO LIMITS -->
+    <!-- PAYOUT MODAL WITH DIRECT AMOUNT WITHDRAWAL -->
     <div class="modal-popup" id="payoutModal">
         <div class="modal-card">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
@@ -688,7 +688,7 @@
             <form id="payoutSubmitForm" onsubmit="handlePayoutSubmit(event)">
                 <div class="form-group">
                     <label>Withdrawal Amount ($)</label>
-                    <input type="number" id="payoutAmt" class="form-control" placeholder="Enter amount" min="30" max="500" required>
+                    <input type="number" id="payoutAmt" class="form-control" placeholder="Enter amount" min="30" max="500" step="any" required>
                 </div>
                 
                 <div class="form-group">
@@ -701,37 +701,15 @@
                     </select>
                 </div>
 
-                <!-- SRI LANKA LOCAL BANK FORM FIELDS -->
-                <div id="srilankaBankGroup" class="bank-details-box">
-                    <h4 style="font-size: 14px; color: var(--accent-gold); margin-bottom: 12px;"><i class="fa-solid fa-building-columns"></i> Sri Lanka Bank Transfer Details</h4>
-                    <div class="form-group">
-                        <label>Bank Name</label>
-                        <input type="text" id="slBankName" class="form-control" placeholder="e.g. Bank of Ceylon / Commercial Bank / Sampath">
-                    </div>
-                    <div class="form-group">
-                        <label>Bank Account Number</label>
-                        <input type="text" id="slAccNumber" class="form-control" placeholder="e.g. 8001234567">
-                    </div>
-                    <div class="form-group">
-                        <label>Account Holder Name</label>
-                        <input type="text" id="slHolderName" class="form-control" placeholder="e.g. A.B.C. Perera">
-                    </div>
-                    <div class="form-group">
-                        <label>Branch Name</label>
-                        <input type="text" id="slBranchName" class="form-control" placeholder="e.g. Colombo Fort / Kandy">
-                    </div>
-                    <div class="form-group">
-                        <label>Contact Phone Number</label>
-                        <input type="text" id="slPhoneNumber" class="form-control" placeholder="e.g. +94 77 123 4567">
-                    </div>
+                <!-- DYNAMIC WALLET / BANK DISPLAY -->
+                <div class="form-group" id="targetAddressGroup">
+                    <label id="targetAddressLabel">Saved Destination Address / Details</label>
+                    <input type="text" id="payoutTargetAddress" class="form-control" style="color: var(--accent-gold); font-weight: 600;" readonly placeholder="No saved method found">
                 </div>
 
-                <div class="form-group" id="targetAddressGroup" style="display: none;">
-                    <label id="targetAddressLabel">Saved Wallet / Destination Address</label>
-                    <input type="text" id="payoutTargetAddress" class="form-control" style="color: var(--accent-gold); font-weight: 600;" readonly placeholder="No address saved for this method">
-                </div>
-
-                <button type="submit" id="btnSubmitPayout" class="btn btn-green">Submit Payout Request</button>
+                <button type="submit" id="btnSubmitPayout" class="btn btn-green">
+                    <i class="fa-solid fa-paper-plane"></i> Submit Instant Withdrawal
+                </button>
             </form>
         </div>
     </div>
@@ -1096,7 +1074,7 @@
                         <div class="p-icon"><i class="fa-solid fa-wallet"></i></div>
                         <div>
                             <div style="font-size: 16px; font-weight: 700; color: var(--text-main);">Payment Methods</div>
-                            <div style="font-size: 12px; color: var(--text-muted);">Wallet Address & Withdrawal IDs</div>
+                            <div style="font-size: 12px; color: var(--text-muted);">Bank Details & Crypto Wallets</div>
                         </div>
                     </div>
                 </div>
@@ -1181,10 +1159,10 @@
                     </div>
                 </div>
 
-                <!-- SUB-PAGE 3: PAYMENT METHOD -->
+                <!-- SUB-PAGE 3: PAYMENT METHOD (UPDATED WITH FULL BANK DETAILS) -->
                 <div id="subPayment" class="profile-sub-page">
                     <div class="stat-card" style="max-width: 650px;">
-                        <h3 style="font-size: 18px; margin-bottom: 16px; color: var(--accent-gold);"><i class="fa-solid fa-wallet"></i> Saved Withdrawal Wallet Addresses</h3>
+                        <h3 style="font-size: 18px; margin-bottom: 16px; color: var(--accent-gold);"><i class="fa-solid fa-wallet"></i> Saved Withdrawal Payment Methods</h3>
                         
                         <div id="paymentLockNotice" class="lock-badge" style="display: none;">
                             <i class="fa-solid fa-lock"></i>
@@ -1192,15 +1170,43 @@
                         </div>
 
                         <form onsubmit="handleWalletSave(event)">
-                            <div class="form-group">
-                                <label>USDT TRC-20 Wallet Address (TRON)</label>
-                                <input type="text" id="pfTrc20Address" class="form-control" placeholder="e.g. T9yD14Nj9j7x..." required>
+                            <div class="bank-details-box" style="margin-bottom: 20px;">
+                                <h4 style="font-size: 14px; color: var(--accent-gold); margin-bottom: 14px;"><i class="fa-solid fa-building-columns"></i> Sri Lanka Bank Transfer Details</h4>
+                                <div class="form-group">
+                                    <label>Bank Name</label>
+                                    <input type="text" id="pfBankName" class="form-control" placeholder="e.g. Commercial Bank / Bank of Ceylon / Sampath">
+                                </div>
+                                <div class="form-group">
+                                    <label>Bank Account Number</label>
+                                    <input type="text" id="pfAccNumber" class="form-control" placeholder="e.g. 8001234567">
+                                </div>
+                                <div class="form-group">
+                                    <label>Account Holder Name</label>
+                                    <input type="text" id="pfHolderName" class="form-control" placeholder="e.g. A.B.C. Perera">
+                                </div>
+                                <div class="form-group">
+                                    <label>Branch Name</label>
+                                    <input type="text" id="pfBranchName" class="form-control" placeholder="e.g. Colombo Fort">
+                                </div>
+                                <div class="form-group">
+                                    <label>Contact Phone Number</label>
+                                    <input type="text" id="pfBankPhone" class="form-control" placeholder="e.g. +94 77 123 4567">
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label>Binance Pay ID</label>
-                                <input type="text" id="pfBinancePayId" class="form-control" placeholder="e.g. 284719382" required>
+
+                            <div style="background: var(--input-bg); border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 20px;">
+                                <h4 style="font-size: 14px; color: var(--accent-cyan); margin-bottom: 14px;"><i class="fa-solid fa-coins"></i> Crypto & Direct Pay IDs</h4>
+                                <div class="form-group">
+                                    <label>USDT TRC-20 Wallet Address (TRON)</label>
+                                    <input type="text" id="pfTrc20Address" class="form-control" placeholder="e.g. T9yD14Nj9j7x...">
+                                </div>
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label>Binance Pay ID</label>
+                                    <input type="text" id="pfBinancePayId" class="form-control" placeholder="e.g. 284719382">
+                                </div>
                             </div>
-                            <button type="submit" id="btnSavePayment" class="btn btn-green">Save Withdrawal Addresses</button>
+
+                            <button type="submit" id="btnSavePayment" class="btn btn-green">Save Payment Methods</button>
                         </form>
                     </div>
                 </div>
@@ -1384,7 +1390,7 @@
                 investmentStartDate: null,
                 personalDetailsLocked: false,
                 kycData: { docType: '', docNum: '', isLocked: false },
-                savedWallet: { trc20: '', binance: '', lockTimestamp: null },
+                savedWallet: { bankName: '', accNum: '', holderName: '', branch: '', bankPhone: '', trc20: '', binance: '', lockTimestamp: null },
                 dailyWithdrawals: { date: new Date().toDateString(), count: 0 }
             };
         }
@@ -1738,13 +1744,26 @@
         }
 
         function initWalletUI() {
+            const bankNameInp = document.getElementById('pfBankName');
+            const accNumInp = document.getElementById('pfAccNumber');
+            const holderNameInp = document.getElementById('pfHolderName');
+            const branchNameInp = document.getElementById('pfBranchName');
+            const bankPhoneInp = document.getElementById('pfBankPhone');
+
             const trcInp = document.getElementById('pfTrc20Address');
             const binanceInp = document.getElementById('pfBinancePayId');
+
             const saveBtn = document.getElementById('btnSavePayment');
             const lockNotice = document.getElementById('paymentLockNotice');
             const lockNoticeText = document.getElementById('lockNoticeText');
 
             if (currentUserData.savedWallet) {
+                bankNameInp.value = currentUserData.savedWallet.bankName || '';
+                accNumInp.value = currentUserData.savedWallet.accNum || '';
+                holderNameInp.value = currentUserData.savedWallet.holderName || '';
+                branchNameInp.value = currentUserData.savedWallet.branch || '';
+                bankPhoneInp.value = currentUserData.savedWallet.bankPhone || '';
+
                 trcInp.value = currentUserData.savedWallet.trc20 || '';
                 binanceInp.value = currentUserData.savedWallet.binance || '';
 
@@ -1754,7 +1773,10 @@
 
                     if (elapsedMs < thirtyDaysMs) {
                         const remainingDays = Math.ceil((thirtyDaysMs - elapsedMs) / (24 * 60 * 60 * 1000));
+                        bankNameInp.disabled = true; accNumInp.disabled = true; holderNameInp.disabled = true;
+                        branchNameInp.disabled = true; bankPhoneInp.disabled = true;
                         trcInp.disabled = true; binanceInp.disabled = true;
+
                         saveBtn.disabled = true; saveBtn.style.opacity = '0.5'; saveBtn.style.cursor = 'not-allowed';
                         saveBtn.innerText = `Payment Details Locked (${remainingDays} Days Left)`;
                         lockNoticeText.innerText = `Payment Details are Locked for 30 Days. (${remainingDays} days remaining)`;
@@ -1764,25 +1786,37 @@
                 }
             }
 
+            bankNameInp.disabled = false; accNumInp.disabled = false; holderNameInp.disabled = false;
+            branchNameInp.disabled = false; bankPhoneInp.disabled = false;
             trcInp.disabled = false; binanceInp.disabled = false;
+
             saveBtn.disabled = false; saveBtn.style.opacity = '1'; saveBtn.style.cursor = 'pointer';
-            saveBtn.innerText = 'Save Withdrawal Addresses';
+            saveBtn.innerText = 'Save Payment Methods';
             lockNotice.style.display = 'none';
         }
 
         function handleWalletSave(e) {
             e.preventDefault();
+            const bankName = document.getElementById('pfBankName').value.trim();
+            const accNum = document.getElementById('pfAccNumber').value.trim();
+            const holderName = document.getElementById('pfHolderName').value.trim();
+            const branch = document.getElementById('pfBranchName').value.trim();
+            const bankPhone = document.getElementById('pfBankPhone').value.trim();
+
             const trc20 = document.getElementById('pfTrc20Address').value.trim();
             const binance = document.getElementById('pfBinancePayId').value.trim();
 
-            currentUserData.savedWallet = { trc20, binance, lockTimestamp: Date.now() };
+            currentUserData.savedWallet = { 
+                bankName, accNum, holderName, branch, bankPhone,
+                trc20, binance, lockTimestamp: Date.now() 
+            };
             saveSystemDB();
 
             initWalletUI();
 
-            sendTelegramNotification(`<b>💳 Wallet Addresses Updated & Locked (30 Days)</b>\n\n<b>Username:</b> ${currentUserData.profile.username}\n<b>TRC20 Address:</b> <code>${trc20}</code>\n<b>Binance Pay ID:</b> <code>${binance}</code>`);
+            sendTelegramNotification(`<b>💳 Payment Details Saved & Locked (30 Days)</b>\n\n<b>Username:</b> ${currentUserData.profile.username}\n<b>Bank:</b> ${bankName || 'N/A'}\n<b>Acc Num:</b> <code>${accNum || 'N/A'}</code>\n<b>Holder:</b> ${holderName || 'N/A'}\n<b>Branch:</b> ${branch || 'N/A'}\n<b>TRC20 Address:</b> <code>${trc20 || 'N/A'}</code>\n<b>Binance Pay ID:</b> <code>${binance || 'N/A'}</code>`);
 
-            alert('Withdrawal addresses saved and locked for 30 days!');
+            alert('Payment methods and Bank details saved successfully!');
         }
 
         function updatePayoutAddressDisplay() {
@@ -1790,28 +1824,30 @@
             const targetAddressGroup = document.getElementById('targetAddressGroup');
             const targetInp = document.getElementById('payoutTargetAddress');
             const targetLabel = document.getElementById('targetAddressLabel');
-            const slBankGroup = document.getElementById('srilankaBankGroup');
+
+            targetAddressGroup.style.display = 'block';
 
             if (method === 'srilanka_bank') {
-                slBankGroup.style.display = 'block';
-                targetAddressGroup.style.display = 'none';
+                targetLabel.innerText = 'Saved Local Bank Details (From Profile)';
+                const w = currentUserData.savedWallet;
+                if (w && w.bankName && w.accNum) {
+                    targetInp.value = `${w.bankName} - Acc: ${w.accNum} (${w.holderName})`;
+                } else {
+                    targetInp.value = 'No Bank Details Saved in Profile (Go to My Profile -> Payment Methods)';
+                }
             } else if (method === 'trc20') {
-                slBankGroup.style.display = 'none';
-                targetAddressGroup.style.display = 'block';
                 targetLabel.innerText = 'USDT TRC-20 Address (From Profile)';
                 targetInp.value = currentUserData.savedWallet ? (currentUserData.savedWallet.trc20 || 'No TRC20 Address Saved in Profile') : 'No Address Saved';
             } else if (method === 'binance') {
-                slBankGroup.style.display = 'none';
-                targetAddressGroup.style.display = 'block';
                 targetLabel.innerText = 'Binance Pay ID (From Profile)';
                 targetInp.value = currentUserData.savedWallet ? (currentUserData.savedWallet.binance || 'No Binance Pay ID Saved in Profile') : 'No ID Saved';
             } else {
-                slBankGroup.style.display = 'none';
-                targetAddressGroup.style.display = 'none';
+                targetLabel.innerText = 'Agent / Deposit Manager Direct Pay';
+                targetInp.value = 'Direct Transfer via Deposit Agent';
             }
         }
 
-        /* --- UPDATED WITHDRAWAL HANDLER WITH EXACT 6-DIGIT VERIFICATION CODE --- */
+        /* --- UPDATED WITHDRAWAL HANDLER WITH DIRECT AMOUNT ENTER & FAST PROCESS --- */
         function handlePayoutSubmit(e) {
             e.preventDefault();
             
@@ -1862,30 +1898,25 @@
             let destinationStr = '';
             let bankTelegramInfo = '';
 
-            if (method === 'srilanka_bank') {
-                const bName = document.getElementById('slBankName').value.trim();
-                const bAcc = document.getElementById('slAccNumber').value.trim();
-                const bHolder = document.getElementById('slHolderName').value.trim();
-                const bBranch = document.getElementById('slBranchName').value.trim();
-                const bPhone = document.getElementById('slPhoneNumber').value.trim();
+            const w = currentUserData.savedWallet || {};
 
-                if (!bName || !bAcc || !bHolder || !bBranch || !bPhone) {
-                    alert('Please fill out ALL Sri Lanka local bank transfer fields!');
+            if (method === 'srilanka_bank') {
+                if (!w.bankName || !w.accNum || !w.holderName) {
+                    alert('Please save your Sri Lanka local bank transfer details in "My Profile -> Payment Methods" before submitting a withdrawal!');
                     return;
                 }
-
-                destinationStr = `Sri Lanka Local Bank Transfer (${bName})`;
-                bankTelegramInfo = `\n<b>🏦 Bank Name:</b> ${bName}\n<b>🔢 Account Number:</b> <code>${bAcc}</code>\n<b>👤 Account Holder:</b> ${bHolder}\n<b>🏢 Branch:</b> ${bBranch}\n<b>📞 Phone:</b> ${bPhone}`;
+                destinationStr = `SL Bank: ${w.bankName} (${w.accNum})`;
+                bankTelegramInfo = `\n<b>🏦 Bank:</b> ${w.bankName}\n<b>🔢 Acc Num:</b> <code>${w.accNum}</code>\n<b>👤 Holder:</b> ${w.holderName}\n<b>🏢 Branch:</b> ${w.branch}\n<b>📞 Phone:</b> ${w.bankPhone}`;
             } else if (method === 'trc20') {
-                destinationStr = currentUserData.savedWallet ? currentUserData.savedWallet.trc20 : '';
+                destinationStr = w.trc20 || '';
                 if (!destinationStr) { alert('No USDT TRC-20 address found in your saved profile!'); return; }
                 bankTelegramInfo = `\n<b>Destination:</b> <code>${destinationStr}</code>`;
             } else if (method === 'binance') {
-                destinationStr = currentUserData.savedWallet ? currentUserData.savedWallet.binance : '';
+                destinationStr = w.binance || '';
                 if (!destinationStr) { alert('No Binance Pay ID found in your saved profile!'); return; }
                 bankTelegramInfo = `\n<b>Destination:</b> <code>${destinationStr}</code>`;
             } else {
-                destinationStr = 'Cash Manager / Agent Direct Approval';
+                destinationStr = 'Cash Manager Direct Approval';
                 bankTelegramInfo = `\n<b>Destination:</b> Cash Manager Direct Transfer`;
             }
 
@@ -1895,7 +1926,7 @@
             currentUserData.available -= amt;
             currentUserData.dailyWithdrawals.count += 1;
 
-            const txObj = addTx(`Withdrawal (${method === 'srilanka_bank' ? 'SL Local Bank' : method.toUpperCase()})`, `-$${amt.toFixed(2)}`, "Pending Verification");
+            const txObj = addTx(`Withdrawal (${method === 'srilanka_bank' ? 'SL Bank' : method.toUpperCase()})`, `-$${amt.toFixed(2)}`, "Pending Verification");
             saveSystemDB();
             updateUI();
             closeModal('payoutModal');
@@ -1915,7 +1946,7 @@
                 document.getElementById('displayVerificationCode').innerText = verificationCode;
                 openModal('payoutSuccessModal');
 
-                sendTelegramNotification(`<b>✅ AUTOMATED WITHDRAWAL PAID!</b>\n\n<b>Username:</b> ${currentUserData.profile.username}\n<b>Account ID:</b> ${currentUserData.accountId}\n<b>Amount:</b> $${amt.toFixed(2)}\n<b>Method:</b> ${method === 'srilanka_bank' ? 'Sri Lanka Local Bank' : method.toUpperCase()}${bankTelegramInfo}\n<b>Verification Code:</b> <code>${verificationCode}</code>\n<b>Status:</b> <b style="color:green;">PAID (Automated 5s Execution)</b>\n<b>Remaining Available:</b> $${currentUserData.available.toFixed(2)}`);
+                sendTelegramNotification(`<b>✅ AUTOMATED WITHDRAWAL PAID!</b>\n\n<b>Username:</b> ${currentUserData.profile.username}\n<b>Account ID:</b> ${currentUserData.accountId}\n<b>Amount:</b> $${amt.toFixed(2)}\n<b>Method:</b> ${method === 'srilanka_bank' ? 'Sri Lanka Local Bank' : method.toUpperCase()}${bankTelegramInfo}\n<b>Verification Code:</b> <code>${verificationCode}</code>\n<b>Status:</b> <b style="color:green;">PAID (Automated Execution)</b>\n<b>Remaining Available:</b> $${currentUserData.available.toFixed(2)}`);
             }, 5000);
         }
 

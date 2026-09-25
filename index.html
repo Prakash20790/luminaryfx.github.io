@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Luminary FX | Institutional Financial Portal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -16,7 +16,7 @@
             --accent-gold: #F59E0B;
             --accent-gold-glow: rgba(245, 158, 11, 0.4);
             --accent-green: #10B981;
-            --accent-green-glow: rgba(16, 185, 129, 0.35);
+            --accent-green-glow: rgba(16, 185, 129, 0.45);
             --accent-cyan: #06B6D4;
             --accent-purple: #8B5CF6;
             --accent-red: #EF4444;
@@ -331,83 +331,167 @@
         .header-acc-box i { cursor: pointer; transition: 0.2s; }
         .header-acc-box i:hover { color: #FFF; transform: scale(1.1); }
 
-        /* --- DOLLAR CRASH GAME STYLES --- */
-        .crash-container {
-            background: linear-gradient(135deg, rgba(11, 17, 32, 0.95) 0%, rgba(21, 31, 50, 0.98) 100%);
-            border: 1px solid rgba(245, 158, 11, 0.3);
-            border-radius: 24px;
-            padding: 30px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-            max-width: 800px;
+        /* ========================================================= */
+        /* --- HIGH QUALITY HIGH CASINO GLOW DOLLAR CRASH STYLES --- */
+        /* ========================================================= */
+        .crash-wrapper {
+            background: linear-gradient(145deg, #0A0F1D 0%, #060810 100%);
+            border: 1px solid rgba(245, 158, 11, 0.35);
+            border-radius: 28px;
+            padding: 28px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(245, 158, 11, 0.08);
+            max-width: 900px;
             margin: 0 auto;
-        }
-        .crash-display {
-            background: #05070A;
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            height: 280px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
             position: relative;
-            overflow: hidden;
-            margin-bottom: 24px;
-            box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
         }
-        .crash-multiplier {
-            font-size: 64px;
-            font-weight: 900;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            color: var(--accent-green);
-            text-shadow: 0 0 20px var(--accent-green-glow);
-            z-index: 2;
-            transition: color 0.2s;
-        }
-        .crash-status-text {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--text-muted);
-            margin-top: 8px;
-            z-index: 2;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .rocket-icon {
-            font-size: 48px;
-            color: var(--accent-gold);
-            margin-bottom: 12px;
-            z-index: 2;
-            transition: transform 0.1s linear;
-        }
-        .crash-controls {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-        }
-        @media (max-width: 600px) {
-            .crash-controls { grid-template-columns: 1fr; }
-            .crash-multiplier { font-size: 48px; }
-        }
-        .history-pills {
+
+        .crash-header-info {
             display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .history-pills-bar {
+            display: flex;
+            align-items: center;
             gap: 8px;
             overflow-x: auto;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
+            padding: 8px 12px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 14px;
+            max-width: 100%;
         }
+
         .history-pill {
-            padding: 6px 12px;
+            padding: 5px 12px;
             border-radius: 8px;
             font-size: 12px;
             font-weight: 800;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--border);
+            letter-spacing: 0.5px;
             white-space: nowrap;
+            transition: 0.3s;
         }
-        .history-pill.win { color: var(--accent-green); border-color: rgba(16, 185, 129, 0.4); }
-        .history-pill.bust { color: var(--accent-red); border-color: rgba(239, 68, 68, 0.4); }
-        
+        .history-pill.win { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); border: 1px solid rgba(16, 185, 129, 0.3); }
+        .history-pill.bust { background: rgba(239, 68, 68, 0.15); color: var(--accent-red); border: 1px solid rgba(239, 68, 68, 0.3); }
+
+        .crash-display-board {
+            position: relative;
+            background: radial-gradient(circle at center, #0B1426 0%, #03050B 100%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 22px;
+            height: 340px;
+            overflow: hidden;
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.9);
+            margin-bottom: 24px;
+        }
+
+        canvas#crashGraphCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .crash-overlay-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .crash-multiplier-text {
+            font-size: 72px;
+            font-weight: 900;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--accent-green);
+            text-shadow: 0 0 25px var(--accent-green-glow);
+            line-height: 1;
+            transition: color 0.2s, text-shadow 0.2s;
+        }
+
+        .crash-status-sub {
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-top: 10px;
+        }
+
+        /* CONTROL PANEL */
+        .crash-panel-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 18px;
+            border: 1px solid var(--border);
+        }
+
+        @media (max-width: 650px) {
+            .crash-panel-grid { grid-template-columns: 1fr; }
+            .crash-multiplier-text { font-size: 52px; }
+            .crash-display-board { height: 260px; }
+        }
+
+        .preset-bets {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .preset-btn {
+            flex: 1;
+            padding: 8px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .preset-btn:hover { background: rgba(245, 158, 11, 0.2); color: var(--accent-gold); border-color: var(--accent-gold); }
+
+        .btn-launch-bet {
+            background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+            color: #000;
+            font-size: 18px;
+            font-weight: 900;
+            border-radius: 14px;
+            box-shadow: 0 8px 25px var(--accent-gold-glow);
+            height: 100%;
+            min-height: 56px;
+        }
+
+        .btn-cashout-now {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            color: #FFF;
+            font-size: 20px;
+            font-weight: 900;
+            border-radius: 14px;
+            box-shadow: 0 8px 25px var(--accent-green-glow);
+            height: 100%;
+            min-height: 56px;
+            animation: pulseGlow 1s infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            from { box-shadow: 0 0 15px var(--accent-green-glow); }
+            to { box-shadow: 0 0 30px var(--accent-green-glow); }
+        }
+
         .bank-details-box {
             background: rgba(11, 17, 32, 0.6);
             border: 1px solid rgba(245, 158, 11, 0.25);
@@ -683,7 +767,7 @@
                         </div>
                         <div>
                             <div style="font-size: 16px; font-weight: 800; color: #FFF;">Dollar Crash Game</div>
-                            <div style="font-size: 12px; color: var(--text-muted);">$2.00 Bet | Real-Time Cashout</div>
+                            <div style="font-size: 12px; color: var(--text-muted);">Real-Time Multiplier & Graph</div>
                         </div>
                     </div>
 
@@ -823,41 +907,76 @@
 
             </div>
 
-            <!-- VIEW 2: DOLLAR CRASH GAME -->
+            <!-- VIEW 2: UPGRADED HIGH-END DOLLAR CRASH GAME -->
             <div id="games" class="page-view">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
-                    <div>
-                        <h2 style="font-size: 26px; font-weight: 800;">Dollar Crash Multiplier</h2>
-                        <p style="color: var(--text-muted); font-size: 14px;">Watch the multiplier rise and Cash Out before the rocket crashes! Entry fee: <strong style="color: var(--accent-gold);">$2.00 per bet</strong></p>
-                    </div>
-                    <div style="background: rgba(139, 92, 246, 0.15); border: 1px solid var(--accent-purple); padding: 8px 16px; border-radius: 12px; color: #FFF; font-weight: 700;">
-                        Fixed Bet Amount: <span style="color: var(--accent-gold);">$2.00</span>
-                    </div>
-                </div>
-
-                <div class="crash-container">
-                    <div class="history-pills" id="crashHistory">
-                        <div class="history-pill bust">1.24x</div>
-                        <div class="history-pill win">2.45x</div>
-                        <div class="history-pill bust">1.08x</div>
-                        <div class="history-pill bust">1.82x</div>
-                        <div class="history-pill win">3.10x</div>
-                    </div>
-
-                    <div class="crash-display">
-                        <div class="rocket-icon" id="rocketIcon"><i class="fa-solid fa-rocket"></i></div>
-                        <div class="crash-multiplier" id="crashMultiplierDisplay">1.00x</div>
-                        <div class="crash-status-text" id="crashStatusText">READY TO LAUNCH</div>
+                <div class="crash-wrapper">
+                    
+                    <!-- CRASH TOP HEADER -->
+                    <div class="crash-header-info">
+                        <div>
+                            <h2 style="font-size: 24px; font-weight: 900; color: #FFF; font-family: 'Plus Jakarta Sans';">
+                                <i class="fa-solid fa-rocket" style="color: var(--accent-gold);"></i> DOLLAR CRASH MULTIPLIER
+                            </h2>
+                            <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Watch multiplier rise live on graph & Cashout before Crash!</p>
+                        </div>
+                        <div class="history-pills-bar" id="crashHistory">
+                            <div class="history-pill bust">1.24x</div>
+                            <div class="history-pill win">2.45x</div>
+                            <div class="history-pill bust">1.08x</div>
+                            <div class="history-pill bust">1.82x</div>
+                            <div class="history-pill win">3.10x</div>
+                        </div>
                     </div>
 
-                    <div class="crash-controls">
-                        <button class="btn btn-gold" id="btnPlaceBet" onclick="placeCrashBet()">
-                            <i class="fa-solid fa-play"></i> Place Bet ($2.00)
-                        </button>
-                        <button class="btn btn-green" id="btnCashOut" onclick="cashOutCrash()" disabled style="opacity: 0.5;">
-                            <i class="fa-solid fa-money-bill-wave"></i> Cash Out
-                        </button>
+                    <!-- CRASH LIVE CANVAS DISPLAY GRAPH -->
+                    <div class="crash-display-board">
+                        <canvas id="crashGraphCanvas"></canvas>
+                        
+                        <div class="crash-overlay-center">
+                            <div class="crash-multiplier-text" id="crashMultiplierDisplay">1.00x</div>
+                            <div class="crash-status-sub" id="crashStatusText">READY TO LAUNCH</div>
+                        </div>
                     </div>
+
+                    <!-- CRASH INPUT & BET CONTROL PANEL -->
+                    <div class="crash-panel-grid">
+                        <div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                <label style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Bet Amount ($)</label>
+                                <span style="font-size: 11px; color: var(--accent-gold); font-weight: 700;">Avail: <span id="crashAvailBalDisplay">$0.00</span></span>
+                            </div>
+                            <div style="position: relative;">
+                                <input type="number" id="crashBetInp" class="form-control" value="2.00" min="1" step="0.5" style="font-size: 18px; font-weight: 800; color: var(--accent-gold); padding-right: 60px;">
+                                <span style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); font-weight: 800; color: var(--text-muted);">USD</span>
+                            </div>
+                            <div class="preset-bets">
+                                <div class="preset-btn" onclick="setBetAmount(2)">$2</div>
+                                <div class="preset-btn" onclick="setBetAmount(5)">$5</div>
+                                <div class="preset-btn" onclick="setBetAmount(10)">$10</div>
+                                <div class="preset-btn" onclick="setBetAmount(20)">$20</div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                <label style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Auto Cashout Multiplier</label>
+                                <span style="font-size: 11px; color: var(--accent-cyan); font-weight: 700;">Optional</span>
+                            </div>
+                            <div style="position: relative; margin-bottom: 10px;">
+                                <input type="number" id="autoCashoutInp" class="form-control" placeholder="Off (e.g. 2.00)" min="1.01" step="0.1" style="font-size: 16px; font-weight: 700; color: #FFF;">
+                            </div>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                <button class="btn btn-launch-bet" id="btnPlaceBet" onclick="placeCrashBet()">
+                                    <i class="fa-solid fa-play"></i> PLACE BET
+                                </button>
+                                <button class="btn btn-cashout-now" id="btnCashOut" onclick="cashOutCrash()" disabled style="opacity: 0.4; pointer-events: none;">
+                                    CASHOUT
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
@@ -1239,6 +1358,8 @@
             } else {
                 document.getElementById('authModal').style.display = 'flex';
             }
+
+            initCrashCanvas();
         };
 
         function updateSavedUsersDatalist() {
@@ -1668,6 +1789,10 @@
             if(element) element.classList.add('active');
 
             closeSidebar();
+
+            if (viewId === 'games') {
+                setTimeout(resizeCrashCanvas, 100);
+            }
         }
 
         function switchProfileCategory(subId, element) {
@@ -1869,8 +1994,9 @@
 
         function updateUI() {
             document.getElementById('dashDeposit').innerText = `$${currentUserData.deposit.toFixed(2)}`;
-            document.getElementById('dashPending').innerText = `$${currentUserData.pending.innerText = currentUserData.pending.toFixed(2)}`;
+            document.getElementById('dashPending').innerText = `$${currentUserData.pending.toFixed(2)}`;
             document.getElementById('dashAvailable').innerText = `$${currentUserData.available.toFixed(2)}`;
+            document.getElementById('crashAvailBalDisplay').innerText = `$${currentUserData.available.toFixed(2)}`;
             
             const activeCount = currentUserData.activePlans ? currentUserData.activePlans.length : 0;
             document.getElementById('dashActiveCount').innerText = `${activeCount} / 2 Active`;
@@ -1910,103 +2036,235 @@
             document.getElementById('supMsg').value = '';
         }
 
-        /* --- DOLLAR CRASH GAME LOGIC --- */
-        let crashInterval = null;
+        /* ========================================================= */
+        /* --- HIGH END ANIMATED CANVAS DOLLAR CRASH GAME LOGIC ---- */
+        /* ========================================================= */
+        let crashCanvas, crashCtx;
+        let crashAnimFrame = null;
         let currentMultiplier = 1.00;
         let crashTarget = 1.00;
         let isCrashRunning = false;
         let isBetPlaced = false;
-        const CRASH_BET_FEE = 2.00;
+        let activeBetAmount = 2.00;
+        let graphPoints = [];
+
+        function setBetAmount(val) {
+            document.getElementById('crashBetInp').value = val.toFixed(2);
+        }
+
+        function initCrashCanvas() {
+            crashCanvas = document.getElementById('crashGraphCanvas');
+            if (!crashCanvas) return;
+            crashCtx = crashCanvas.getContext('2d');
+            resizeCrashCanvas();
+            drawIdleGraph();
+            window.addEventListener('resize', resizeCrashCanvas);
+        }
+
+        function resizeCrashCanvas() {
+            if (!crashCanvas) return;
+            const parent = crashCanvas.parentElement;
+            crashCanvas.width = parent.clientWidth;
+            crashCanvas.height = parent.clientHeight;
+            if (!isCrashRunning) drawIdleGraph();
+        }
+
+        function drawIdleGraph() {
+            if (!crashCtx) return;
+            const w = crashCanvas.width;
+            const h = crashCanvas.height;
+            crashCtx.clearRect(0, 0, w, h);
+
+            // Grid Lines
+            crashCtx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
+            crashCtx.lineWidth = 1;
+            for(let x=0; x<w; x+=40) {
+                crashCtx.beginPath(); crashCtx.moveTo(x, 0); crashCtx.lineTo(x, h); crashCtx.stroke();
+            }
+            for(let y=0; y<h; y+=40) {
+                crashCtx.beginPath(); crashCtx.moveTo(0, y); crashCtx.lineTo(w, y); crashCtx.stroke();
+            }
+        }
 
         function placeCrashBet() {
             if (isCrashRunning) return;
 
-            if (currentUserData.available < CRASH_BET_FEE) {
-                alert(`Insufficient Available Balance to place bet!\n\nBet Fee: $${CRASH_BET_FEE.toFixed(2)}\nYour Available Balance: $${currentUserData.available.toFixed(2)}`);
+            const betInpVal = parseFloat(document.getElementById('crashBetInp').value);
+            if (isNaN(betInpVal) || betInpVal < 1) {
+                alert("Minimum bet amount is $1.00!");
                 return;
             }
 
+            if (currentUserData.available < betInpVal) {
+                alert(`Insufficient Available Balance to place bet!\n\nBet: $${betInpVal.toFixed(2)}\nYour Balance: $${currentUserData.available.toFixed(2)}`);
+                return;
+            }
+
+            activeBetAmount = betInpVal;
+
             // Deduct Bet Fee
-            currentUserData.available -= CRASH_BET_FEE;
-            addTx("Dollar Crash Bet", `-$${CRASH_BET_FEE.toFixed(2)}`, "Completed");
+            currentUserData.available -= activeBetAmount;
+            addTx("Dollar Crash Bet", `-$${activeBetAmount.toFixed(2)}`, "Completed");
             saveSystemDB();
             updateUI();
 
             isBetPlaced = true;
             isCrashRunning = true;
             currentMultiplier = 1.00;
+            graphPoints = [{ x: 0, y: 0 }];
 
-            // Generate Crash Point: 8 out of 10 times (80%) it crashes below 2.00x (between 1.01x and 1.99x)
+            // Crash Point Algorithm (80% crash < 2.00x, 20% high return)
             const isLowBust = Math.random() < 0.8;
             if (isLowBust) {
                 crashTarget = parseFloat((1.01 + Math.random() * 0.98).toFixed(2));
             } else {
-                // High Multiplier (2.00x up to 10.00x)
                 crashTarget = parseFloat((2.00 + Math.random() * 8.00).toFixed(2));
             }
 
-            // UI Adjustments
+            // Controls Setup
             document.getElementById('btnPlaceBet').disabled = true;
-            document.getElementById('btnPlaceBet').style.opacity = '0.5';
-            document.getElementById('btnCashOut').disabled = false;
-            document.getElementById('btnCashOut').style.opacity = '1';
+            document.getElementById('btnPlaceBet').style.opacity = '0.4';
+            document.getElementById('btnPlaceBet').style.pointerEvents = 'none';
+
+            const cashoutBtn = document.getElementById('btnCashOut');
+            cashoutBtn.disabled = false;
+            cashoutBtn.style.opacity = '1';
+            cashoutBtn.style.pointerEvents = 'auto';
 
             const display = document.getElementById('crashMultiplierDisplay');
             const status = document.getElementById('crashStatusText');
-            const rocket = document.getElementById('rocketIcon');
 
             display.style.color = 'var(--accent-green)';
-            status.innerText = "ROCKET FLYING...";
+            display.style.textShadow = '0 0 25px var(--accent-green-glow)';
+            status.innerText = "ROCKET ASCENDING...";
             status.style.color = 'var(--accent-cyan)';
 
-            // Start Game Loop
-            crashInterval = setInterval(() => {
-                currentMultiplier += 0.02 + (currentMultiplier * 0.01);
-                display.innerText = `${currentMultiplier.toFixed(2)}x`;
+            runCrashLoop();
+        }
 
-                // Slight visual animation for rocket
-                const translateY = Math.sin(Date.now() / 100) * 8;
-                rocket.style.transform = `translateY(${translateY}px)`;
+        function runCrashLoop() {
+            if (!isCrashRunning) return;
 
-                if (currentMultiplier >= crashTarget) {
-                    // CRASH OCCURRED!
-                    clearInterval(crashInterval);
-                    isCrashRunning = false;
+            currentMultiplier += 0.008 + (currentMultiplier * 0.005);
 
-                    display.innerText = `${crashTarget.toFixed(2)}x`;
-                    display.style.color = 'var(--accent-red)';
-                    status.innerText = `CRASHED AT ${crashTarget.toFixed(2)}x!`;
-                    status.style.color = 'var(--accent-red)';
-                    rocket.style.transform = 'translateY(0px)';
+            const autoCashoutVal = parseFloat(document.getElementById('autoCashoutInp').value);
+            if (!isNaN(autoCashoutVal) && autoCashoutVal > 1.00 && currentMultiplier >= autoCashoutVal && isBetPlaced) {
+                cashOutCrash();
+            }
 
-                    addCrashHistory(crashTarget, false);
+            document.getElementById('crashMultiplierDisplay').innerText = `${currentMultiplier.toFixed(2)}x`;
 
-                    if (isBetPlaced) {
-                        // User failed to cash out
-                        sendTelegramNotification(`<b>💥 Dollar Crash Bust!</b>\n\nUser <b>@${currentUserData.profile.username}</b> lost $2.00 bet (Crashed at <b>${crashTarget.toFixed(2)}x</b>)`);
-                    }
+            drawLiveGraph();
 
-                    resetCrashUI();
+            if (currentMultiplier >= crashTarget) {
+                // BUST / CRASHED!
+                isCrashRunning = false;
+                currentMultiplier = crashTarget;
+                
+                const display = document.getElementById('crashMultiplierDisplay');
+                const status = document.getElementById('crashStatusText');
+
+                display.innerText = `${crashTarget.toFixed(2)}x`;
+                display.style.color = 'var(--accent-red)';
+                display.style.textShadow = '0 0 30px rgba(239, 68, 68, 0.6)';
+                status.innerText = `CRASHED AT ${crashTarget.toFixed(2)}x`;
+                status.style.color = 'var(--accent-red)';
+
+                drawCrashExplosion();
+                addCrashHistory(crashTarget, false);
+
+                if (isBetPlaced) {
+                    sendTelegramNotification(`<b>💥 Dollar Crash Bust!</b>\n\nUser <b>@${currentUserData.profile.username}</b> lost $${activeBetAmount.toFixed(2)} bet (Crashed at <b>${crashTarget.toFixed(2)}x</b>)`);
                 }
-            }, 60);
+
+                resetCrashControls();
+                return;
+            }
+
+            crashAnimFrame = requestAnimationFrame(runCrashLoop);
+        }
+
+        function drawLiveGraph() {
+            if (!crashCtx) return;
+            const w = crashCanvas.width;
+            const h = crashCanvas.height;
+
+            crashCtx.clearRect(0, 0, w, h);
+            drawIdleGraph();
+
+            const progress = Math.min((currentMultiplier - 1) / 5, 1);
+            const currX = progress * (w - 60) + 20;
+            const currY = h - (Math.pow(progress, 0.8) * (h - 80)) - 30;
+
+            graphPoints.push({ x: currX, y: currY });
+
+            // Curve Line
+            crashCtx.beginPath();
+            crashCtx.moveTo(0, h);
+            for(let i=0; i<graphPoints.length; i++) {
+                crashCtx.lineTo(graphPoints[i].x, graphPoints[i].y);
+            }
+            
+            // Neon Line Styling
+            crashCtx.strokeStyle = '#10B981';
+            crashCtx.lineWidth = 4;
+            crashCtx.shadowColor = 'rgba(16, 185, 129, 0.8)';
+            crashCtx.shadowBlur = 15;
+            crashCtx.stroke();
+            crashCtx.shadowBlur = 0;
+
+            // Fill Gradient Below Line
+            crashCtx.lineTo(currX, h);
+            crashCtx.lineTo(0, h);
+            const grad = crashCtx.createLinearGradient(0, 0, 0, h);
+            grad.addColorStop(0, 'rgba(16, 185, 129, 0.25)');
+            grad.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
+            crashCtx.fillStyle = grad;
+            crashCtx.fill();
+
+            // Rocket Icon at Tip
+            crashCtx.save();
+            crashCtx.translate(currX, currY);
+            crashCtx.fillStyle = '#F59E0B';
+            crashCtx.font = '22px "Font Awesome 6 Free"';
+            crashCtx.fontWeight = '900';
+            crashCtx.shadowColor = '#F59E0B';
+            crashCtx.shadowBlur = 15;
+            crashCtx.fillText('\uf135', -10, 8); // Rocket FA Code
+            crashCtx.restore();
+        }
+
+        function drawCrashExplosion() {
+            if (!crashCtx) return;
+            const w = crashCanvas.width;
+            const h = crashCanvas.height;
+            const lastP = graphPoints[graphPoints.length - 1] || { x: w/2, y: h/2 };
+
+            crashCtx.beginPath();
+            crashCtx.arc(lastP.x, lastP.y, 35, 0, Math.PI * 2);
+            crashCtx.fillStyle = 'rgba(239, 68, 68, 0.8)';
+            crashCtx.shadowColor = '#EF4444';
+            crashCtx.shadowBlur = 30;
+            crashCtx.fill();
         }
 
         function cashOutCrash() {
             if (!isCrashRunning || !isBetPlaced) return;
 
-            // User Cashout Success!
             const winMultiplier = currentMultiplier;
-            const winAmount = parseFloat((CRASH_BET_FEE * winMultiplier).toFixed(2));
+            const winAmount = parseFloat((activeBetAmount * winMultiplier).toFixed(2));
 
-            isBetPlaced = false; // Prevent double cashout
+            isBetPlaced = false;
 
             currentUserData.available += winAmount;
             addTx(`Dollar Crash Win (${winMultiplier.toFixed(2)}x)`, `+$${winAmount.toFixed(2)}`, "Completed");
             saveSystemDB();
             updateUI();
 
-            document.getElementById('btnCashOut').disabled = true;
-            document.getElementById('btnCashOut').style.opacity = '0.5';
+            const cashoutBtn = document.getElementById('btnCashOut');
+            cashoutBtn.disabled = true;
+            cashoutBtn.style.opacity = '0.4';
+            cashoutBtn.style.pointerEvents = 'none';
 
             const status = document.getElementById('crashStatusText');
             status.innerText = `CASHED OUT AT ${winMultiplier.toFixed(2)}x! (+$${winAmount.toFixed(2)})`;
@@ -2016,15 +2274,20 @@
 
             sendTelegramNotification(`<b>🚀 Dollar Crash Cash Out Win!</b>\n\nUser <b>@${currentUserData.profile.username}</b> cashed out at <b>${winMultiplier.toFixed(2)}x</b> and won <b>+$${winAmount.toFixed(2)}</b>!`);
 
-            alert(`CASH OUT SUCCESSFUL!\n\nYou cashed out at ${winMultiplier.toFixed(2)}x and won +$${winAmount.toFixed(2)} credited directly to your Available Balance!`);
+            alert(`CASH OUT SUCCESSFUL!\n\nYou cashed out at ${winMultiplier.toFixed(2)}x and won +$${winAmount.toFixed(2)} credited to your balance!`);
         }
 
-        function resetCrashUI() {
+        function resetCrashControls() {
             isBetPlaced = false;
-            document.getElementById('btnPlaceBet').disabled = false;
-            document.getElementById('btnPlaceBet').style.opacity = '1';
-            document.getElementById('btnCashOut').disabled = true;
-            document.getElementById('btnCashOut').style.opacity = '0.5';
+            const betBtn = document.getElementById('btnPlaceBet');
+            betBtn.disabled = false;
+            betBtn.style.opacity = '1';
+            betBtn.style.pointerEvents = 'auto';
+
+            const cashoutBtn = document.getElementById('btnCashOut');
+            cashoutBtn.disabled = true;
+            cashoutBtn.style.opacity = '0.4';
+            cashoutBtn.style.pointerEvents = 'none';
         }
 
         function addCrashHistory(multiplier, isWin) {
@@ -2035,7 +2298,7 @@
 
             historyContainer.insertBefore(pill, historyContainer.firstChild);
 
-            if (historyContainer.children.length > 10) {
+            if (historyContainer.children.length > 8) {
                 historyContainer.removeChild(historyContainer.lastChild);
             }
         }

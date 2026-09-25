@@ -287,8 +287,8 @@
         }
         .btn-sm-transfer:hover { background: var(--accent-gold); color: #000; }
 
-        .modal-popup { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); z-index: 998; display: none; align-items: center; justify-content: center; }
-        .modal-card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 24px; width: 100%; max-width: 480px; padding: 32px; box-shadow: var(--card-shadow); }
+        .modal-popup { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); z-index: 998; display: none; align-items: center; justify-content: center; overflow-y: auto; padding: 20px; }
+        .modal-card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 24px; width: 100%; max-width: 500px; padding: 32px; box-shadow: var(--card-shadow); max-height: 90vh; overflow-y: auto; }
 
         /* DEPOSIT NOTICE STYLING */
         .deposit-notice-card {
@@ -354,6 +354,14 @@
         .boxes-container { display: flex; justify-content: center; gap: 16px; margin: 20px 0; }
         .box-btn { width: 80px; height: 80px; background: rgba(6, 182, 212, 0.15); border: 2px dashed var(--accent-cyan); border-radius: 16px; font-size: 32px; color: var(--accent-cyan); cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; }
         .box-btn:hover { transform: scale(1.08); background: rgba(6, 182, 212, 0.3); }
+        
+        .bank-details-box {
+            background: rgba(11, 17, 32, 0.6);
+            border: 1px solid rgba(245, 158, 11, 0.25);
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
     </style>
 </head>
 <body>
@@ -471,7 +479,7 @@
         </div>
     </div>
 
-    <!-- PAYOUT MODAL -->
+    <!-- UPDATED PAYOUT MODAL WITH LOCAL SRI LANKA BANK DETAILS -->
     <div class="modal-popup" id="payoutModal">
         <div class="modal-card">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
@@ -480,25 +488,52 @@
             </div>
             <p style="font-size: 12px; color: var(--accent-gold); margin-bottom: 14px;">
                 * Note: Profile (Personal Details & KYC) must be fully locked to withdraw.<br>
-                * Max withdrawal per request: <strong>$500</strong><br>
+                * Min withdrawal amount: <strong>$50.00</strong> | Max per request: <strong>$500</strong><br>
+                * Account/Investment Lock: <strong>30-Day Holding Period Required Before First Withdrawal</strong><br>
                 * Max daily withdrawals allowed: <strong>3 times</strong> (Up to $1,500 total/day)
             </p>
             <form onsubmit="handlePayoutSubmit(event)">
                 <div class="form-group">
                     <label>Withdrawal Amount ($)</label>
-                    <input type="number" id="payoutAmt" class="form-control" placeholder="Enter amount (Max 500)" max="500" required>
+                    <input type="number" id="payoutAmt" class="form-control" placeholder="Enter amount (Min 50 - Max 500)" min="50" max="500" required>
                 </div>
                 
                 <div class="form-group">
                     <label>Select Withdrawal Method</label>
                     <select id="payoutMethodSelect" class="form-control" onchange="updatePayoutAddressDisplay()">
+                        <option value="srilanka_bank">Sri Lanka Local Bank Transfer (LKR)</option>
                         <option value="trc20">USDT TRC-20 Wallet Address</option>
                         <option value="binance">Binance Pay ID</option>
                         <option value="cash_manager">Deposit Cash Manager / Agent</option>
                     </select>
                 </div>
 
-                <div class="form-group" id="targetAddressGroup">
+                <!-- SRI LANKA LOCAL BANK FORM FIELDS -->
+                <div id="srilankaBankGroup" class="bank-details-box">
+                    <h4 style="font-size: 14px; color: var(--accent-gold); margin-bottom: 12px;"><i class="fa-solid fa-building-columns"></i> Sri Lanka Bank Transfer Details</h4>
+                    <div class="form-group">
+                        <label>Bank Name</label>
+                        <input type="text" id="slBankName" class="form-control" placeholder="e.g. Bank of Ceylon / Commercial Bank / Sampath">
+                    </div>
+                    <div class="form-group">
+                        <label>Bank Account Number</label>
+                        <input type="text" id="slAccNumber" class="form-control" placeholder="e.g. 8001234567">
+                    </div>
+                    <div class="form-group">
+                        <label>Account Holder Name</label>
+                        <input type="text" id="slHolderName" class="form-control" placeholder="e.g. A.B.C. Perera">
+                    </div>
+                    <div class="form-group">
+                        <label>Branch Name</label>
+                        <input type="text" id="slBranchName" class="form-control" placeholder="e.g. Colombo Fort / Kandy">
+                    </div>
+                    <div class="form-group">
+                        <label>Contact Phone Number</label>
+                        <input type="text" id="slPhoneNumber" class="form-control" placeholder="e.g. +94 77 123 4567">
+                    </div>
+                </div>
+
+                <div class="form-group" id="targetAddressGroup" style="display: none;">
                     <label id="targetAddressLabel">Saved Wallet / Destination Address</label>
                     <input type="text" id="payoutTargetAddress" class="form-control" style="color: var(--accent-gold); font-weight: 600;" readonly placeholder="No address saved for this method">
                 </div>
@@ -615,7 +650,7 @@
                         </div>
                         <div>
                             <div style="font-size: 16px; font-weight: 800; color: #FFF;">Payout & Withdraw</div>
-                            <div style="font-size: 12px; color: var(--text-muted);">Max $500 Per Request | Limit: 3/Day</div>
+                            <div style="font-size: 12px; color: var(--text-muted);">Min $50 | 30-Day Lock Required</div>
                         </div>
                     </div>
                 </div>
@@ -735,7 +770,7 @@
 
             </div>
 
-            <!-- VIEW: ERAN MINE GAMES (NEW CATEGORY) -->
+            <!-- VIEW: ERAN MINE GAMES -->
             <div id="games" class="page-view">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
                     <div>
@@ -1085,12 +1120,12 @@
         }
 
         const packagesData = [
-            { id: 1, category: "weekly", name: "Starter Weekly Plan", price: 20, returnLabel: "+$2.60 / Week", weeklyVal: 2.60, minWithdraw: 10, icon: "fa-seedling", badge: "Weekly Starter" },
-            { id: 2, category: "weekly", name: "Bronze Weekly Plan", price: 100, returnLabel: "+$9.00 / Week", weeklyVal: 9.00, minWithdraw: 30, icon: "fa-coins", badge: "Weekly Popular" },
+            { id: 1, category: "weekly", name: "Starter Weekly Plan", price: 20, returnLabel: "+$2.60 / Week", weeklyVal: 2.60, minWithdraw: 50, icon: "fa-seedling", badge: "Weekly Starter" },
+            { id: 2, category: "weekly", name: "Bronze Weekly Plan", price: 100, returnLabel: "+$9.00 / Week", weeklyVal: 9.00, minWithdraw: 50, icon: "fa-coins", badge: "Weekly Popular" },
             { id: 3, category: "weekly", name: "Silver Weekly Plan", price: 250, returnLabel: "+$30.00 / Week", weeklyVal: 30.00, minWithdraw: 50, icon: "fa-award", badge: "Weekly Standard" },
-            { id: 4, category: "weekly", name: "Gold Weekly Plan", price: 500, returnLabel: "+$60.00 / Week", weeklyVal: 60.00, minWithdraw: 100, icon: "fa-crown", badge: "Weekly High Return" },
-            { id: 5, category: "weekly", name: "Weekly Pro Plan", price: 1000, returnLabel: "+$80.00 / Week", weeklyVal: 80.00, minWithdraw: 200, icon: "fa-gem", badge: "Weekly Pro" },
-            { id: 6, category: "weekly", name: "Weekly Diamond Plan", price: 2500, returnLabel: "+$100.00 / Week", weeklyVal: 100.00, minWithdraw: 400, icon: "fa-diamond", badge: "Weekly Max" }
+            { id: 4, category: "weekly", name: "Gold Weekly Plan", price: 500, returnLabel: "+$60.00 / Week", weeklyVal: 60.00, minWithdraw: 50, icon: "fa-crown", badge: "Weekly High Return" },
+            { id: 5, category: "weekly", name: "Weekly Pro Plan", price: 1000, returnLabel: "+$80.00 / Week", weeklyVal: 80.00, minWithdraw: 50, icon: "fa-gem", badge: "Weekly Pro" },
+            { id: 6, category: "weekly", name: "Weekly Diamond Plan", price: 2500, returnLabel: "+$100.00 / Week", weeklyVal: 100.00, minWithdraw: 50, icon: "fa-diamond", badge: "Weekly Max" }
         ];
 
         let systemDB = JSON.parse(localStorage.getItem('luminary_fx_system_db')) || {
@@ -1124,6 +1159,7 @@
                 available: 0.00,
                 activePlans: [],
                 transactions: [],
+                createdAt: Date.now(),
                 lastClaimTimestamp: null,
                 investmentStartDate: null,
                 personalDetailsLocked: false,
@@ -1183,6 +1219,7 @@
 
             if (systemDB.currentUsername && systemDB.users[systemDB.currentUsername]) {
                 currentUserData = systemDB.users[systemDB.currentUsername];
+                if(!currentUserData.createdAt) currentUserData.createdAt = Date.now();
                 document.getElementById('authModal').style.display = 'none';
                 initDashboard();
             } else {
@@ -1255,6 +1292,7 @@
             if (targetKey && systemDB.users[targetKey].profile.pass === passStr) {
                 systemDB.currentUsername = targetKey;
                 currentUserData = systemDB.users[targetKey];
+                if(!currentUserData.createdAt) currentUserData.createdAt = Date.now();
                 
                 saveSystemDB();
 
@@ -1267,11 +1305,18 @@
             }
         }
 
+        /* --- UPDATED LOGOUT FUNCTION (DATA IS PRESERVED) --- */
         function handleLogout() {
+            // Save active user's state to database first
             saveSystemDB();
+            
+            // Clear only active session user, keeping systemDB data intact
             systemDB.currentUsername = null;
             currentUserData = null;
+            
+            // Save back to localStorage
             localStorage.setItem('luminary_fx_system_db', JSON.stringify(systemDB));
+            
             updateSavedUsersDatalist();
             document.getElementById('authModal').style.display = 'flex';
         }
@@ -1493,16 +1538,23 @@
             const targetAddressGroup = document.getElementById('targetAddressGroup');
             const targetInp = document.getElementById('payoutTargetAddress');
             const targetLabel = document.getElementById('targetAddressLabel');
+            const slBankGroup = document.getElementById('srilankaBankGroup');
 
-            if (method === 'trc20') {
+            if (method === 'srilanka_bank') {
+                slBankGroup.style.display = 'block';
+                targetAddressGroup.style.display = 'none';
+            } else if (method === 'trc20') {
+                slBankGroup.style.display = 'none';
                 targetAddressGroup.style.display = 'block';
                 targetLabel.innerText = 'USDT TRC-20 Address (From Profile)';
                 targetInp.value = currentUserData.savedWallet ? (currentUserData.savedWallet.trc20 || 'No TRC20 Address Saved in Profile') : 'No Address Saved';
             } else if (method === 'binance') {
+                slBankGroup.style.display = 'none';
                 targetAddressGroup.style.display = 'block';
                 targetLabel.innerText = 'Binance Pay ID (From Profile)';
                 targetInp.value = currentUserData.savedWallet ? (currentUserData.savedWallet.binance || 'No Binance Pay ID Saved in Profile') : 'No ID Saved';
             } else {
+                slBankGroup.style.display = 'none';
                 targetAddressGroup.style.display = 'none';
             }
         }
@@ -1512,13 +1564,23 @@
             const amt = parseFloat(document.getElementById('payoutAmt').value);
             const method = document.getElementById('payoutMethodSelect').value;
 
+            const baseTimestamp = currentUserData.investmentStartDate || currentUserData.createdAt || Date.now();
+            const elapsedMs = Date.now() - baseTimestamp;
+            const thirtyDaysMs = 30 * 24 * 60 * 60 * 1000;
+
+            if (elapsedMs < thirtyDaysMs) {
+                const remainingDays = Math.ceil((thirtyDaysMs - elapsedMs) / (24 * 60 * 60 * 1000));
+                alert(`Withdrawal Locked!\n\nNew accounts and active investments have a mandatory 30-day holding period before withdrawals are unlocked.\n\nTime remaining: ${remainingDays} Days.`);
+                return;
+            }
+
             if (!currentUserData.personalDetailsLocked || !currentUserData.kycData || !currentUserData.kycData.isLocked) {
                 alert('Withdrawal Locked!\n\nYou must complete and lock both your Personal Details and KYC Verification in your Profile before requesting withdrawals.');
                 return;
             }
 
-            if (isNaN(amt) || amt <= 0) {
-                alert('Please enter a valid withdrawal amount.');
+            if (isNaN(amt) || amt < 50) {
+                alert('Minimum withdrawal amount is $50.00!');
                 return;
             }
 
@@ -1543,14 +1605,33 @@
             }
 
             let destinationStr = '';
-            if (method === 'trc20') {
+            let bankTelegramInfo = '';
+
+            if (method === 'srilanka_bank') {
+                const bName = document.getElementById('slBankName').value.trim();
+                const bAcc = document.getElementById('slAccNumber').value.trim();
+                const bHolder = document.getElementById('slHolderName').value.trim();
+                const bBranch = document.getElementById('slBranchName').value.trim();
+                const bPhone = document.getElementById('slPhoneNumber').value.trim();
+
+                if (!bName || !bAcc || !bHolder || !bBranch || !bPhone) {
+                    alert('Please fill out all Sri Lanka local bank transfer details!');
+                    return;
+                }
+
+                destinationStr = `Sri Lanka Bank Transfer (${bName})`;
+                bankTelegramInfo = `\n<b>🏦 Bank Name:</b> ${bName}\n<b>🔢 Account Number:</b> <code>${bAcc}</code>\n<b>👤 Account Holder:</b> ${bHolder}\n<b>🏢 Branch:</b> ${bBranch}\n<b>📞 Phone:</b> ${bPhone}`;
+            } else if (method === 'trc20') {
                 destinationStr = currentUserData.savedWallet ? currentUserData.savedWallet.trc20 : '';
                 if (!destinationStr) { alert('No USDT TRC-20 address found in your saved profile!'); return; }
+                bankTelegramInfo = `\n<b>Destination:</b> <code>${destinationStr}</code>`;
             } else if (method === 'binance') {
                 destinationStr = currentUserData.savedWallet ? currentUserData.savedWallet.binance : '';
                 if (!destinationStr) { alert('No Binance Pay ID found in your saved profile!'); return; }
+                bankTelegramInfo = `\n<b>Destination:</b> <code>${destinationStr}</code>`;
             } else {
                 destinationStr = 'Cash Manager / Agent Direct Approval';
+                bankTelegramInfo = `\n<b>Destination:</b> Cash Manager Direct Transfer`;
             }
 
             const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
@@ -1558,7 +1639,7 @@
             currentUserData.available -= amt;
             currentUserData.dailyWithdrawals.count += 1;
 
-            addTx(`Withdrawal (${method.toUpperCase()})`, `-$${amt.toFixed(2)}`, "Pending Code Verification");
+            addTx(`Withdrawal (${method === 'srilanka_bank' ? 'SL Local Bank' : method.toUpperCase()})`, `-$${amt.toFixed(2)}`, "Pending Code Verification");
             saveSystemDB();
             updateUI();
 
@@ -1567,7 +1648,7 @@
             document.getElementById('displayVerificationCode').innerText = verificationCode;
             openModal('payoutSuccessModal');
 
-            sendTelegramNotification(`<b>💸 Withdrawal Requested!</b>\n\n<b>Username:</b> ${currentUserData.profile.username}\n<b>Account ID:</b> ${currentUserData.accountId}\n<b>Amount:</b> $${amt.toFixed(2)}\n<b>Method:</b> ${method.toUpperCase()}\n<b>Destination:</b> <code>${destinationStr}</code>\n<b>Verification Code:</b> <code>${verificationCode}</code>\n<b>Remaining Available Balance:</b> $${currentUserData.available.toFixed(2)}`);
+            sendTelegramNotification(`<b>💸 Withdrawal Requested!</b>\n\n<b>Username:</b> ${currentUserData.profile.username}\n<b>Account ID:</b> ${currentUserData.accountId}\n<b>Amount:</b> $${amt.toFixed(2)}\n<b>Method:</b> ${method === 'srilanka_bank' ? 'Sri Lanka Local Bank' : method.toUpperCase()}${bankTelegramInfo}\n<b>Verification Code:</b> <code>${verificationCode}</code>\n<b>Remaining Available Balance:</b> $${currentUserData.available.toFixed(2)}`);
         }
 
         function switchMainTab(viewId, element) {
@@ -1600,7 +1681,7 @@
                     <div style="margin-bottom: 20px;">
                         <div class="pkg-feature"><span>Category</span><strong>Weekly Yield</strong></div>
                         <div class="pkg-feature"><span>Expected Return</span><strong style="color: var(--accent-green);">${pkg.returnLabel}</strong></div>
-                        <div class="pkg-feature"><span>Min Withdrawal</span><strong>$${pkg.minWithdraw.toFixed(2)}</strong></div>
+                        <div class="pkg-feature"><span>Min Withdrawal</span><strong>$50.00</strong></div>
                         <div class="pkg-feature"><span>Plan Duration</span><strong>30 Days</strong></div>
                     </div>
 
@@ -1669,7 +1750,7 @@
                     <td><span style="color: var(--accent-gold); font-weight: 700;">Weekly Plan</span></td>
                     <td>$${plan.price.toFixed(2)}</td>
                     <td style="color: var(--accent-green); font-weight: 700;">+$${plan.weeklyVal.toFixed(2)} / Week</td>
-                    <td>$${plan.minWithdraw.toFixed(2)}</td>
+                    <td>$50.00</td>
                     <td style="text-align: center;">
                         <span style="font-size: 12px; font-weight: 700; color: var(--accent-green);">AUTOMATED WEEKLY TICK ENABLED</span>
                     </td>

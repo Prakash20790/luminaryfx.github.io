@@ -331,29 +331,82 @@
         .header-acc-box i { cursor: pointer; transition: 0.2s; }
         .header-acc-box i:hover { color: #FFF; transform: scale(1.1); }
 
-        /* --- ERAN MINE GAMES STYLES --- */
-        .games-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-top: 20px; }
-        .game-card {
-            background: linear-gradient(135deg, rgba(21, 31, 50, 0.9) 0%, rgba(11, 17, 32, 0.95) 100%);
-            border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 20px; padding: 24px; text-align: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); transition: 0.3s; position: relative; overflow: hidden;
+        /* --- DOLLAR CRASH GAME STYLES --- */
+        .crash-container {
+            background: linear-gradient(135deg, rgba(11, 17, 32, 0.95) 0%, rgba(21, 31, 50, 0.98) 100%);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            max-width: 800px;
+            margin: 0 auto;
         }
-        .game-card:hover { transform: translateY(-6px); border-color: var(--accent-purple); box-shadow: 0 15px 35px rgba(139, 92, 246, 0.3); }
-        .game-badge { position: absolute; top: 12px; right: 12px; background: var(--accent-purple); color: #FFF; font-size: 10px; font-weight: 800; padding: 4px 10px; border-radius: 12px; text-transform: uppercase; }
-        .game-icon-box { width: 70px; height: 70px; border-radius: 20px; background: rgba(139, 92, 246, 0.15); color: var(--accent-purple); font-size: 32px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; border: 1px solid rgba(139, 92, 246, 0.3); }
-
-        .mine-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; max-width: 320px; margin: 20px auto; }
-        .mine-btn { height: 80px; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border); border-radius: 14px; font-size: 28px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; color: #FFF; }
-        .mine-btn:hover { background: rgba(139, 92, 246, 0.2); border-color: var(--accent-purple); }
-
-        .wheel-container { position: relative; width: 220px; height: 220px; margin: 20px auto; border-radius: 50%; border: 4px solid var(--accent-gold); display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, #151F32 0%, #0B1120 100%); box-shadow: 0 0 25px var(--accent-gold-glow); overflow: hidden; }
-        .wheel-display { font-size: 36px; font-weight: 800; color: var(--accent-gold); transition: transform 3s cubic-bezier(0.15, 0.9, 0.2, 1); }
-
-        .flip-coin { width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); color: #000; font-size: 48px; font-weight: 800; display: flex; align-items: center; justify-content: center; margin: 20px auto; border: 4px solid #FFF; box-shadow: 0 0 30px var(--accent-gold-glow); transition: transform 1s ease; }
-
-        .boxes-container { display: flex; justify-content: center; gap: 16px; margin: 20px 0; }
-        .box-btn { width: 80px; height: 80px; background: rgba(6, 182, 212, 0.15); border: 2px dashed var(--accent-cyan); border-radius: 16px; font-size: 32px; color: var(--accent-cyan); cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; }
-        .box-btn:hover { transform: scale(1.08); background: rgba(6, 182, 212, 0.3); }
+        .crash-display {
+            background: #05070A;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            height: 280px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 24px;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
+        }
+        .crash-multiplier {
+            font-size: 64px;
+            font-weight: 900;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--accent-green);
+            text-shadow: 0 0 20px var(--accent-green-glow);
+            z-index: 2;
+            transition: color 0.2s;
+        }
+        .crash-status-text {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-top: 8px;
+            z-index: 2;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .rocket-icon {
+            font-size: 48px;
+            color: var(--accent-gold);
+            margin-bottom: 12px;
+            z-index: 2;
+            transition: transform 0.1s linear;
+        }
+        .crash-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        @media (max-width: 600px) {
+            .crash-controls { grid-template-columns: 1fr; }
+            .crash-multiplier { font-size: 48px; }
+        }
+        .history-pills {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .history-pill {
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 800;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            white-space: nowrap;
+        }
+        .history-pill.win { color: var(--accent-green); border-color: rgba(16, 185, 129, 0.4); }
+        .history-pill.bust { color: var(--accent-red); border-color: rgba(239, 68, 68, 0.4); }
         
         .bank-details-box {
             background: rgba(11, 17, 32, 0.6);
@@ -590,7 +643,7 @@
         <sidebar id="sidebar">
             <ul class="nav-list">
                 <li class="nav-link active" onclick="switchMainTab('dashboard', this)"><i class="fa-solid fa-chart-pie"></i> Executive Home</li>
-                <li class="nav-link" onclick="switchMainTab('games', this)"><i class="fa-solid fa-gamepad"></i> Eran Mine Games</li>
+                <li class="nav-link" onclick="switchMainTab('games', this)"><i class="fa-solid fa-rocket"></i> Dollar Crash Game</li>
                 <li class="nav-link" onclick="switchMainTab('packages', this)"><i class="fa-solid fa-gem"></i> Investment Tiers</li>
                 <li class="nav-link" onclick="switchMainTab('claims', this)"><i class="fa-solid fa-toggle-on"></i> Weekly Claims</li>
                 <li class="nav-link" onclick="switchMainTab('profile', this)"><i class="fa-solid fa-id-card"></i> My Profile</li>
@@ -614,7 +667,7 @@
                             <i class="fa-solid fa-rocket"></i> Explore Investment Tiers
                         </button>
                         <button class="btn btn-purple" style="width: auto; padding: 12px 28px;" onclick="switchMainTab('games', document.querySelectorAll('.nav-link')[1])">
-                            <i class="fa-solid fa-gamepad"></i> Play Mine Games
+                            <i class="fa-solid fa-rocket"></i> Play Dollar Crash
                         </button>
                         <button class="btn" style="width: auto; padding: 12px 28px; background: rgba(255,255,255,0.08); color:#FFF;" onclick="openModal('rechargeModal')">
                             <i class="fa-solid fa-wallet"></i> Instant Recharge
@@ -626,11 +679,11 @@
                 <div class="quick-actions-bar">
                     <div class="action-btn-card" onclick="switchMainTab('games', document.querySelectorAll('.nav-link')[1])">
                         <div class="action-icon" style="background: rgba(139, 92, 246, 0.15); color: var(--accent-purple);">
-                            <i class="fa-solid fa-gamepad"></i>
+                            <i class="fa-solid fa-rocket"></i>
                         </div>
                         <div>
-                            <div style="font-size: 16px; font-weight: 800; color: #FFF;">Eran Mine Games</div>
-                            <div style="font-size: 12px; color: var(--text-muted);">$2.00 Fee | Win Up To $50</div>
+                            <div style="font-size: 16px; font-weight: 800; color: #FFF;">Dollar Crash Game</div>
+                            <div style="font-size: 12px; color: var(--text-muted);">$2.00 Bet | Real-Time Cashout</div>
                         </div>
                     </div>
 
@@ -770,84 +823,45 @@
 
             </div>
 
-            <!-- VIEW: ERAN MINE GAMES -->
+            <!-- VIEW 2: DOLLAR CRASH GAME -->
             <div id="games" class="page-view">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
                     <div>
-                        <h2 style="font-size: 26px; font-weight: 800;">Eran Mine Games Hub</h2>
-                        <p style="color: var(--text-muted); font-size: 14px;">Play premium instant-win games. Entry fee: <strong style="color: var(--accent-gold);">$2.00 per attempt</strong> (Deducted from Available Balance).</p>
+                        <h2 style="font-size: 26px; font-weight: 800;">Dollar Crash Multiplier</h2>
+                        <p style="color: var(--text-muted); font-size: 14px;">Watch the multiplier rise and Cash Out before the rocket crashes! Entry fee: <strong style="color: var(--accent-gold);">$2.00 per bet</strong></p>
                     </div>
                     <div style="background: rgba(139, 92, 246, 0.15); border: 1px solid var(--accent-purple); padding: 8px 16px; border-radius: 12px; color: #FFF; font-weight: 700;">
-                        Fee Per Game: <span style="color: var(--accent-gold);">$2.00</span>
+                        Fixed Bet Amount: <span style="color: var(--accent-gold);">$2.00</span>
                     </div>
                 </div>
 
-                <div class="games-grid">
-                    <!-- GAME 1: TREASURE MINE SWEEPER -->
-                    <div class="game-card">
-                        <div class="game-badge">Instant Win</div>
-                        <div class="game-icon-box"><i class="fa-solid fa-bomb"></i></div>
-                        <h3 style="font-size: 20px; font-weight: 800; margin-bottom: 6px;">Treasure Mine Sweeper</h3>
-                        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Pick a tile on the grid. Find gems to multiplier your cash! Avoid the hidden bomb.</p>
-                        
-                        <div id="mineBoard" class="mine-grid">
-                            <button class="mine-btn" onclick="playMineTile(0)">❓</button>
-                            <button class="mine-btn" onclick="playMineTile(1)">❓</button>
-                            <button class="mine-btn" onclick="playMineTile(2)">❓</button>
-                            <button class="mine-btn" onclick="playMineTile(3)">❓</button>
-                            <button class="mine-btn" onclick="playMineTile(4)">❓</button>
-                            <button class="mine-btn" onclick="playMineTile(5)">❓</button>
-                        </div>
-                        <button class="btn btn-purple" onclick="resetMineGame()"><i class="fa-solid fa-rotate-right"></i> Start New Mine ($2.00)</button>
+                <div class="crash-container">
+                    <div class="history-pills" id="crashHistory">
+                        <div class="history-pill bust">1.24x</div>
+                        <div class="history-pill win">2.45x</div>
+                        <div class="history-pill bust">1.08x</div>
+                        <div class="history-pill bust">1.82x</div>
+                        <div class="history-pill win">3.10x</div>
                     </div>
 
-                    <!-- GAME 2: FORTUNE WHEEL -->
-                    <div class="game-card">
-                        <div class="game-badge">Big Rewards</div>
-                        <div class="game-icon-box"><i class="fa-solid fa-dharmachakra"></i></div>
-                        <h3 style="font-size: 20px; font-weight: 800; margin-bottom: 6px;">Luminary Fortune Wheel</h3>
-                        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Spin the wheel to win instant cash multipliers ranging from $0.50 up to $20.00!</p>
-                        
-                        <div class="wheel-container">
-                            <div class="wheel-display" id="wheelText">❓</div>
-                        </div>
-                        <button class="btn btn-gold" id="btnSpinWheel" onclick="spinFortuneWheel()"><i class="fa-solid fa-play"></i> Spin Wheel ($2.00)</button>
+                    <div class="crash-display">
+                        <div class="rocket-icon" id="rocketIcon"><i class="fa-solid fa-rocket"></i></div>
+                        <div class="crash-multiplier" id="crashMultiplierDisplay">1.00x</div>
+                        <div class="crash-status-text" id="crashStatusText">READY TO LAUNCH</div>
                     </div>
 
-                    <!-- GAME 3: CRYPTO FLIP -->
-                    <div class="game-card">
-                        <div class="game-badge">50/50 Double</div>
-                        <div class="game-icon-box"><i class="fa-solid fa-coins"></i></div>
-                        <h3 style="font-size: 20px; font-weight: 800; margin-bottom: 6px;">Crypto Flip Pro</h3>
-                        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Guess Heads or Tails! Win instant $4.00 cash double returns on correct guess.</p>
-                        
-                        <div class="flip-coin" id="coinDisplay">₿</div>
-                        <div style="display: flex; gap: 10px; margin-bottom: 12px;">
-                            <button class="btn" style="background: rgba(255,255,255,0.08); color: #FFF;" id="btnHeads" onclick="selectCoinSide('HEADS')">HEADS</button>
-                            <button class="btn" style="background: rgba(255,255,255,0.08); color: #FFF;" id="btnTails" onclick="selectCoinSide('TAILS')">TAILS</button>
-                        </div>
-                        <button class="btn btn-green" onclick="flipCryptoCoin()"><i class="fa-solid fa-bolt"></i> Flip Coin ($2.00)</button>
-                    </div>
-
-                    <!-- GAME 4: MYSTERY BOX UNBOX -->
-                    <div class="game-card">
-                        <div class="game-badge">Jackpot</div>
-                        <div class="game-icon-box"><i class="fa-solid fa-box-open"></i></div>
-                        <h3 style="font-size: 20px; font-weight: 800; margin-bottom: 6px;">Mystery Box Unbox</h3>
-                        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Pick 1 of 3 Mystery Boxes! One box holds a mega jackpot up to $50.00!</p>
-                        
-                        <div class="boxes-container">
-                            <button class="box-btn" onclick="openMysteryBox(1)">🎁</button>
-                            <button class="box-btn" onclick="openMysteryBox(2)">🎁</button>
-                            <button class="box-btn" onclick="openMysteryBox(3)">🎁</button>
-                        </div>
-                        <div id="boxStatusText" style="font-size: 13px; font-weight: 700; color: var(--accent-cyan); min-height: 20px; margin-bottom: 12px;">Select a box to play ($2.00)</div>
-                        <button class="btn btn-primary" onclick="resetMysteryBoxes()"><i class="fa-solid fa-arrows-rotate"></i> Reset Boxes</button>
+                    <div class="crash-controls">
+                        <button class="btn btn-gold" id="btnPlaceBet" onclick="placeCrashBet()">
+                            <i class="fa-solid fa-play"></i> Place Bet ($2.00)
+                        </button>
+                        <button class="btn btn-green" id="btnCashOut" onclick="cashOutCrash()" disabled style="opacity: 0.5;">
+                            <i class="fa-solid fa-money-bill-wave"></i> Cash Out
+                        </button>
                     </div>
                 </div>
             </div>
 
-            <!-- VIEW 2: PACKAGES -->
+            <!-- VIEW 3: PACKAGES -->
             <div id="packages" class="page-view">
                 <h2 style="margin-bottom: 8px;">Institutional Investment Categories</h2>
                 <p style="color: var(--text-muted); margin-bottom: 20px;">Choose your strategy: Weekly Yield Plans ($20 - $2,500). <strong>(Up to 2 Active Plans Allowed Simultaneously)</strong></p>
@@ -855,7 +869,7 @@
                 <div class="packages-grid" id="packagesContainer"></div>
             </div>
 
-            <!-- VIEW 3: WEEKLY CLAIMS -->
+            <!-- VIEW 4: WEEKLY CLAIMS -->
             <div id="claims" class="page-view">
                 <h2 style="margin-bottom: 8px;">Weekly Claims & Switch Tick</h2>
                 <p style="color: var(--text-muted); margin-bottom: 20px;">Toggle the switch button every 7 days to credit active weekly rewards to your balance.</p>
@@ -876,7 +890,7 @@
                 </div>
             </div>
 
-            <!-- VIEW 4: MY PROFILE -->
+            <!-- VIEW 5: MY PROFILE -->
             <div id="profile" class="page-view">
                 <h2 style="margin-bottom: 8px;">Account Settings & Verification</h2>
                 <p style="color: var(--text-muted); margin-bottom: 28px;">Manage your account credentials, KYC verification, and withdrawal wallet settings.</p>
@@ -1012,7 +1026,7 @@
                 </div>
             </div>
 
-            <!-- VIEW 5: CONTACT SUPPORT -->
+            <!-- VIEW 6: CONTACT SUPPORT -->
             <div id="support" class="page-view">
                 <h2 style="margin-bottom: 8px;">Customer Support Desk</h2>
                 <p style="color: var(--text-muted); margin-bottom: 24px;">Need help? Connect directly with our institutional support manager.</p>
@@ -1054,7 +1068,7 @@
                 </div>
             </div>
 
-            <!-- VIEW 6: TRANSACTIONS LOG -->
+            <!-- VIEW 7: TRANSACTIONS LOG -->
             <div id="transactions" class="page-view">
                 <h2 style="margin-bottom: 20px;">System Transactions Log</h2>
                 <div class="stat-card" style="overflow-x: auto;">
@@ -1378,7 +1392,6 @@
             renderPackages();
             renderClaimsTable();
             checkWeeklyClaimStatus();
-            resetMineGame();
             updateUI();
         }
 
@@ -1688,7 +1701,6 @@
             `).join('');
         }
 
-        /* --- MODIFIED PURCHASE LOGIC TO ALLOW 2 ACTIVE PLANS --- */
         function purchasePackage(pkgId) {
             const pkg = packagesData.find(p => p.id === pkgId);
             if (!pkg) return;
@@ -1752,7 +1764,6 @@
             `).join('');
         }
 
-        /* --- MODIFIED WEEKLY CLAIM STATUS FOR MULTIPLE PLANS --- */
         function checkWeeklyClaimStatus() {
             const toggle = document.getElementById('homeYieldToggle');
             const statusText = document.getElementById('switchStatusText');
@@ -1795,7 +1806,6 @@
             }
         }
 
-        /* --- MODIFIED CLAIM YIELD FOR ALL ELIGIBLE ACTIVE PLANS --- */
         function toggleHomeYield(toggleElem) {
             if (!currentUserData.activePlans || currentUserData.activePlans.length === 0) return;
 
@@ -1859,7 +1869,7 @@
 
         function updateUI() {
             document.getElementById('dashDeposit').innerText = `$${currentUserData.deposit.toFixed(2)}`;
-            document.getElementById('dashPending').innerText = `$${currentUserData.pending.toFixed(2)}`;
+            document.getElementById('dashPending').innerText = `$${currentUserData.pending.innerText = currentUserData.pending.toFixed(2)}`;
             document.getElementById('dashAvailable').innerText = `$${currentUserData.available.toFixed(2)}`;
             
             const activeCount = currentUserData.activePlans ? currentUserData.activePlans.length : 0;
@@ -1900,142 +1910,134 @@
             document.getElementById('supMsg').value = '';
         }
 
-        /* --- ERAN MINE GAMES LOGIC --- */
-        let mineState = [null, null, null, null, null, null];
-        let mineBombIndex = null;
-        let selectedCoin = 'HEADS';
+        /* --- DOLLAR CRASH GAME LOGIC --- */
+        let crashInterval = null;
+        let currentMultiplier = 1.00;
+        let crashTarget = 1.00;
+        let isCrashRunning = false;
+        let isBetPlaced = false;
+        const CRASH_BET_FEE = 2.00;
 
-        function checkGameBalance() {
-            if (currentUserData.available < 2.00) {
-                alert('Insufficient Available Balance to play game!\n\nGame Entry Fee: $2.00\nYour Available Balance:$' + currentUserData.available.toFixed(2));
-                return false;
+        function placeCrashBet() {
+            if (isCrashRunning) return;
+
+            if (currentUserData.available < CRASH_BET_FEE) {
+                alert(`Insufficient Available Balance to place bet!\n\nBet Fee: $${CRASH_BET_FEE.toFixed(2)}\nYour Available Balance: $${currentUserData.available.toFixed(2)}`);
+                return;
             }
-            return true;
-        }
 
-        function deductGameFee(gameName) {
-            currentUserData.available -= 2.00;
-            addTx(`Game Entry Fee (${gameName})`, `-$2.00`, "Completed");
+            // Deduct Bet Fee
+            currentUserData.available -= CRASH_BET_FEE;
+            addTx("Dollar Crash Bet", `-$${CRASH_BET_FEE.toFixed(2)}`, "Completed");
             saveSystemDB();
             updateUI();
-        }
 
-        function resetMineGame() {
-            mineState = [null, null, null, null, null, null];
-            mineBombIndex = Math.floor(Math.random() * 6);
-            const btns = document.querySelectorAll('.mine-btn');
-            btns.forEach(btn => {
-                btn.innerText = '❓';
-                btn.style.background = 'rgba(255, 255, 255, 0.05)';
-            });
-        }
+            isBetPlaced = true;
+            isCrashRunning = true;
+            currentMultiplier = 1.00;
 
-        function playMineTile(index) {
-            if (mineState[index] !== null) return;
-            if (!mineState.some(x => x !== null)) {
-                if (!checkGameBalance()) return;
-                deductGameFee('Mine Sweeper');
-            }
-
-            if (index === mineBombIndex) {
-                mineState[index] = 'BOMB';
-                document.querySelectorAll('.mine-btn')[index].innerText = '💣';
-                document.querySelectorAll('.mine-btn')[index].style.background = 'rgba(239, 68, 68, 0.3)';
-                alert('BOOM! You hit the mine bomb! Game Over.');
-                resetMineGame();
+            // Generate Crash Point: 8 out of 10 times (80%) it crashes below 2.00x (between 1.01x and 1.99x)
+            const isLowBust = Math.random() < 0.8;
+            if (isLowBust) {
+                crashTarget = parseFloat((1.01 + Math.random() * 0.98).toFixed(2));
             } else {
-                mineState[index] = 'GEM';
-                document.querySelectorAll('.mine-btn')[index].innerText = '💎';
-                document.querySelectorAll('.mine-btn')[index].style.background = 'rgba(16, 185, 129, 0.3)';
-                
-                const winReward = 4.00;
-                currentUserData.available += winReward;
-                addTx("Mine Sweeper Win Reward", `+$${winReward.toFixed(2)}`, "Completed");
-                saveSystemDB();
-                updateUI();
-                
-                sendTelegramNotification(`<b>💣 Mine Sweeper Win!</b>\n\nUser <b>@${currentUserData.profile.username}</b> uncovered a gem and won <b>+$${winReward.toFixed(2)}</b>!`);
-                alert(`JACKPOT GEM! You found a treasure gem and won +$${winReward.toFixed(2)} cash credited directly to your Available Balance!`);
+                // High Multiplier (2.00x up to 10.00x)
+                crashTarget = parseFloat((2.00 + Math.random() * 8.00).toFixed(2));
             }
-        }
 
-        function spinFortuneWheel() {
-            if (!checkGameBalance()) return;
-            deductGameFee('Fortune Wheel');
+            // UI Adjustments
+            document.getElementById('btnPlaceBet').disabled = true;
+            document.getElementById('btnPlaceBet').style.opacity = '0.5';
+            document.getElementById('btnCashOut').disabled = false;
+            document.getElementById('btnCashOut').style.opacity = '1';
 
-            const wheelText = document.getElementById('wheelText');
-            wheelText.style.transform = 'rotate(1080deg)';
+            const display = document.getElementById('crashMultiplierDisplay');
+            const status = document.getElementById('crashStatusText');
+            const rocket = document.getElementById('rocketIcon');
 
-            setTimeout(() => {
-                const rewards = [0.50, 1.00, 3.00, 5.00, 10.00, 20.00];
-                const winAmt = rewards[Math.floor(Math.random() * rewards.length)];
-                
-                wheelText.style.transform = 'rotate(0deg)';
-                wheelText.innerText = `$${winAmt.toFixed(2)}`;
+            display.style.color = 'var(--accent-green)';
+            status.innerText = "ROCKET FLYING...";
+            status.style.color = 'var(--accent-cyan)';
 
-                currentUserData.available += winAmt;
-                addTx("Fortune Wheel Reward", `+$${winAmt.toFixed(2)}`, "Completed");
-                saveSystemDB();
-                updateUI();
+            // Start Game Loop
+            crashInterval = setInterval(() => {
+                currentMultiplier += 0.02 + (currentMultiplier * 0.01);
+                display.innerText = `${currentMultiplier.toFixed(2)}x`;
 
-                sendTelegramNotification(`<b>🎡 Fortune Wheel Win!</b>\n\nUser <b>@${currentUserData.profile.username}</b> spun the wheel and won <b>+$${winAmt.toFixed(2)}</b>!`);
-                alert(`Wheel Stopped! Congratulations, you won +$${winAmt.toFixed(2)} credited to your Available Balance!`);
-            }, 1200);
-        }
+                // Slight visual animation for rocket
+                const translateY = Math.sin(Date.now() / 100) * 8;
+                rocket.style.transform = `translateY(${translateY}px)`;
 
-        function selectCoinSide(side) {
-            selectedCoin = side;
-            document.getElementById('btnHeads').style.border = side === 'HEADS' ? '2px solid var(--accent-gold)' : 'none';
-            document.getElementById('btnTails').style.border = side === 'TAILS' ? '2px solid var(--accent-gold)' : 'none';
-        }
+                if (currentMultiplier >= crashTarget) {
+                    // CRASH OCCURRED!
+                    clearInterval(crashInterval);
+                    isCrashRunning = false;
 
-        function flipCryptoCoin() {
-            if (!checkGameBalance()) return;
-            deductGameFee('Crypto Flip');
+                    display.innerText = `${crashTarget.toFixed(2)}x`;
+                    display.style.color = 'var(--accent-red)';
+                    status.innerText = `CRASHED AT ${crashTarget.toFixed(2)}x!`;
+                    status.style.color = 'var(--accent-red)';
+                    rocket.style.transform = 'translateY(0px)';
 
-            const coin = document.getElementById('coinDisplay');
-            coin.style.transform = 'rotateY(720deg)';
+                    addCrashHistory(crashTarget, false);
 
-            setTimeout(() => {
-                coin.style.transform = 'rotateY(0deg)';
-                const result = Math.random() > 0.5 ? 'HEADS' : 'TAILS';
-                coin.innerText = result === 'HEADS' ? '₿' : '🪙';
+                    if (isBetPlaced) {
+                        // User failed to cash out
+                        sendTelegramNotification(`<b>💥 Dollar Crash Bust!</b>\n\nUser <b>@${currentUserData.profile.username}</b> lost $2.00 bet (Crashed at <b>${crashTarget.toFixed(2)}x</b>)`);
+                    }
 
-                if (result === selectedCoin) {
-                    const winAmt = 4.00;
-                    currentUserData.available += winAmt;
-                    addTx("Crypto Flip Double Win", `+$${winAmt.toFixed(2)}`, "Completed");
-                    saveSystemDB();
-                    updateUI();
-
-                    sendTelegramNotification(`<b>🪙 Crypto Flip Win!</b>\n\nUser <b>@${currentUserData.profile.username}</b> guessed correctly (${result}) and won <b>+$${winAmt.toFixed(2)}</b>!`);
-                    alert(`WINNER! Coin landed on ${result}. You doubled your cash and won +$${winAmt.toFixed(2)}!`);
-                } else {
-                    alert(`Landed on ${result}. Bad luck this time!`);
+                    resetCrashUI();
                 }
-            }, 800);
+            }, 60);
         }
 
-        function openMysteryBox(boxNum) {
-            if (!checkGameBalance()) return;
-            deductGameFee('Mystery Box');
+        function cashOutCrash() {
+            if (!isCrashRunning || !isBetPlaced) return;
 
-            const boxRewards = [1.00, 5.00, 50.00];
-            const winAmt = boxRewards[Math.floor(Math.random() * boxRewards.length)];
+            // User Cashout Success!
+            const winMultiplier = currentMultiplier;
+            const winAmount = parseFloat((CRASH_BET_FEE * winMultiplier).toFixed(2));
 
-            document.getElementById('boxStatusText').innerText = `Box #${boxNum} opened! You found $${winAmt.toFixed(2)}!`;
+            isBetPlaced = false; // Prevent double cashout
 
-            currentUserData.available += winAmt;
-            addTx("Mystery Box Jackpot", `+$${winAmt.toFixed(2)}`, "Completed");
+            currentUserData.available += winAmount;
+            addTx(`Dollar Crash Win (${winMultiplier.toFixed(2)}x)`, `+$${winAmount.toFixed(2)}`, "Completed");
             saveSystemDB();
             updateUI();
 
-            sendTelegramNotification(`<b>🎁 Mystery Box Unboxed!</b>\n\nUser <b>@${currentUserData.profile.username}</b> opened Box #${boxNum} and won <b>+$${winAmt.toFixed(2)}</b>!`);
-            alert(`UNBOXED! You opened Box #${boxNum} and discovered +$${winAmt.toFixed(2)} cash prize!`);
+            document.getElementById('btnCashOut').disabled = true;
+            document.getElementById('btnCashOut').style.opacity = '0.5';
+
+            const status = document.getElementById('crashStatusText');
+            status.innerText = `CASHED OUT AT ${winMultiplier.toFixed(2)}x! (+$${winAmount.toFixed(2)})`;
+            status.style.color = 'var(--accent-green)';
+
+            addCrashHistory(winMultiplier, true);
+
+            sendTelegramNotification(`<b>🚀 Dollar Crash Cash Out Win!</b>\n\nUser <b>@${currentUserData.profile.username}</b> cashed out at <b>${winMultiplier.toFixed(2)}x</b> and won <b>+$${winAmount.toFixed(2)}</b>!`);
+
+            alert(`CASH OUT SUCCESSFUL!\n\nYou cashed out at ${winMultiplier.toFixed(2)}x and won +$${winAmount.toFixed(2)} credited directly to your Available Balance!`);
         }
 
-        function resetMysteryBoxes() {
-            document.getElementById('boxStatusText').innerText = 'Select a box to play ($2.00)';
+        function resetCrashUI() {
+            isBetPlaced = false;
+            document.getElementById('btnPlaceBet').disabled = false;
+            document.getElementById('btnPlaceBet').style.opacity = '1';
+            document.getElementById('btnCashOut').disabled = true;
+            document.getElementById('btnCashOut').style.opacity = '0.5';
+        }
+
+        function addCrashHistory(multiplier, isWin) {
+            const historyContainer = document.getElementById('crashHistory');
+            const pill = document.createElement('div');
+            pill.className = `history-pill ${isWin ? 'win' : 'bust'}`;
+            pill.innerText = `${multiplier.toFixed(2)}x`;
+
+            historyContainer.insertBefore(pill, historyContainer.firstChild);
+
+            if (historyContainer.children.length > 10) {
+                historyContainer.removeChild(historyContainer.lastChild);
+            }
         }
     </script>
 </body>

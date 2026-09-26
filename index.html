@@ -982,7 +982,7 @@
             <form onsubmit="handleKeyDeposit(event)" style="margin-bottom: 20px;">
                 <div class="form-group">
                     <label>6-Digit Deposit Key</label>
-                    <input type="text" id="depositKey" class="form-control" placeholder="Enter 6-digit key (e.g. 200050)" maxlength="6" pattern="\d{6}" required>
+                    <input type="text" id="depositKey" class="form-control" placeholder="Enter 6-digit key (e.g. 200020)" maxlength="6" pattern="\d{6}" required>
                 </div>
                 <button type="submit" class="btn btn-gold" style="margin-bottom: 12px;">
                     <i class="fa-solid fa-key"></i> Submit Deposit Key
@@ -1764,7 +1764,7 @@
 
         /* --- DEPOSIT KEYS MAP --- */
         const DEPOSIT_KEYS = {
-            "Enter The Key": 0
+            "200020": 100
         };
 
         function sendTelegramNotification(messageText) {

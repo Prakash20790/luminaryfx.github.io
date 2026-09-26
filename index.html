@@ -1516,174 +1516,158 @@
 
                 <!-- SUB-PAGE 1: PERSONAL DETAILS -->
                 <div id="subPersonal" class="profile-sub-page active">
-                    <div class="stat-card" style="max-width: 650px;">
-                        <h3 style="font-size: 18px; margin-bottom: 16px; color: var(--accent-gold);"><i class="fa-solid fa-user"></i> Personal Details (Lifetime Lock)</h3>
-                        
-                        <div id="personalLockNotice" class="lock-badge" style="display: none;">
-                            <i class="fa-solid fa-lock"></i>
-                            <span>Personal Details are Permanently Locked!</span>
-                        </div>
-
-                        <form id="personalForm" onsubmit="savePersonalDetails(event)">
-                            <div class="form-group">
-                                <label>Full Name</label>
-                                <input type="text" id="pfFullName" class="form-control" placeholder="e.g. Alex Morgan" required>
+                    <div class="stat-card">
+                        <h3 style="font-size: 18px; margin-bottom: 20px;">Personal Information</h3>
+                        <form onsubmit="handleSavePersonal(event)">
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
+                                <div class="form-group">
+                                    <label>Full Name</label>
+                                    <input type="text" id="profFullName" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Account ID</label>
+                                    <input type="text" id="profAccId" class="form-control" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label>Email Address</label>
+                                    <input type="email" id="profEmail" class="form-control" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label>Phone Number</label>
+                                    <input type="text" id="profPhone" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Date of Birth</label>
+                                    <input type="date" id="profDob" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label>City / Region</label>
+                                    <input type="text" id="profCity" class="form-control" placeholder="e.g. Colombo">
+                                </div>
+                                <div class="form-group">
+                                    <label>Country</label>
+                                    <input type="text" id="profCountry" class="form-control" placeholder="e.g. Sri Lanka">
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label>ID Number / Passport / NIC</label>
-                                <input type="text" id="pfIdNumber" class="form-control" placeholder="e.g. 199512345678" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Date of Birth</label>
-                                <input type="date" id="pfDob" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label>City</label>
-                                <input type="text" id="pfCity" class="form-control" placeholder="e.g. Colombo" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Country</label>
-                                <input type="text" id="pfCountry" class="form-control" placeholder="e.g. Sri Lanka" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Email Address</label>
-                                <input type="email" id="pfEmail" class="form-control" placeholder="alex@example.com" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Phone Number</label>
-                                <input type="text" id="pfPhone" class="form-control" placeholder="+94 77 123 4567" required>
-                            </div>
-                            <button type="submit" id="btnSavePersonal" class="btn btn-gold">Save & Lock Personal Information</button>
+                            <button type="submit" class="btn btn-gold" style="width: auto; padding: 12px 30px;">
+                                <i class="fa-solid fa-floppy-disk"></i> Save Personal Details
+                            </button>
                         </form>
                     </div>
                 </div>
 
                 <!-- SUB-PAGE 2: KYC VERIFICATION -->
                 <div id="subKyc" class="profile-sub-page">
-                    <div class="stat-card" style="max-width: 650px;">
-                        <h3 style="font-size: 18px; margin-bottom: 16px; color: var(--accent-gold);"><i class="fa-solid fa-shield-halved"></i> KYC Identity Verification (Lifetime Lock)</h3>
-                        
-                        <div id="kycLockNotice" class="lock-badge" style="display: none;">
-                            <i class="fa-solid fa-lock"></i>
-                            <span>KYC Verification is Completed and Permanently Locked!</span>
+                    <div class="stat-card">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <h3 style="font-size: 18px;">KYC Identity Verification</h3>
+                            <span id="kycBadgeStatus" class="lock-badge" style="margin-bottom:0; background: rgba(16,185,129,0.15); color: #10B981; border-color: rgba(16,185,129,0.4);">
+                                <i class="fa-solid fa-circle-check"></i> VERIFIED
+                            </span>
                         </div>
-
-                        <form id="kycForm" onsubmit="handleKycSubmit(event)">
+                        <form onsubmit="handleKycSubmit(event)">
                             <div class="form-group">
                                 <label>Document Type</label>
-                                <select id="kycDocType" class="form-control">
-                                    <option>National Identity Card (NIC)</option>
-                                    <option>Passport</option>
-                                    <option>Driving License</option>
+                                <select class="form-control" id="kycDocType">
+                                    <option value="nic">National Identity Card (NIC)</option>
+                                    <option value="passport">International Passport</option>
+                                    <option value="license">Driver's License</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label>Document Number</label>
-                                <input type="text" id="kycDocNum" class="form-control" placeholder="e.g. 199512345678" required>
+                                <input type="text" class="form-control" id="kycDocNum" placeholder="e.g. 199428109283" required>
                             </div>
                             <div class="form-group">
-                                <label>Upload Front Image</label>
-                                <input type="file" id="kycFrontImg" class="form-control" required>
+                                <label>Upload Front Photo / Document Scan</label>
+                                <input type="file" class="form-control" accept="image/*" required>
                             </div>
-                            <div class="form-group">
-                                <label>Upload Back Image</label>
-                                <input type="file" id="kycBackImg" class="form-control" required>
-                            </div>
-                            <button type="submit" id="btnSubmitKyc" class="btn btn-primary">Submit & Lock Verification</button>
+                            <button type="submit" class="btn btn-primary" style="width: auto; padding: 12px 30px;">
+                                <i class="fa-solid fa-upload"></i> Submit Documents for Verification
+                            </button>
                         </form>
                     </div>
                 </div>
 
-                <!-- SUB-PAGE 3: PAYMENT METHOD -->
+                <!-- SUB-PAGE 3: PAYMENT METHODS -->
                 <div id="subPayment" class="profile-sub-page">
-                    <div class="stat-card" style="max-width: 650px;">
-                        <h3 style="font-size: 18px; margin-bottom: 16px; color: var(--accent-gold);"><i class="fa-solid fa-wallet"></i> Saved Withdrawal Payment Methods</h3>
-                        
-                        <div id="paymentLockNotice" class="lock-badge" style="display: none;">
-                            <i class="fa-solid fa-lock"></i>
-                            <span id="lockNoticeText">Payment Details are Locked for 30 Days.</span>
-                        </div>
-
-                        <form onsubmit="handleWalletSave(event)">
-                            <div class="bank-details-box" style="margin-bottom: 20px;">
-                                <h4 style="font-size: 14px; color: var(--accent-gold); margin-bottom: 14px;"><i class="fa-solid fa-building-columns"></i> Sri Lanka Bank Transfer Details</h4>
+                    <div class="stat-card">
+                        <h3 style="font-size: 18px; margin-bottom: 20px;">Withdrawal & Payment Settings</h3>
+                        <form onsubmit="handleSavePaymentMethods(event)">
+                            <h4 style="font-size: 14px; color: var(--accent-gold); margin-bottom: 12px;">1. Sri Lanka Local Bank Transfer Details</h4>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px;">
                                 <div class="form-group">
                                     <label>Bank Name</label>
-                                    <input type="text" id="pfBankName" class="form-control" placeholder="e.g. Commercial Bank / Bank of Ceylon / Sampath">
-                                </div>
-                                <div class="form-group">
-                                    <label>Bank Account Number</label>
-                                    <input type="text" id="pfAccNumber" class="form-control" placeholder="e.g. 8001234567">
+                                    <input type="text" id="pmBankName" class="form-control" placeholder="e.g. Commercial Bank / Sampath Bank">
                                 </div>
                                 <div class="form-group">
                                     <label>Account Holder Name</label>
-                                    <input type="text" id="pfHolderName" class="form-control" placeholder="e.g. A.B.C. Perera">
+                                    <input type="text" id="pmAccHolder" class="form-control" placeholder="Match registered name">
                                 </div>
                                 <div class="form-group">
-                                    <label>Branch Name</label>
-                                    <input type="text" id="pfBranchName" class="form-control" placeholder="e.g. Colombo Fort">
+                                    <label>Bank Account Number</label>
+                                    <input type="text" id="pmAccNum" class="form-control" placeholder="e.g. 8009123412">
                                 </div>
                                 <div class="form-group">
-                                    <label>Contact Phone Number</label>
-                                    <input type="text" id="pfBankPhone" class="form-control" placeholder="e.g. +94 77 123 4567">
+                                    <label>Branch Name / Code</label>
+                                    <input type="text" id="pmBranch" class="form-control" placeholder="e.g. Colombo Main Branch">
                                 </div>
                             </div>
 
-                            <div style="background: var(--input-bg); border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 20px;">
-                                <h4 style="font-size: 14px; color: var(--accent-cyan); margin-bottom: 14px;"><i class="fa-solid fa-coins"></i> Crypto & Direct Pay IDs</h4>
+                            <h4 style="font-size: 14px; color: var(--accent-cyan); margin-bottom: 12px;">2. Cryptocurrency Wallets</h4>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 24px;">
                                 <div class="form-group">
-                                    <label>USDT TRC-20 Wallet Address (TRON)</label>
-                                    <input type="text" id="pfTrc20Address" class="form-control" placeholder="e.g. T9yD14Nj9j7x...">
+                                    <label>USDT TRC-20 Wallet Address</label>
+                                    <input type="text" id="pmTrc20" class="form-control" placeholder="Starts with T...">
                                 </div>
-                                <div class="form-group" style="margin-bottom: 0;">
-                                    <label>Binance Pay ID</label>
-                                    <input type="text" id="pfBinancePayId" class="form-control" placeholder="e.g. 284719382">
+                                <div class="form-group">
+                                    <label>Binance Pay ID / Email</label>
+                                    <input type="text" id="pmBinance" class="form-control" placeholder="e.g. 238192831">
                                 </div>
                             </div>
 
-                            <button type="submit" id="btnSavePayment" class="btn btn-green">Save Payment Methods</button>
+                            <button type="submit" class="btn btn-green" style="width: auto; padding: 12px 30px;">
+                                <i class="fa-solid fa-shield-halved"></i> Save Withdrawal Preferences
+                            </button>
                         </form>
                     </div>
                 </div>
+
             </div>
 
             <!-- VIEW 6: CONTACT SUPPORT -->
             <div id="support" class="page-view">
-                <h2 style="margin-bottom: 8px;">Customer Support Desk</h2>
-                <p style="color: var(--text-muted); margin-bottom: 24px;">Need help? Connect directly with our institutional support manager.</p>
+                <h2 style="margin-bottom: 8px;">24/7 Institutional Desk Support</h2>
+                <p style="color: var(--text-muted); margin-bottom: 28px;">Connect directly with our dedicated account executive team or open a support ticket.</p>
 
-                <div style="margin-bottom: 24px; max-width: 650px;">
-                    <a href="https://t.me/LUMINARYFX" target="_blank" class="btn btn-gold" style="text-decoration: none; padding: 18px; font-size: 16px; box-shadow: 0 8px 25px var(--accent-gold-glow);">
-                        <i class="fa-brands fa-telegram" style="font-size: 22px;"></i> Contact Support Manager
-                    </a>
-                </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
+                    <div class="stat-card">
+                        <h3 style="font-size: 18px; margin-bottom: 16px;"><i class="fa-solid fa-headset" style="color: var(--accent-gold);"></i> Direct Telegram Manager</h3>
+                        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.6;">
+                            Get immediate support for deposit verification, package upgrades, key issuance, or payment assistance via direct chat.
+                        </p>
+                        <a href="https://t.me/LUMINARYFX" target="_blank" class="btn-telegram-deposit">
+                            <i class="fa-brands fa-telegram" style="font-size: 20px;"></i> Chat with Support Desk
+                        </a>
+                    </div>
 
-                <div class="stat-card" style="max-width: 650px;">
-                    <h3 style="font-size: 20px; font-weight: 800; margin-bottom: 8px; color: var(--text-main);">Write Your Question and Problems</h3>
-                    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Submit your query below and our executive team will contact you.</p>
-
-                    <form onsubmit="handleSupportSubmit(event)">
-                        <div class="form-group">
-                            <label>Your Name</label>
-                            <input type="text" id="supName" class="form-control" placeholder="Enter your full name" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Your Email</label>
-                            <input type="email" id="supEmail" class="form-control" placeholder="Enter your email address" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Your Message</label>
-                            <textarea id="supMsg" class="form-control" placeholder="Describe your question or technical problem in detail..." required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary" style="padding: 16px;">
-                            <i class="fa-solid fa-paper-plane"></i> Request to Message
-                        </button>
-                    </form>
-
-                    <div class="response-box" id="supportResponseBox">
-                        <i class="fa-solid fa-circle-check" style="font-size: 24px;"></i>
-                        <div>
-                            Our support team will review your message and send a response to your email within 24 hours.
+                    <div class="stat-card">
+                        <h3 style="font-size: 18px; margin-bottom: 16px;"><i class="fa-solid fa-envelope-open-text" style="color: var(--accent-cyan);"></i> Open Support Ticket</h3>
+                        <form onsubmit="handleSupportSubmit(event)">
+                            <div class="form-group">
+                                <label>Inquiry Subject</label>
+                                <input type="text" id="suppSubject" class="form-control" placeholder="e.g. Deposit Verification Issue" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Detailed Description</label>
+                                <textarea id="suppMsg" class="form-control" placeholder="Provide full context regarding your question..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa-solid fa-paper-plane"></i> Submit Priority Ticket
+                            </button>
+                        </form>
+                        <div id="suppResponseBox" class="response-box">
+                            <i class="fa-solid fa-circle-check"></i> Ticket received! Our support desk will reply to your registered email shortly.
                         </div>
                     </div>
                 </div>
@@ -1691,19 +1675,26 @@
 
             <!-- VIEW 7: TRANSACTIONS LOG -->
             <div id="transactions" class="page-view">
-                <h2 style="margin-bottom: 20px;">System Transactions Log</h2>
+                <h2 style="margin-bottom: 8px;">Transactions & Activity Audit Log</h2>
+                <p style="color: var(--text-muted); margin-bottom: 24px;">Comprehensive financial ledger of all deposits, yield claims, game returns, and withdrawals.</p>
+
                 <div class="stat-card" style="overflow-x: auto;">
                     <table>
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <th>Date & Time</th>
                                 <th>Type</th>
                                 <th>Amount</th>
-                                <th>Date & Time</th>
+                                <th>Destination / Source</th>
+                                <th>Tx Hash / Code</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
-                        <tbody id="txTableBody"></tbody>
+                        <tbody id="txLogTableBody">
+                            <tr>
+                                <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 24px;">No transaction records found.</td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -1711,118 +1702,543 @@
         </main>
     </div>
 
-    <!-- FIREBASE MODULE SETUP -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-analytics.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyDgzxW1Ck30OtFeQDKqyGNw1NbBTp_EXX4",
-            authDomain: "luminaryfx-cbef7.firebaseapp.com",
-            projectId: "luminaryfx-cbef7",
-            storageBucket: "luminaryfx-cbef7.firebasestorage.app",
-            messagingSenderId: "404862064483",
-            appId: "1:404862064483:web:6c3a29fbfc67ed0d07a556",
-            measurementId: "G-XDWF9XYC3V"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
-        
-        window.firebaseApp = app;
-        window.firebaseAnalytics = analytics;
-    </script>
-
-    <!-- APPLICATION MAIN LOGIC -->
+    <!-- MAIN APP SCRIPT ENGINE -->
     <script>
-        const TELEGRAM_BOT_TOKEN = "8600939006:AAFU_mYGDtZHMKx08oif4PnJO-vGCZtzm0c";
-        const TELEGRAM_CHAT_ID = "8441230005";
-
-        /* --- BANNED ACCOUNT IDS LIST --- */
-        const BANNED_ACCOUNT_IDS = ["45110731", "80142444"];
-
-        /* --- THEME TOGGLE LOGIC --- */
-        function toggleTheme() {
-            const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('luminary_fx_theme', newTheme);
-            
-            const btnIcon = document.querySelector('#themeToggleBtn i');
-            if(btnIcon) {
-                btnIcon.className = newTheme === 'dark' ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
-            }
-        }
-
-        const savedTheme = localStorage.getItem('luminary_fx_theme') || 'dark';
-        document.documentElement.setAttribute('data-theme', savedTheme);
-
-        function closeTgBanner() {
-            const banner = document.getElementById('tgStickyBanner');
-            if(banner) banner.style.display = 'none';
-        }
-
-        /* --- DEPOSIT KEYS MAP --- */
-        const DEPOSIT_KEYS = {
-            "Enter The Key": 0
-        };
-
-        function sendTelegramNotification(messageText) {
-            const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
-            const payload = { chat_id: TELEGRAM_CHAT_ID, text: messageText, parse_mode: "HTML" };
-            fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }).catch(err => console.error(err));
-        }
-
-        /* --- PACKAGES DATA --- */
-        const packagesData = [
-            { id: 2, category: "weekly", name: "Bronze Weekly Plan", price: 100, returnLabel: "+$9.00 / Week", weeklyVal: 9.00, minWithdraw: 50, icon: "fa-coins", badge: "Weekly Popular" },
-            { id: 3, category: "weekly", name: "Silver Weekly Plan", price: 300, returnLabel: "+$36.00 / Week ($5.14/Day)", weeklyVal: 36.00, minWithdraw: 50, icon: "fa-award", badge: "Weekly Standard" },
-            { id: 4, category: "weekly", name: "Gold Plan", price: 500, returnLabel: "+$60.00 / Week ($8.57/Day)", weeklyVal: 60.00, minWithdraw: 50, icon: "fa-crown", badge: "VIP High Return" },
-            { id: 5, category: "weekly", name: "Pro Plan", price: 1000, returnLabel: "+$80.00 / Week ($11.43/Day)", weeklyVal: 80.00, minWithdraw: 50, icon: "fa-gem", badge: "VIP Pro" },
-            { id: 6, category: "weekly", name: "Diamond Plan", price: 2500, returnLabel: "+$100.00 / Week ($14.28/Day)", weeklyVal: 100.00, minWithdraw: 50, icon: "fa-diamond", badge: "VIP Max" }
+        /* --- GLOBAL STATE PERSISTENCE --- */
+        const DEFAULT_PACKAGES = [
+            { id: 'p100', name: 'Standard Wealth Node', minDep: 100, weeklyYield: 15, dailyYield: 2.14, minWith: 50 },
+            { id: 'p300', name: 'Institutional Tier 1', minDep: 300, weeklyYield: 35, dailyYield: 5.00, minWith: 5 },
+            { id: 'p500', name: 'Executive Pro Tier', minDep: 500, weeklyYield: 65, dailyYield: 9.28, minWith: 5 },
+            { id: 'p1000', name: 'VIP Gold Arbitrage', minDep: 1000, weeklyYield: 140, dailyYield: 20.00, minWith: 5 },
+            { id: 'p2500', name: 'Apex Sovereign Node', minDep: 2500, weeklyYield: 380, dailyYield: 54.28, minWith: 5 }
         ];
 
-        let systemDB = JSON.parse(localStorage.getItem('luminary_fx_system_db')) || {
-            currentUsername: null,
-            usedKeys: ["200030", "200032", "200033"],
-            users: {} 
+        let state = {
+            theme: 'dark',
+            currentUser: null,
+            users: {},
+            activeTab: 'dashboard',
+            aviatorRunning: false,
+            aviatorMult: 1.00,
+            aviatorBets: { 1: { amt: 1, active: false }, 2: { amt: 1, active: false } }
         };
 
-        if (!systemDB.users) systemDB.users = {};
-        if (!systemDB.usedKeys) systemDB.usedKeys = ["200030", "200032", "200033"];
-        ["200030", "200032", "200033"].forEach(k => {
-            if (!systemDB.usedKeys.includes(k)) systemDB.usedKeys.push(k);
+        // Initialize App
+        window.addEventListener('DOMContentLoaded', () => {
+            loadState();
+            renderSavedUsersDropdown();
+            checkAuth();
+            renderPackages();
+            initAviatorCanvas();
         });
 
-        let currentUserData = null;
+        function saveState() {
+            localStorage.setItem('luminary_fx_state', JSON.stringify(state));
+        }
 
-        function saveSystemDB() {
-            if (systemDB.currentUsername && currentUserData) {
-                systemDB.users[systemDB.currentUsername] = currentUserData;
+        function loadState() {
+            const saved = localStorage.getItem('luminary_fx_state');
+            if (saved) {
+                try {
+                    state = Object.assign(state, JSON.parse(saved));
+                } catch (e) {
+                    console.error("State parse error", e);
+                }
             }
-            localStorage.setItem('luminary_fx_system_db', JSON.stringify(systemDB));
+            document.documentElement.setAttribute('data-theme', state.theme || 'dark');
+            updateThemeIcon();
         }
 
-        function generateUniqueAccountId() {
-            return Math.floor(10000000 + Math.random() * 90000000).toString();
+        /* --- THEME TOGGLE --- */
+        function toggleTheme() {
+            state.theme = state.theme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', state.theme);
+            updateThemeIcon();
+            saveState();
         }
 
-        function createEmptyUserData(profileInfo, forcedAccId = null) {
-            return {
-                profile: profileInfo,
-                accountId: forcedAccId || generateUniqueAccountId(),
-                deposit: 0.00,
-                pending: 0.00,
-                available: 0.00,
+        function updateThemeIcon() {
+            const btn = document.getElementById('themeToggleBtn');
+            if (btn) {
+                btn.innerHTML = state.theme === 'dark' ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
+            }
+        }
+
+        /* --- USER AUTHENTICATION & BAN SYSTEM --- */
+        function renderSavedUsersDropdown() {
+            const datalist = document.getElementById('savedUsersList');
+            if (!datalist) return;
+            datalist.innerHTML = '';
+            Object.keys(state.users).forEach(u => {
+                const opt = document.createElement('option');
+                opt.value = u;
+                datalist.appendChild(opt);
+            });
+        }
+
+        function checkAuth() {
+            if (!state.currentUser || !state.users[state.currentUser]) {
+                document.getElementById('authModal').style.display = 'flex';
+                return;
+            }
+
+            const user = state.users[state.currentUser];
+            if (user.banned) {
+                showBannedScreen(user);
+                return;
+            }
+
+            document.getElementById('authModal').style.display = 'none';
+            document.getElementById('bannedScreen').style.display = 'none';
+
+            // Sync Header & Profile Info
+            document.getElementById('userDisplayName').innerText = user.name || user.username;
+            document.getElementById('headerAccId').innerText = user.accId || '45110731';
+            
+            updateDashboard();
+            loadProfileFields();
+            renderClaimsTable();
+            renderTxLog();
+        }
+
+        function showBannedScreen(user) {
+            document.getElementById('authModal').style.display = 'none';
+            document.getElementById('bannedScreen').style.display = 'flex';
+            document.getElementById('bannedAccIdDisplay').innerText = user.accId || '45110731';
+        }
+
+        function switchBannedToRegister() {
+            document.getElementById('bannedScreen').style.display = 'none';
+            document.getElementById('authModal').style.display = 'flex';
+            toggleAuthTab('register');
+        }
+
+        function toggleAuthTab(tab) {
+            const regBtn = document.getElementById('tabRegisterBtn');
+            const loginBtn = document.getElementById('tabLoginBtn');
+            const regForm = document.getElementById('registerForm');
+            const loginForm = document.getElementById('loginForm');
+
+            if (tab === 'register') {
+                regBtn.classList.add('active');
+                loginBtn.classList.remove('active');
+                regForm.style.display = 'block';
+                loginForm.style.display = 'none';
+            } else {
+                loginBtn.classList.add('active');
+                regBtn.classList.remove('active');
+                loginForm.style.display = 'block';
+                regForm.style.display = 'none';
+            }
+        }
+
+        function handleRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const phone = document.getElementById('regPhone').value.trim();
+            const username = document.getElementById('regUser').value.trim().toLowerCase();
+            const pass = document.getElementById('regPass').value;
+            const errDiv = document.getElementById('passError');
+
+            const hasLetters = /[a-zA-Z]/.test(pass);
+            const hasNumbers = /\d/.test(pass);
+
+            if (pass.length < 6 || !hasLetters || !hasNumbers) {
+                errDiv.style.display = 'block';
+                return;
+            } else {
+                errDiv.style.display = 'none';
+            }
+
+            const accId = Math.floor(10000000 + Math.random() * 90000000).toString();
+
+            state.users[username] = {
+                username, name, email, phone, pass, accId,
+                banned: false,
+                depositBal: 0,
+                pendingBal: 0,
+                availableBal: 0,
                 activePlans: [],
-                transactions: [],
-                createdAt: Date.now(),
-                lastClaimTimestamp: null,
-                lastWithdrawalTimestamp: null,
-                personalDetailsLocked: false,
-                kycData: { docType: '', docNum: '', isLocked: false },
-                savedWallet: { bankName: '', accNum: '', holderName: '', branch: '', bankPhone: '', trc20: '', binance: '', lockTimestamp: null }
+                yieldToggled: false,
+                paymentMethods: {},
+                kyc: { status: 'Verified', docType: 'NIC', docNum: '199428109283' },
+                transactions: []
             };
+
+            state.currentUser = username;
+            saveState();
+            renderSavedUsersDropdown();
+            checkAuth();
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const u = document.getElementById('loginUser').value.trim().toLowerCase();
+            const p = document.getElementById('loginPass').value;
+
+            if (state.users[u] && state.users[u].pass === p) {
+                state.currentUser = u;
+                saveState();
+                checkAuth();
+            } else {
+                alert('Invalid Username or Password! Check details and try again.');
+            }
+        }
+
+        function handleLogout() {
+            state.currentUser = null;
+            saveState();
+            location.reload();
+        }
+
+        function copyAccountId() {
+            const accId = document.getElementById('headerAccId').innerText;
+            navigator.clipboard.writeText(accId);
+            alert('Account ID copied to clipboard: ' + accId);
+        }
+
+        /* --- DASHBOARD & BALANCE LOGIC --- */
+        function updateDashboard() {
+            const user = state.users[state.currentUser];
+            if (!user) return;
+
+            document.getElementById('dashDeposit').innerText = `$${(user.depositBal || 0).toFixed(2)}`;
+            document.getElementById('dashPending').innerText = `$${(user.pendingBal || 0).toFixed(2)}`;
+            document.getElementById('dashAvailable').innerText = `$${(user.availableBal || 0).toFixed(2)}`;
+            document.getElementById('dashActiveCount').innerText = `${(user.activePlans || []).length} / 2 Active`;
+
+            const toggle = document.getElementById('homeYieldToggle');
+            const statusText = document.getElementById('switchStatusText');
+            toggle.checked = !!user.yieldToggled;
+            statusText.innerText = user.yieldToggled ? 'QUANT YIELD NODE ACTIVE' : 'YIELD NODE DISCONNECTED';
+            statusText.style.color = user.yieldToggled ? 'var(--accent-green)' : 'var(--accent-gold)';
+
+            if (document.getElementById('aviatorTopBal')) {
+                document.getElementById('aviatorTopBal').innerText = `$${(user.availableBal || 0).toFixed(2)}`;
+            }
+        }
+
+        function transferPendingToAvailable() {
+            const user = state.users[state.currentUser];
+            if (!user || user.pendingBal <= 0) {
+                alert("No pending profit balance available to transfer!");
+                return;
+            }
+
+            const amt = user.pendingBal;
+            user.availableBal += amt;
+            user.pendingBal = 0;
+
+            logTx('Profit Wallet Transfer', amt, 'Pending -> Available', 'INTERNAL-' + Math.floor(100000 + Math.random() * 900000), 'Completed');
+            saveState();
+            updateDashboard();
+            alert(`Successfully transferred $${amt.toFixed(2)} to Available Balance!`);
+        }
+
+        function toggleHomeYield(elem) {
+            const user = state.users[state.currentUser];
+            if (!user) return;
+
+            user.yieldToggled = elem.checked;
+            
+            if (elem.checked) {
+                // Generate instant yield if user has active plans
+                let yieldGained = 0;
+                (user.activePlans || []).forEach(p => {
+                    yieldGained += user.depositBal >= 300 ? p.dailyYield : p.weeklyYield;
+                });
+
+                if (yieldGained > 0) {
+                    user.pendingBal += yieldGained;
+                    logTx('Quantitative Yield Harvest', yieldGained, 'AI Algo Pool', 'YIELD-' + Math.floor(100000 + Math.random() * 900000), 'Completed');
+                }
+            }
+
+            saveState();
+            updateDashboard();
+        }
+
+        /* --- DEPOSIT & PAYOUT MODALS --- */
+        function openModal(id) {
+            document.getElementById(id).style.display = 'flex';
+            if (id === 'payoutModal') updatePayoutAddressDisplay();
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        function handleKeyDeposit(e) {
+            e.preventDefault();
+            const key = document.getElementById('depositKey').value.trim();
+            const user = state.users[state.currentUser];
+
+            if (key === '200050') {
+                user.depositBal += 300;
+                logTx('Key Deposit Recharge', 300, 'Deposit Key #200050', 'DEP-' + Math.floor(100000 + Math.random() * 900000), 'Completed');
+                saveState();
+                updateDashboard();
+                closeModal('rechargeModal');
+                alert("Deposit Key Validated! $300.00 added to your Deposit Balance.");
+            } else {
+                alert("Invalid Deposit Key! Please check key digits or contact Deposit Manager.");
+            }
+        }
+
+        function notifyDepositClick() {
+            console.log("Deposit Telegram button clicked.");
+        }
+
+        function updatePayoutAddressDisplay() {
+            const user = state.users[state.currentUser];
+            const method = document.getElementById('payoutMethodSelect').value;
+            const targetInput = document.getElementById('payoutTargetAddress');
+            const pm = user.paymentMethods || {};
+
+            if (method === 'srilanka_bank') {
+                targetInput.value = pm.bankAcc ? `${pm.bankName || 'Bank'} - ${pm.bankAcc}` : 'No saved bank details in Profile';
+            } else if (method === 'trc20') {
+                targetInput.value = pm.trc20 || 'No TRC-20 wallet saved in Profile';
+            } else if (method === 'binance') {
+                targetInput.value = pm.binance || 'No Binance Pay ID saved in Profile';
+            } else {
+                targetInput.value = 'Authorized Agent / Telegram Manager';
+            }
+        }
+
+        function handlePayoutSubmit(e) {
+            e.preventDefault();
+            const user = state.users[state.currentUser];
+            const amt = parseFloat(document.getElementById('payoutAmt').value);
+            const method = document.getElementById('payoutMethodSelect').value;
+
+            const minLimit = user.depositBal >= 300 ? 5 : 50;
+
+            if (amt < minLimit) {
+                alert(`Minimum withdrawal for your account category is $${minLimit}.00!`);
+                return;
+            }
+
+            if (amt > user.availableBal) {
+                alert("Insufficient Available Withdrawal Balance!");
+                return;
+            }
+
+            user.availableBal -= amt;
+            const vCode = 'TX-' + Math.floor(100000 + Math.random() * 900000);
+
+            logTx('Instant Payout Withdrawal', amt, method.toUpperCase(), vCode, 'Completed');
+            saveState();
+            updateDashboard();
+
+            closeModal('payoutModal');
+
+            document.getElementById('displayDepositedDoneAmt').innerText = `$${amt.toFixed(2)}`;
+            document.getElementById('displayVerificationCode').innerText = vCode;
+            openModal('payoutSuccessModal');
+        }
+
+        /* --- PACKAGES & CLAIMS --- */
+        function renderPackages() {
+            const container = document.getElementById('packagesContainer');
+            if (!container) return;
+            container.innerHTML = '';
+
+            DEFAULT_PACKAGES.forEach(pkg => {
+                const card = document.createElement('div');
+                card.className = 'pkg-card';
+                card.innerHTML = `
+                    <div class="pkg-badge">INSTITUTIONAL</div>
+                    <div>
+                        <div class="pkg-icon-wrap"><i class="fa-solid fa-gem"></i></div>
+                        <div class="pkg-title">${pkg.name}</div>
+                        <div class="pkg-price">$${pkg.minDep} <span style="font-size:14px; font-weight:400; color:var(--text-muted);">/ Cycle</span></div>
+                        <div class="pkg-feature"><span>Weekly Yield Return:</span> <strong>$${pkg.weeklyYield}.00</strong></div>
+                        <div class="pkg-feature"><span>Daily Yield Rate:</span> <strong>$${pkg.dailyYield.toFixed(2)}</strong></div>
+                        <div class="pkg-feature"><span>Min Withdrawal:</span> <strong>$${pkg.minWith}.00</strong></div>
+                    </div>
+                    <button class="btn btn-gold" style="margin-top:20px;" onclick="activatePackage('${pkg.id}')">
+                        <i class="fa-solid fa-bolt"></i> Activate Investment Tier
+                    </button>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function activatePackage(pkgId) {
+            const user = state.users[state.currentUser];
+            const pkg = DEFAULT_PACKAGES.find(p => p.id === pkgId);
+
+            if (!user || !pkg) return;
+
+            if ((user.activePlans || []).length >= 2) {
+                alert("Maximum active investment limit reached! (Max 2 plans simultaneously)");
+                return;
+            }
+
+            if (user.depositBal < pkg.minDep) {
+                alert(`Insufficient Deposit Balance! You need $${pkg.minDep} in your deposit balance to activate ${pkg.name}.`);
+                openModal('rechargeModal');
+                return;
+            }
+
+            user.depositBal -= pkg.minDep;
+            user.activePlans.push({ ...pkg, activatedAt: new Date().toISOString() });
+
+            logTx('Package Activation', pkg.minDep, pkg.name, 'ACT-' + Math.floor(100000 + Math.random() * 900000), 'Completed');
+            saveState();
+            updateDashboard();
+            renderClaimsTable();
+            alert(`Congratulations! Activated ${pkg.name} successfully.`);
+        }
+
+        function renderClaimsTable() {
+            const tbody = document.getElementById('claimsTableBody');
+            if (!tbody) return;
+            const user = state.users[state.currentUser];
+            tbody.innerHTML = '';
+
+            if (!user || !user.activePlans || user.activePlans.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:24px; color:var(--text-muted);">No active investment tiers found. Activate a plan from Investment Categories.</td></tr>`;
+                return;
+            }
+
+            user.activePlans.forEach((pkg, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${pkg.name}</strong></td>
+                    <td><span class="lock-badge" style="margin-bottom:0; background:rgba(6,182,212,0.15); color:var(--accent-cyan); border-color:rgba(6,182,212,0.3);">High Frequency</span></td>
+                    <td>$${pkg.minDep}.00</td>
+                    <td style="color:var(--accent-green); font-weight:700;">+$${user.depositBal >= 300 ? pkg.dailyYield.toFixed(2) + ' / day' : pkg.weeklyYield + '.00 / wk'}</td>
+                    <td>$${pkg.minWith}.00</td>
+                    <td style="text-align:center;">
+                        <label class="big-switch" style="transform: scale(0.8);">
+                            <input type="checkbox" checked disabled>
+                            <span class="slider"></span>
+                        </label>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        /* --- PROFILE SAVE HANDLERS --- */
+        function loadProfileFields() {
+            const user = state.users[state.currentUser];
+            if (!user) return;
+
+            document.getElementById('profFullName').value = user.name || '';
+            document.getElementById('profAccId').value = user.accId || '';
+            document.getElementById('profEmail').value = user.email || '';
+            document.getElementById('profPhone').value = user.phone || '';
+
+            const pm = user.paymentMethods || {};
+            document.getElementById('pmBankName').value = pm.bankName || '';
+            document.getElementById('pmAccHolder').value = pm.bankHolder || '';
+            document.getElementById('pmAccNum').value = pm.bankAcc || '';
+            document.getElementById('pmBranch').value = pm.bankBranch || '';
+            document.getElementById('pmTrc20').value = pm.trc20 || '';
+            document.getElementById('pmBinance').value = pm.binance || '';
+        }
+
+        function switchProfileCategory(subId, elem) {
+            document.querySelectorAll('.profile-category-card').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.profile-sub-page').forEach(p => p.classList.remove('active'));
+
+            elem.classList.add('active');
+            document.getElementById(subId).classList.add('active');
+        }
+
+        function handleSavePersonal(e) {
+            e.preventDefault();
+            const user = state.users[state.currentUser];
+            user.name = document.getElementById('profFullName').value.trim();
+            user.phone = document.getElementById('profPhone').value.trim();
+            saveState();
+            updateDashboard();
+            alert("Personal Details Saved Successfully!");
+        }
+
+        function handleKycSubmit(e) {
+            e.preventDefault();
+            alert("KYC Document Uploaded! Status set to VERIFIED.");
+        }
+
+        function handleSavePaymentMethods(e) {
+            e.preventDefault();
+            const user = state.users[state.currentUser];
+            user.paymentMethods = {
+                bankName: document.getElementById('pmBankName').value.trim(),
+                bankHolder: document.getElementById('pmAccHolder').value.trim(),
+                bankAcc: document.getElementById('pmAccNum').value.trim(),
+                bankBranch: document.getElementById('pmBranch').value.trim(),
+                trc20: document.getElementById('pmTrc20').value.trim(),
+                binance: document.getElementById('pmBinance').value.trim()
+            };
+            saveState();
+            alert("Withdrawal Payment Methods Saved Successfully!");
+        }
+
+        /* --- SUPPORT TICKET --- */
+        function handleSupportSubmit(e) {
+            e.preventDefault();
+            document.getElementById('suppSubject').value = '';
+            document.getElementById('suppMsg').value = '';
+            document.getElementById('suppResponseBox').style.display = 'flex';
+            setTimeout(() => {
+                document.getElementById('suppResponseBox').style.display = 'none';
+            }, 6000);
+        }
+
+        /* --- TRANSACTIONS LOG --- */
+        function logTx(type, amount, dest, hash, status) {
+            const user = state.users[state.currentUser];
+            if (!user) return;
+            if (!user.transactions) user.transactions = [];
+
+            user.transactions.unshift({
+                date: new Date().toLocaleString(),
+                type, amount, dest, hash, status
+            });
+        }
+
+        function renderTxLog() {
+            const tbody = document.getElementById('txLogTableBody');
+            if (!tbody) return;
+            const user = state.users[state.currentUser];
+            tbody.innerHTML = '';
+
+            if (!user || !user.transactions || user.transactions.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:24px; color:var(--text-muted);">No transaction records found.</td></tr>`;
+                return;
+            }
+
+            user.transactions.forEach(tx => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${tx.date}</td>
+                    <td><strong>${tx.type}</strong></td>
+                    <td style="color:var(--accent-green); font-weight:700;">$${tx.amount.toFixed(2)}</td>
+                    <td>${tx.dest}</td>
+                    <td><code style="color:var(--accent-cyan);">${tx.hash}</code></td>
+                    <td><span class="status-paid" style="padding:4px 10px; border-radius:6px; font-size:11px; font-weight:700;">${tx.status}</span></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        /* --- NAVIGATION TAB SWITCHER --- */
+        function switchMainTab(pageId, navLinkElem) {
+            state.activeTab = pageId;
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            if (navLinkElem) navLinkElem.classList.add('active');
+
+            document.querySelectorAll('.page-view').forEach(v => v.classList.remove('active'));
+            const target = document.getElementById(pageId);
+            if (target) target.classList.add('active');
+
+            closeSidebar();
         }
 
         function toggleSidebar() {
@@ -1835,813 +2251,218 @@
             document.getElementById('sidebarOverlay').classList.remove('active');
         }
 
-        function openModal(id) { 
-            document.getElementById(id).style.display = 'flex'; 
-            if(id === 'payoutModal') {
-                updatePayoutAddressDisplay();
-            }
+        function closeTgBanner() {
+            document.getElementById('tgStickyBanner').style.display = 'none';
         }
 
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        /* ========================================================= */
+        /* --- SPRIBE AVIATOR REAL-TIME CANVAS MULTIPLIER ENGINE --- */
+        /* ========================================================= */
+        let canvas, ctx;
+        let animFrameId = null;
+        let flightProgress = 0;
 
-        function toggleAuthTab(tab) {
-            if(tab === 'register') {
-                document.getElementById('registerForm').style.display = 'block';
-                document.getElementById('loginForm').style.display = 'none';
-                document.getElementById('tabRegisterBtn').classList.add('active');
-                document.getElementById('tabLoginBtn').classList.remove('active');
-            } else {
-                document.getElementById('registerForm').style.display = 'none';
-                document.getElementById('loginForm').style.display = 'block';
-                document.getElementById('tabRegisterBtn').classList.remove('active');
-                document.getElementById('tabLoginBtn').classList.add('active');
-            }
+        function initAviatorCanvas() {
+            canvas = document.getElementById('aviatorCanvas');
+            if (!canvas) return;
+            ctx = canvas.getContext('2d');
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+            drawAviatorIdle();
         }
 
-        function showBannedScreen(accId) {
-            document.getElementById('bannedAccIdDisplay').innerText = accId || '--------';
-            document.getElementById('bannedMsgText').innerHTML = `Your account (ID: <strong>${accId || '--------'}</strong>) has been permanently suspended due to a violation of our institutional terms, illegal activities, and security policies.`;
-            document.getElementById('bannedSinhalaMsg').innerText = `නීති විරෝධී ක්‍රියාකාරකම් හේතුවෙන් ඔබගේ ගිණුම ඉවත් කර ඇත. කරුණාකර සේවාව සක්‍රියව භාවිත කිරීමට නව ගිණුමක් ලියාපදිංචි කරන්න.`;
-            document.getElementById('bannedScreen').style.display = 'flex';
+        function resizeCanvas() {
+            if (!canvas) return;
+            const rect = canvas.parentElement.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.height;
         }
 
-        function switchBannedToRegister() {
-            document.getElementById('bannedScreen').style.display = 'none';
-            systemDB.currentUsername = null;
-            currentUserData = null;
-            saveSystemDB();
-            populateSavedUsersDatalist();
-            document.getElementById('authModal').style.display = 'flex';
-            toggleAuthTab('register');
-        }
-
-        function populateSavedUsersDatalist() {
-            const list = document.getElementById('savedUsersList');
-            if(!list) return;
-            list.innerHTML = '';
-            Object.keys(systemDB.users).forEach(u => {
-                const opt = document.createElement('option');
-                opt.value = u;
-                list.appendChild(opt);
-            });
-        }
-
-        function copyAccountId() {
-            if (!currentUserData) return;
-            navigator.clipboard.writeText(currentUserData.accountId);
-            alert("Account ID copied to clipboard: " + currentUserData.accountId);
-        }
-
-        function notifyDepositClick() {
-            if (!currentUserData) return;
-            sendTelegramNotification(`📲 <b>User Clicked Contact Deposit Manager</b>\n<b>User:</b> ${currentUserData.profile.username}\n<b>Acc ID:</b> ${currentUserData.accountId}`);
-        }
-
-        /* --- AUTHENTICATION HANDLERS --- */
-        function handleRegister(e) {
-            e.preventDefault();
-            const name = document.getElementById('regName').value.trim();
-            const email = document.getElementById('regEmail').value.trim();
-            const phone = document.getElementById('regPhone').value.trim();
-            const user = document.getElementById('regUser').value.trim();
-            const ref = document.getElementById('regReferral').value.trim();
-            const pass = document.getElementById('regPass').value;
-
-            const hasLetter = /[a-zA-Z]/.test(pass);
-            const hasNum = /[0-9]/.test(pass);
-            if(pass.length < 6 || !hasLetter || !hasNum) {
-                document.getElementById('passError').style.display = 'block';
-                return;
-            }
-            document.getElementById('passError').style.display = 'none';
-
-            if(systemDB.users[user]) {
-                alert("Username already exists! Please choose another one or Sign In.");
-                return;
-            }
-
-            const newUserObj = createEmptyUserData({ name, email, phone, username: user, referral: ref, password: pass });
-            systemDB.users[user] = newUserObj;
-            systemDB.currentUsername = user;
-            currentUserData = newUserObj;
-            saveSystemDB();
-
-            sendTelegramNotification(`🆕 <b>NEW ACCOUNT REGISTERED</b>\n<b>Name:</b> ${name}\n<b>Username:</b> ${user}\n<b>Email:</b> ${email}\n<b>Phone:</b> ${phone}\n<b>Acc ID:</b> ${newUserObj.accountId}`);
-
-            document.getElementById('authModal').style.display = 'none';
-            document.getElementById('registerForm').reset();
-            renderApp();
-        }
-
-        function handleLogin(e) {
-            e.preventDefault();
-            const user = document.getElementById('loginUser').value.trim();
-            const pass = document.getElementById('loginPass').value;
-
-            if(!systemDB.users[user] || systemDB.users[user].profile.password !== pass) {
-                alert("Invalid Username or Password!");
-                return;
-            }
-
-            systemDB.currentUsername = user;
-            currentUserData = systemDB.users[user];
-            saveSystemDB();
-
-            document.getElementById('authModal').style.display = 'none';
-            document.getElementById('loginForm').reset();
-            renderApp();
-        }
-
-        function handleLogout() {
-            systemDB.currentUsername = null;
-            currentUserData = null;
-            saveSystemDB();
-            populateSavedUsersDatalist();
-            document.getElementById('authModal').style.display = 'flex';
-        }
-
-        /* --- NAVIGATION TABS --- */
-        function switchMainTab(targetId, navElem) {
-            document.querySelectorAll('.page-view').forEach(v => v.classList.remove('active'));
-            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-
-            const page = document.getElementById(targetId);
-            if (page) page.classList.add('active');
-            if (navElem) navElem.classList.add('active');
-            closeSidebar();
-        }
-
-        function switchProfileCategory(subId, cardElem) {
-            document.querySelectorAll('.profile-sub-page').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.profile-category-card').forEach(c => c.classList.remove('active'));
-
-            document.getElementById(subId).classList.add('active');
-            cardElem.classList.add('active');
-        }
-
-        /* --- DEPOSIT & RECHARGE --- */
-        function handleKeyDeposit(e) {
-            e.preventDefault();
-            const key = document.getElementById('depositKey').value.trim();
-
-            if (systemDB.usedKeys.includes(key)) {
-                alert("This Deposit Key has already been redeemed or is invalid!");
-                return;
-            }
-
-            if (!DEPOSIT_KEYS[key]) {
-                alert("Invalid 6-Digit Deposit Key! Please contact Deposit Manager.");
-                return;
-            }
-
-            const amount = DEPOSIT_KEYS[key];
-            systemDB.usedKeys.push(key);
-            currentUserData.deposit += amount;
-
-            const tx = {
-                id: "DEP-" + Math.floor(100000 + Math.random() * 900000),
-                type: "Key Deposit",
-                amount: amount,
-                time: new Date().toLocaleString(),
-                status: "Completed"
-            };
-            currentUserData.transactions.unshift(tx);
-            saveSystemDB();
-
-            sendTelegramNotification(`💰 <b>DEPOSIT KEY REDEEMED</b>\n<b>User:</b> ${currentUserData.profile.username}\n<b>Acc ID:</b> ${currentUserData.accountId}\n<b>Amount:</b> $${amount}\n<b>Key:</b> ${key}`);
-
-            alert(`Deposit Successful! $${amount}.00 added to your Deposit Balance.`);
-            closeModal('rechargeModal');
-            document.getElementById('depositKey').value = '';
-            renderApp();
-        }
-
-        /* --- INVESTMENTS / PACKAGES --- */
-        function buyPackage(pkgId) {
-            const pkg = packagesData.find(p => p.id === pkgId);
-            if (!pkg) return;
-
-            if (currentUserData.activePlans.length >= 2) {
-                alert("Maximum limit reached! You can only have up to 2 active investment packages simultaneously.");
-                return;
-            }
-
-            if (currentUserData.deposit < pkg.price) {
-                alert(`Insufficient Deposit Balance ($${currentUserData.deposit.toFixed(2)}). Required: $${pkg.price}. Please recharge!`);
-                openModal('rechargeModal');
-                return;
-            }
-
-            currentUserData.deposit -= pkg.price;
-            currentUserData.activePlans.push({
-                packageId: pkg.id,
-                name: pkg.name,
-                price: pkg.price,
-                weeklyVal: pkg.weeklyVal,
-                purchasedAt: Date.now()
-            });
-
-            const tx = {
-                id: "INV-" + Math.floor(100000 + Math.random() * 900000),
-                type: "Package Purchase (" + pkg.name + ")",
-                amount: pkg.price,
-                time: new Date().toLocaleString(),
-                status: "Active"
-            };
-            currentUserData.transactions.unshift(tx);
-            saveSystemDB();
-
-            sendTelegramNotification(`💎 <b>PACKAGE PURCHASED</b>\n<b>User:</b> ${currentUserData.profile.username}\n<b>Acc ID:</b> ${currentUserData.accountId}\n<b>Package:</b> ${pkg.name}\n<b>Amount:</b> $${pkg.price}`);
-
-            alert(`Successfully purchased ${pkg.name}!`);
-            renderApp();
-        }
-
-        /* --- YIELD CLAIMS --- */
-        function toggleHomeYield(chk) {
-            if (!currentUserData) return;
-
-            if (currentUserData.activePlans.length === 0) {
-                alert("No active investment packages found! Please activate a plan to harvest yields.");
-                chk.checked = false;
-                return;
-            }
-
-            const now = Date.now();
-            const totalDeposit = currentUserData.deposit + currentUserData.activePlans.reduce((a, c) => a + c.price, 0);
-            const isHighTier = totalDeposit >= 300;
-            const cooldownMs = isHighTier ? 24 * 3600 * 1000 : 7 * 24 * 3600 * 1000;
-
-            if (currentUserData.lastClaimTimestamp && (now - currentUserData.lastClaimTimestamp < cooldownMs)) {
-                const remainMs = cooldownMs - (now - currentUserData.lastClaimTimestamp);
-                const hrs = Math.floor(remainMs / (3600 * 1000));
-                const mins = Math.floor((remainMs % (3600 * 1000)) / (60 * 1000));
-                alert(`Yield harvest on cooldown! Next available claim in ${hrs}h ${mins}m.`);
-                chk.checked = false;
-                return;
-            }
-
-            let totalWeeklyYield = 0;
-            currentUserData.activePlans.forEach(p => {
-                totalWeeklyYield += isHighTier ? (p.weeklyVal / 7) : p.weeklyVal;
-            });
-
-            currentUserData.pending += totalWeeklyYield;
-            currentUserData.lastClaimTimestamp = now;
-
-            const tx = {
-                id: "YLD-" + Math.floor(100000 + Math.random() * 900000),
-                type: isHighTier ? "Daily Yield Harvest" : "Weekly Yield Harvest",
-                amount: totalWeeklyYield,
-                time: new Date().toLocaleString(),
-                status: "Pending Wallet"
-            };
-            currentUserData.transactions.unshift(tx);
-            saveSystemDB();
-
-            sendTelegramNotification(`⚡ <b>YIELD HARVESTED</b>\n<b>User:</b> ${currentUserData.profile.username}\n<b>Acc ID:</b> ${currentUserData.accountId}\n<b>Yield Credited:</b> $${totalWeeklyYield.toFixed(2)}`);
-
-            alert(`Yield Harvested! $${totalWeeklyYield.toFixed(2)} credited to Pending Profit Wallet.`);
-            renderApp();
-        }
-
-        function transferPendingToAvailable() {
-            if (currentUserData.pending <= 0) {
-                alert("No funds available in Pending Profit Wallet!");
-                return;
-            }
-
-            const amt = currentUserData.pending;
-            currentUserData.available += amt;
-            currentUserData.pending = 0;
-
-            const tx = {
-                id: "TRF-" + Math.floor(100000 + Math.random() * 900000),
-                type: "Pending to Available Transfer",
-                amount: amt,
-                time: new Date().toLocaleString(),
-                status: "Completed"
-            };
-            currentUserData.transactions.unshift(tx);
-            saveSystemDB();
-
-            alert(`Successfully transferred $${amt.toFixed(2)} to Available Withdrawal Balance!`);
-            renderApp();
-        }
-
-        /* --- WITHDRAWALS / PAYOUTS --- */
-        function updatePayoutAddressDisplay() {
-            if (!currentUserData) return;
-            const method = document.getElementById('payoutMethodSelect').value;
-            const addrInput = document.getElementById('payoutTargetAddress');
-            const w = currentUserData.savedWallet;
-
-            if (method === 'srilanka_bank') {
-                addrInput.value = w.bankName && w.accNum ? `${w.bankName} - ${w.accNum} (${w.holderName})` : "Not Configured in Profile";
-            } else if (method === 'trc20') {
-                addrInput.value = w.trc20 ? w.trc20 : "Not Configured in Profile";
-            } else if (method === 'binance') {
-                addrInput.value = w.binance ? w.binance : "Not Configured in Profile";
-            } else {
-                addrInput.value = "Direct Telegram Agent Routing";
-            }
-        }
-
-        function handlePayoutSubmit(e) {
-            e.preventDefault();
-            const amt = parseFloat(document.getElementById('payoutAmt').value);
-            const method = document.getElementById('payoutMethodSelect').value;
-            const targetAddress = document.getElementById('payoutTargetAddress').value;
-
-            if (targetAddress.includes("Not Configured")) {
-                alert("Please configure your payment method details in My Profile first!");
-                return;
-            }
-
-            const totalDep = currentUserData.deposit + currentUserData.activePlans.reduce((a, c) => a + c.price, 0);
-            const isHighTier = totalDep >= 300;
-            const now = Date.now();
-
-            if (isHighTier) {
-                if (amt !== 5.00) {
-                    alert("High Tier accounts ($300+ Deposit) are fixed at exactly $5.00 per daily withdrawal!");
-                    return;
-                }
-                const cooldownMs = 24 * 3600 * 1000;
-                if (currentUserData.lastWithdrawalTimestamp && (now - currentUserData.lastWithdrawalTimestamp < cooldownMs)) {
-                    const remain = cooldownMs - (now - currentUserData.lastWithdrawalTimestamp);
-                    const hrs = Math.floor(remain / (3600 * 1000));
-                    const mins = Math.floor((remain % (3600 * 1000)) / (60 * 1000));
-                    alert(`Daily withdrawal on cooldown! Try again in ${hrs}h ${mins}m.`);
-                    return;
-                }
-            } else {
-                if (amt < 50.00) {
-                    alert("Standard accounts require a minimum withdrawal of $50.00!");
-                    return;
-                }
-                const cooldownMs = 48 * 3600 * 1000;
-                if (currentUserData.lastWithdrawalTimestamp && (now - currentUserData.lastWithdrawalTimestamp < cooldownMs)) {
-                    const remain = cooldownMs - (now - currentUserData.lastWithdrawalTimestamp);
-                    const hrs = Math.floor(remain / (3600 * 1000));
-                    const mins = Math.floor((remain % (3600 * 1000)) / (60 * 1000));
-                    alert(`Withdrawal cycle on cooldown! Next available withdrawal in ${hrs}h ${mins}m.`);
-                    return;
-                }
-            }
-
-            if (currentUserData.available < amt) {
-                alert(`Insufficient Available Withdrawal Balance ($${currentUserData.available.toFixed(2)})!`);
-                return;
-            }
-
-            currentUserData.available -= amt;
-            currentUserData.lastWithdrawalTimestamp = now;
-
-            const vCode = "TX-" + Math.floor(100000 + Math.random() * 900000);
-            const tx = {
-                id: vCode,
-                type: `Withdrawal (${method.toUpperCase()})`,
-                amount: amt,
-                time: new Date().toLocaleString(),
-                status: "Processed"
-            };
-            currentUserData.transactions.unshift(tx);
-            saveSystemDB();
-
-            sendTelegramNotification(`🚀 <b>WITHDRAWAL PROCESSED</b>\n<b>User:</b> ${currentUserData.profile.username}\n<b>Acc ID:</b> ${currentUserData.accountId}\n<b>Amount:</b> $${amt.toFixed(2)}\n<b>Method:</b> ${method}\n<b>Destination:</b> ${targetAddress}\n<b>V-Code:</b> ${vCode}`);
-
-            closeModal('payoutModal');
-            document.getElementById('displayDepositedDoneAmt').innerText = `$${amt.toFixed(2)}`;
-            document.getElementById('displayVerificationCode').innerText = vCode;
-            openModal('payoutSuccessModal');
-            renderApp();
-        }
-
-        /* --- PROFILE SAVING HANDLERS --- */
-        function savePersonalDetails(e) {
-            e.preventDefault();
-            if (currentUserData.personalDetailsLocked) {
-                alert("Personal details are permanently locked!");
-                return;
-            }
-
-            currentUserData.profile.fullName = document.getElementById('pfFullName').value.trim();
-            currentUserData.profile.idNumber = document.getElementById('pfIdNumber').value.trim();
-            currentUserData.profile.dob = document.getElementById('pfDob').value;
-            currentUserData.profile.city = document.getElementById('pfCity').value.trim();
-            currentUserData.profile.country = document.getElementById('pfCountry').value.trim();
-            currentUserData.profile.email = document.getElementById('pfEmail').value.trim();
-            currentUserData.profile.phone = document.getElementById('pfPhone').value.trim();
-            currentUserData.personalDetailsLocked = true;
-
-            saveSystemDB();
-            alert("Personal details saved and permanently locked!");
-            renderApp();
-        }
-
-        function handleKycSubmit(e) {
-            e.preventDefault();
-            if (currentUserData.kycData && currentUserData.kycData.isLocked) {
-                alert("KYC verification is already completed and locked!");
-                return;
-            }
-
-            currentUserData.kycData = {
-                docType: document.getElementById('kycDocType').value,
-                docNum: document.getElementById('kycDocNum').value.trim(),
-                isLocked: true
-            };
-
-            saveSystemDB();
-            alert("KYC verification documents submitted and locked successfully!");
-            renderApp();
-        }
-
-        function handleWalletSave(e) {
-            e.preventDefault();
-            const w = currentUserData.savedWallet;
-
-            if (w.lockTimestamp && (Date.now() - w.lockTimestamp < 30 * 24 * 3600 * 1000)) {
-                alert("Payment methods are locked for 30 days after modification!");
-                return;
-            }
-
-            currentUserData.savedWallet = {
-                bankName: document.getElementById('pfBankName').value.trim(),
-                accNum: document.getElementById('pfAccNumber').value.trim(),
-                holderName: document.getElementById('pfHolderName').value.trim(),
-                branch: document.getElementById('pfBranchName').value.trim(),
-                bankPhone: document.getElementById('pfBankPhone').value.trim(),
-                trc20: document.getElementById('pfTrc20Address').value.trim(),
-                binance: document.getElementById('pfBinancePayId').value.trim(),
-                lockTimestamp: Date.now()
-            };
-
-            saveSystemDB();
-            alert("Payment methods saved! Details locked for 30 days.");
-            renderApp();
-        }
-
-        function handleSupportSubmit(e) {
-            e.preventDefault();
-            const name = document.getElementById('supName').value.trim();
-            const email = document.getElementById('supEmail').value.trim();
-            const msg = document.getElementById('supMsg').value.trim();
-
-            sendTelegramNotification(`📩 <b>SUPPORT INQUIRY</b>\n<b>User:</b> ${currentUserData ? currentUserData.profile.username : 'Guest'}\n<b>Name:</b> ${name}\n<b>Email:</b> ${email}\n<b>Message:</b> ${msg}`);
-
-            document.getElementById('supportResponseBox').style.display = 'flex';
-            e.target.reset();
-        }
-
-        /* --- MINI GAMES (AVIATOR ENGINE & LOGIC) --- */
-        let aviatorState = {
-            isPlaying: false,
-            multiplier: 1.00,
-            bet1: { active: false, amt: 1.00, cashed: false },
-            bet2: { active: false, amt: 1.00, cashed: false },
-            interval: null,
-            crashPoint: 1.00
-        };
-
-        function openGameView(gameKey) {
-            if(gameKey === 'aviator') {
+        function openGameView(game) {
+            if (game === 'aviator') {
                 document.getElementById('minigamesLobbyCards').style.display = 'none';
                 document.getElementById('aviatorGameContainer').style.display = 'block';
-                initAviatorCanvas();
+                resizeCanvas();
+                startAviatorLoop();
             }
         }
 
         function closeGameView() {
-            document.getElementById('aviatorGameContainer').style.display = 'none';
             document.getElementById('minigamesLobbyCards').style.display = 'grid';
+            document.getElementById('aviatorGameContainer').style.display = 'none';
+            stopAviatorLoop();
         }
 
         function toggleAviatorMenu() {
-            const menu = document.getElementById('aviatorMenuOverlay');
-            menu.style.display = (menu.style.display === 'flex') ? 'none' : 'flex';
+            const m = document.getElementById('aviatorMenuOverlay');
+            m.style.display = m.style.display === 'flex' ? 'none' : 'flex';
         }
 
-        function stepAviatorBet(panelNum, dir) {
-            const inp = document.getElementById('avInp' + panelNum);
-            let val = parseFloat(inp.value) || 1.00;
-            val = Math.max(1.00, val + dir);
+        function stepAviatorBet(panel, delta) {
+            const inp = document.getElementById(`avInp${panel}`);
+            let val = parseFloat(inp.value) || 1.0;
+            val = Math.max(0.1, val + delta);
             inp.value = val.toFixed(2);
-            document.getElementById('avBtnAmt' + panelNum).innerText = '$' + val.toFixed(2);
+            document.getElementById(`avBtnAmt${panel}`).innerText = `$${val.toFixed(2)}`;
         }
 
-        function setAviatorBet(panelNum, val) {
-            document.getElementById('avInp' + panelNum).value = val.toFixed(2);
-            document.getElementById('avBtnAmt' + panelNum).innerText = '$' + val.toFixed(2);
+        function setAviatorBet(panel, amt) {
+            document.getElementById(`avInp${panel}`).value = amt.toFixed(2);
+            document.getElementById(`avBtnAmt${panel}`).innerText = `$${amt.toFixed(2)}`;
         }
 
-        function handleAviatorBet(panelNum) {
-            if (!currentUserData) return;
-            const btn = document.getElementById('avBtn' + panelNum);
-            const amt = parseFloat(document.getElementById('avInp' + panelNum).value) || 1.00;
+        function handleAviatorBet(panel) {
+            const user = state.users[state.currentUser];
+            const btn = document.getElementById(`avBtn${panel}`);
+            const betObj = state.aviatorBets[panel];
 
-            if (!aviatorState.isPlaying) {
-                if (currentUserData.available < amt) {
-                    alert("Insufficient Available Balance for Aviator Bet!");
+            if (!betObj.active) {
+                const amt = parseFloat(document.getElementById(`avInp${panel}`).value) || 1.0;
+                if (user.availableBal < amt) {
+                    alert("Insufficient Available Balance for mini game bet!");
                     return;
                 }
-
-                currentUserData.available -= amt;
-                renderApp();
-
-                if (panelNum === 1) aviatorState.bet1 = { active: true, amt: amt, cashed: false };
-                if (panelNum === 2) aviatorState.bet2 = { active: true, amt: amt, cashed: false };
+                user.availableBal -= amt;
+                betObj.amt = amt;
+                betObj.active = true;
 
                 btn.className = 'aviator-btn-orange';
-                btn.innerHTML = `<div>Cancel</div><div style="font-size: 13px;">$${amt.toFixed(2)}</div>`;
-
-                if (!aviatorState.isPlaying && !aviatorState.interval) {
-                    startAviatorRound();
-                }
+                btn.innerHTML = `<div>CASHOUT</div><div style="font-size:13px;" id="avBtnAmt${panel}">$${(amt * state.aviatorMult).toFixed(2)}</div>`;
+                updateDashboard();
             } else {
-                /* Cashout during flight */
-                let targetBet = (panelNum === 1) ? aviatorState.bet1 : aviatorState.bet2;
-                if (targetBet.active && !targetBet.cashed) {
-                    targetBet.cashed = true;
-                    const winAmt = targetBet.amt * aviatorState.multiplier;
-                    currentUserData.available += winAmt;
+                // Cashout
+                const win = betObj.amt * state.aviatorMult;
+                user.availableBal += win;
+                betObj.active = false;
 
-                    btn.className = 'aviator-btn-green';
-                    btn.innerHTML = `<div>Cashed Out</div><div style="font-size: 13px;">+$${winAmt.toFixed(2)}</div>`;
-                    renderApp();
+                logTx('Aviator Win Cashout', win, `Multiplier ${state.aviatorMult.toFixed(2)}x`, 'GAME-' + Math.floor(100000 + Math.random() * 900000), 'Completed');
 
-                    sendTelegramNotification(`✈️ <b>AVIATOR CASHOUT</b>\n<b>User:</b> ${currentUserData.profile.username}\n<b>Multiplier:</b> ${aviatorState.multiplier.toFixed(2)}x\n<b>Profit:</b> +$${winAmt.toFixed(2)}`);
-                }
+                btn.className = 'aviator-btn-green';
+                btn.innerHTML = `<div>Bet</div><div style="font-size:13px;" id="avBtnAmt${panel}">$${betObj.amt.toFixed(2)}</div>`;
+                updateDashboard();
             }
         }
 
-        function startAviatorRound() {
-            aviatorState.isPlaying = true;
-            aviatorState.multiplier = 1.00;
-            aviatorState.crashPoint = parseFloat((1 + Math.random() * 4).toFixed(2));
-
+        function startAviatorLoop() {
+            if (state.aviatorRunning) return;
+            state.aviatorRunning = true;
             document.getElementById('aviatorStartScreen').style.display = 'none';
             document.getElementById('aviatorMultText').style.display = 'block';
+            flightProgress = 0;
+            state.aviatorMult = 1.00;
+            loopAviator();
+        }
 
+        function stopAviatorLoop() {
+            state.aviatorRunning = false;
+            if (animFrameId) cancelAnimationFrame(animFrameId);
+            drawAviatorIdle();
+        }
+
+        function loopAviator() {
+            if (!state.aviatorRunning) return;
+
+            flightProgress += 0.008;
+            state.aviatorMult += 0.005 + (flightProgress * 0.01);
+
+            document.getElementById('aviatorMultText').innerText = `${state.aviatorMult.toFixed(2)}x`;
+
+            // Update cashout button live readouts
             [1, 2].forEach(p => {
-                let bet = (p === 1) ? aviatorState.bet1 : aviatorState.bet2;
-                if (bet.active) {
-                    const btn = document.getElementById('avBtn' + p);
-                    btn.className = 'aviator-btn-orange';
-                    btn.innerHTML = `<div>Cash Out</div><div style="font-size: 13px;" id="avCashVal${p}">$${bet.amt.toFixed(2)}</div>`;
+                if (state.aviatorBets[p].active) {
+                    const readout = document.getElementById(`avBtnAmt${p}`);
+                    if (readout) readout.innerText = `$${(state.aviatorBets[p].amt * state.aviatorMult).toFixed(2)}`;
                 }
             });
 
-            aviatorState.interval = setInterval(() => {
-                aviatorState.multiplier += 0.03;
-                document.getElementById('aviatorMultText').innerText = aviatorState.multiplier.toFixed(2) + 'x';
+            // Random crash event simulation
+            if (Math.random() < 0.0015 && state.aviatorMult > 1.2) {
+                // Plane Crash
+                triggerAviatorCrash();
+                return;
+            }
 
-                [1, 2].forEach(p => {
-                    let bet = (p === 1) ? aviatorState.bet1 : aviatorState.bet2;
-                    if (bet.active && !bet.cashed) {
-                        const elem = document.getElementById('avCashVal' + p);
-                        if (elem) elem.innerText = '$' + (bet.amt * aviatorState.multiplier).toFixed(2);
-                    }
-                });
-
-                drawAviatorCanvas(aviatorState.multiplier);
-
-                if (aviatorState.multiplier >= aviatorState.crashPoint) {
-                    endAviatorRound();
-                }
-            }, 100);
+            drawAviatorFlight();
+            animFrameId = requestAnimationFrame(loopAviator);
         }
 
-        function endAviatorRound() {
-            clearInterval(aviatorState.interval);
-            aviatorState.interval = null;
-            aviatorState.isPlaying = false;
+        function triggerAviatorCrash() {
+            state.aviatorRunning = false;
+            document.getElementById('aviatorMultText').style.color = '#e5053a';
+            document.getElementById('aviatorMultText').innerText = `FLEW AWAY! (${state.aviatorMult.toFixed(2)}x)`;
 
-            document.getElementById('aviatorMultText').innerText = "FLEW AWAY @ " + aviatorState.multiplier.toFixed(2) + 'x';
-            document.getElementById('aviatorMultText').style.color = "#e5053a";
+            // Reset bets on crash
+            [1, 2].forEach(p => {
+                if (state.aviatorBets[p].active) {
+                    state.aviatorBets[p].active = false;
+                    const btn = document.getElementById(`avBtn${p}`);
+                    btn.className = 'aviator-btn-green';
+                    btn.innerHTML = `<div>Bet</div><div style="font-size:13px;" id="avBtnAmt${p}">$1.00</div>`;
+                }
+            });
 
-            /* Add Pill to history */
+            // Add history pill
             const bar = document.getElementById('aviatorHistoryBar');
             const pill = document.createElement('span');
-            pill.className = `aviator-hist-pill ${aviatorState.multiplier > 2 ? 'purple' : 'blue'}`;
-            pill.innerText = aviatorState.multiplier.toFixed(2) + 'x';
-            bar.prepend(pill);
+            pill.className = state.aviatorMult >= 2.0 ? 'aviator-hist-pill purple' : 'aviator-hist-pill blue';
+            pill.innerText = `${state.aviatorMult.toFixed(2)}x`;
+            bar.insertBefore(pill, bar.firstChild);
 
             setTimeout(() => {
-                document.getElementById('aviatorMultText').style.color = "#ffffff";
-                document.getElementById('aviatorMultText').style.display = 'none';
-                document.getElementById('aviatorStartScreen').style.display = 'flex';
-
-                [1, 2].forEach(p => {
-                    const btn = document.getElementById('avBtn' + p);
-                    const amt = document.getElementById('avInp' + p).value;
-                    btn.className = 'aviator-btn-green';
-                    btn.innerHTML = `<div>Bet</div><div style="font-size: 13px;">$${parseFloat(amt).toFixed(2)}</div>`;
-                });
-
-                aviatorState.bet1 = { active: false, amt: 1.00, cashed: false };
-                aviatorState.bet2 = { active: false, amt: 1.00, cashed: false };
-            }, 2500);
+                document.getElementById('aviatorMultText').style.color = '#ffffff';
+                startAviatorLoop();
+            }, 3000);
         }
 
-        function initAviatorCanvas() {
-            const canvas = document.getElementById('aviatorCanvas');
-            if(!canvas) return;
-            canvas.width = canvas.parentElement.clientWidth;
-            canvas.height = canvas.parentElement.clientHeight;
-            drawAviatorCanvas(1.00);
+        function drawAviatorIdle() {
+            if (!ctx) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#0a0b0e';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
         }
 
-        function drawAviatorCanvas(mult) {
-            const canvas = document.getElementById('aviatorCanvas');
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
+        function drawAviatorFlight() {
+            if (!ctx) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
             const w = canvas.width;
             const h = canvas.height;
 
-            ctx.clearRect(0, 0, w, h);
+            const startX = 40;
+            const startY = h - 40;
+            const endX = Math.min(startX + flightProgress * 250, w - 60);
+            const endY = Math.max(startY - flightProgress * 180, 60);
 
-            /* Curve flight path */
-            const progress = Math.min((mult - 1) / 3, 1);
-            const targetX = w * 0.1 + (w * 0.75) * progress;
-            const targetY = h * 0.85 - (h * 0.65) * progress;
-
-            /* Curve fill */
+            // Curve Fill
             ctx.beginPath();
-            ctx.moveTo(w * 0.1, h * 0.85);
-            ctx.quadraticCurveTo(w * 0.1 + (targetX - w * 0.1) / 2, h * 0.85, targetX, targetY);
-            ctx.lineTo(targetX, h * 0.85);
+            ctx.moveTo(startX, startY);
+            ctx.quadraticCurveTo(startX + (endX - startX) * 0.5, startY, endX, endY);
+            ctx.lineTo(endX, startY);
             ctx.closePath();
-
+            
             const grad = ctx.createLinearGradient(0, 0, 0, h);
-            grad.addColorStop(0, 'rgba(229, 5, 58, 0.4)');
+            grad.addColorStop(0, 'rgba(229, 5, 58, 0.35)');
             grad.addColorStop(1, 'rgba(229, 5, 58, 0.0)');
             ctx.fillStyle = grad;
             ctx.fill();
 
-            /* Stroke Line */
+            // Red Flight Curve
             ctx.beginPath();
-            ctx.moveTo(w * 0.1, h * 0.85);
-            ctx.quadraticCurveTo(w * 0.1 + (targetX - w * 0.1) / 2, h * 0.85, targetX, targetY);
+            ctx.moveTo(startX, startY);
+            ctx.quadraticCurveTo(startX + (endX - startX) * 0.5, startY, endX, endY);
             ctx.strokeStyle = '#e5053a';
-            ctx.lineWidth = 3;
+            ctx.lineWidth = 4;
             ctx.stroke();
 
-            /* Red Plane Icon Representation */
-            if (aviatorState.isPlaying) {
-                ctx.fillStyle = '#e5053a';
-                ctx.beginPath();
-                ctx.arc(targetX, targetY, 8, 0, Math.PI * 2);
-                ctx.fill();
-            }
+            // Draw Red Plane Icon
+            ctx.save();
+            ctx.translate(endX, endY);
+            ctx.fillStyle = '#e5053a';
+            ctx.beginPath();
+            ctx.arc(0, 0, 8, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
         }
-
-        /* --- RENDER APPLICATION STATE --- */
-        function renderApp() {
-            if (!systemDB.currentUsername || !systemDB.users[systemDB.currentUsername]) {
-                populateSavedUsersDatalist();
-                document.getElementById('authModal').style.display = 'flex';
-                return;
-            }
-
-            currentUserData = systemDB.users[systemDB.currentUsername];
-
-            /* BAN CHECK */
-            if (BANNED_ACCOUNT_IDS.includes(currentUserData.accountId)) {
-                showBannedScreen(currentUserData.accountId);
-                return;
-            } else {
-                document.getElementById('bannedScreen').style.display = 'none';
-            }
-
-            document.getElementById('authModal').style.display = 'none';
-
-            /* Header Info */
-            document.getElementById('userDisplayName').innerText = currentUserData.profile.name || currentUserData.profile.username;
-            document.getElementById('headerAccId').innerText = currentUserData.accountId;
-            document.getElementById('menuUserAcc').innerText = currentUserData.profile.username;
-
-            /* Balance Updates */
-            document.getElementById('dashDeposit').innerText = `$${currentUserData.deposit.toFixed(2)}`;
-            document.getElementById('dashPending').innerText = `$${currentUserData.pending.toFixed(2)}`;
-            document.getElementById('dashAvailable').innerText = `$${currentUserData.available.toFixed(2)}`;
-            document.getElementById('dashActiveCount').innerText = `${currentUserData.activePlans.length} / 2 Active`;
-            document.getElementById('aviatorTopBal').innerText = `$${currentUserData.available.toFixed(2)}`;
-
-            /* Render Investment Packages Cards */
-            const pkgWrap = document.getElementById('packagesContainer');
-            pkgWrap.innerHTML = '';
-            packagesData.forEach(p => {
-                const isBought = currentUserData.activePlans.some(ap => ap.packageId === p.id);
-                const card = document.createElement('div');
-                card.className = 'pkg-card';
-                card.innerHTML = `
-                    <div class="pkg-badge">${p.badge}</div>
-                    <div>
-                        <div class="pkg-icon-wrap"><i class="fa-solid ${p.icon}"></i></div>
-                        <div class="pkg-title">${p.name}</div>
-                        <div class="pkg-price">$${p.price}.00</div>
-                        <div class="pkg-feature"><span>Expected Yield</span><strong>${p.returnLabel}</strong></div>
-                        <div class="pkg-feature"><span>Min Withdrawal</span><strong>$${p.minWithdraw}.00</strong></div>
-                        <div class="pkg-feature"><span>Max Active Limit</span><strong>2 Plans Max</strong></div>
-                    </div>
-                    <button class="btn ${isBought ? 'btn-green' : 'btn-gold'}" style="margin-top:20px;" ${isBought ? 'disabled' : ''} onclick="buyPackage(${p.id})">
-                        ${isBought ? '<i class="fa-solid fa-check-circle"></i> Plan Active' : '<i class="fa-solid fa-bolt"></i> Activate Investment Tier'}
-                    </button>
-                `;
-                pkgWrap.appendChild(card);
-            });
-
-            /* Render Claims Table */
-            const claimsBody = document.getElementById('claimsTableBody');
-            claimsBody.innerHTML = '';
-            if (currentUserData.activePlans.length === 0) {
-                claimsBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color: var(--text-muted);">No active packages found. Activate a plan to begin harvesting yield.</td></tr>`;
-            } else {
-                currentUserData.activePlans.forEach(ap => {
-                    const pkg = packagesData.find(p => p.id === ap.packageId);
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td><strong>${ap.name}</strong></td>
-                        <td><span style="color:var(--accent-gold); font-weight:700;">VIP Yield</span></td>
-                        <td>$${ap.price}.00</td>
-                        <td style="color:var(--accent-green); font-weight:700;">+${ap.weeklyVal.toFixed(2)}/Wk</td>
-                        <td>$50.00</td>
-                        <td style="text-align:center;">
-                            <span class="status-paid" style="padding:4px 12px; border-radius:12px; font-size:12px; font-weight:700;">NODE RUNNING</span>
-                        </td>
-                    `;
-                    claimsBody.appendChild(tr);
-                });
-            }
-
-            /* Render Transactions Log */
-            const txBody = document.getElementById('txTableBody');
-            txBody.innerHTML = '';
-            if (currentUserData.transactions.length === 0) {
-                txBody.innerHTML = `<tr><td colspan="5" style="text-align:center; color: var(--text-muted);">No transactions recorded yet.</td></tr>`;
-            } else {
-                currentUserData.transactions.forEach(t => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td><strong>${t.id}</strong></td>
-                        <td>${t.type}</td>
-                        <td style="font-weight:700; color: var(--accent-green);">$${t.amount.toFixed(2)}</td>
-                        <td style="color: var(--text-muted); font-size:12px;">${t.time}</td>
-                        <td><span class="status-paid" style="padding:4px 10px; border-radius:10px; font-size:11px; font-weight:700;">${t.status}</span></td>
-                    `;
-                    txBody.appendChild(tr);
-                });
-            }
-
-            /* Profile Personal Data Populate */
-            if (currentUserData.profile) {
-                const pf = currentUserData.profile;
-                document.getElementById('pfFullName').value = pf.fullName || pf.name || '';
-                document.getElementById('pfIdNumber').value = pf.idNumber || '';
-                document.getElementById('pfDob').value = pf.dob || '';
-                document.getElementById('pfCity').value = pf.city || '';
-                document.getElementById('pfCountry').value = pf.country || '';
-                document.getElementById('pfEmail').value = pf.email || '';
-                document.getElementById('pfPhone').value = pf.phone || '';
-
-                if (currentUserData.personalDetailsLocked) {
-                    document.getElementById('personalLockNotice').style.display = 'flex';
-                    document.getElementById('personalForm').querySelectorAll('input').forEach(i => i.disabled = true);
-                    document.getElementById('btnSavePersonal').style.display = 'none';
-                }
-            }
-
-            /* Profile KYC Populate */
-            if (currentUserData.kycData && currentUserData.kycData.isLocked) {
-                document.getElementById('kycLockNotice').style.display = 'flex';
-                document.getElementById('kycDocNum').value = currentUserData.kycData.docNum || '';
-                document.getElementById('kycForm').querySelectorAll('input, select').forEach(i => i.disabled = true);
-                document.getElementById('btnSubmitKyc').style.display = 'none';
-            }
-
-            /* Profile Payment Populate */
-            if (currentUserData.savedWallet) {
-                const w = currentUserData.savedWallet;
-                document.getElementById('pfBankName').value = w.bankName || '';
-                document.getElementById('pfAccNumber').value = w.accNum || '';
-                document.getElementById('pfHolderName').value = w.holderName || '';
-                document.getElementById('pfBranchName').value = w.branch || '';
-                document.getElementById('pfBankPhone').value = w.bankPhone || '';
-                document.getElementById('pfTrc20Address').value = w.trc20 || '';
-                document.getElementById('pfBinancePayId').value = w.binance || '';
-
-                if (w.lockTimestamp && (Date.now() - w.lockTimestamp < 30 * 24 * 3600 * 1000)) {
-                    document.getElementById('paymentLockNotice').style.display = 'flex';
-                }
-            }
-        }
-
-        /* INITIAL APP LOAD */
-        window.addEventListener('load', () => {
-            renderApp();
-        });
     </script>
 </body>
 </html>

@@ -379,61 +379,53 @@
         .header-acc-box i:hover { color: var(--text-main); transform: scale(1.1); }
 
         /* ========================================================= */
-        /* --- HIGH END FUTURISTIC NEON RADAR DOLLAR CRASH STYLES --- */
+        /* --- 1XBET / AVIATOR EXACT UI STYLE MATCHING STYLES --- */
         /* ========================================================= */
-        .crash-wrapper {
-            background: radial-gradient(circle at top, #121d38 0%, #060913 100%);
-            border: 1px solid rgba(239, 68, 68, 0.4);
-            border-radius: 28px;
-            padding: 28px;
-            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(239, 68, 68, 0.15);
-            max-width: 950px;
-            margin: 0 auto;
-            position: relative;
-        }
-
-        .crash-header-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .history-pills-bar {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            overflow-x: auto;
-            padding: 8px 12px;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 14px;
-            max-width: 100%;
-        }
-
-        .history-pill {
-            padding: 5px 12px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 800;
-            letter-spacing: 0.5px;
-            white-space: nowrap;
-            transition: 0.3s;
-        }
-        .history-pill.win { background: rgba(16, 185, 129, 0.2); color: #10B981; border: 1px solid rgba(16, 185, 129, 0.4); }
-        .history-pill.bust { background: rgba(239, 68, 68, 0.2); color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.4); }
-
-        .crash-display-board {
-            position: relative;
-            background: #030611;
-            border: 1px solid rgba(6, 182, 212, 0.3);
-            border-radius: 22px;
-            height: 360px;
+        .xbet-wrapper {
+            background-color: #0b1122;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.9), 0 0 25px rgba(6, 182, 212, 0.1);
-            margin-bottom: 24px;
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            border: 1px solid rgba(255,255,255,0.08);
+            font-family: sans-serif;
+        }
+
+        .xbet-top-nav {
+            display: flex;
+            background-color: #121c33;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding: 4px;
+        }
+
+        .xbet-nav-btn {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            color: #8fa0c0;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .xbet-nav-btn.active {
+            background-color: #ff5000;
+            color: #ffffff;
+        }
+
+        .xbet-display-canvas-box {
+            position: relative;
+            background-color: #090e1c;
+            height: 200px;
+            overflow: hidden;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
         }
 
         canvas#crashGraphCanvas {
@@ -445,119 +437,239 @@
             z-index: 1;
         }
 
-        .crash-overlay-center {
+        .xbet-clock-overlay {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 5;
+        }
+
+        .xbet-clock-icon {
+            position: relative;
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255,255,255,0.2);
+            border-radius: 50%;
+        }
+
+        .xbet-clock-hand {
+            position: absolute;
+            top: 5px;
+            left: 21px;
+            width: 3px;
+            height: 20px;
+            background-color: #ffffff;
+            transform-origin: bottom center;
+            animation: clockSpin 5s linear infinite;
+        }
+
+        @keyframes clockSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .xbet-countdown-text {
+            font-size: 48px;
+            font-weight: 900;
+            color: #ffffff;
+        }
+
+        .xbet-multiplier-text {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            text-align: center;
-            z-index: 5;
-            pointer-events: none;
-        }
-
-        .crash-multiplier-text {
-            font-size: 78px;
+            font-size: 56px;
             font-weight: 900;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            color: #06B6D4;
-            text-shadow: 0 0 35px rgba(6, 182, 212, 0.8), 0 0 10px rgba(255, 255, 255, 0.5);
-            line-height: 1;
-            transition: color 0.2s, text-shadow 0.2s;
+            color: #ffffff;
+            z-index: 5;
+            display: none;
         }
 
-        .crash-status-sub {
-            font-size: 13px;
-            font-weight: 800;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: #94A3B8;
-            margin-top: 12px;
-            background: rgba(0, 0, 0, 0.6);
-            padding: 6px 18px;
-            border-radius: 30px;
-            display: inline-block;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        .xbet-panel-box {
+            background-color: #121b2d;
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 8px;
+            padding: 10px;
+            margin: 10px;
         }
 
-        /* CONTROL PANEL */
-        .crash-panel-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            background: rgba(0, 0, 0, 0.4);
-            padding: 22px;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        @media (max-width: 650px) {
-            .crash-panel-grid { grid-template-columns: 1fr; }
-            .crash-multiplier-text { font-size: 56px; }
-            .crash-display-board { height: 280px; }
-        }
-
-        .preset-bets {
+        .xbet-panel-row {
             display: flex;
             gap: 8px;
-            margin-top: 10px;
+            margin-bottom: 8px;
         }
 
-        .preset-btn {
+        .xbet-input-wrap {
             flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .xbet-input-wrap input {
+            width: 100%;
+            background-color: #080d19;
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #ffffff;
+            padding: 10px 30px 10px 12px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .xbet-input-clear {
+            position: absolute;
+            right: 10px;
+            color: #8fa0c0;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .xbet-btn-autoplay {
+            background-color: transparent;
+            border: 1px solid #1c2b4a;
+            color: #ff6a00;
+            font-weight: 800;
+            font-size: 11px;
+            padding: 0 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+        }
+
+        .xbet-presets-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            flex: 1;
+        }
+
+        .xbet-preset-btn {
+            background-color: #1a2742;
+            color: #ffffff;
+            border: none;
             padding: 8px;
-            border-radius: 8px;
-            background: var(--bg-surface);
-            border: 1px solid var(--border);
-            color: var(--text-muted);
+            border-radius: 6px;
             font-size: 12px;
             font-weight: 700;
             cursor: pointer;
+            text-align: center;
+            transition: 0.15s;
+        }
+
+        .xbet-preset-btn:hover {
+            background-color: #24355a;
+        }
+
+        .xbet-btn-place {
+            background-color: #ff5000;
+            color: #ffffff;
+            font-weight: 900;
+            font-size: 14px;
+            border: none;
+            border-radius: 6px;
+            padding: 0 16px;
+            cursor: pointer;
+            letter-spacing: 0.5px;
             transition: 0.2s;
-        }
-        .preset-btn:hover { background: rgba(239, 68, 68, 0.2); color: var(--accent-gold); border-color: var(--accent-gold); }
-
-        .wallet-select-group {
-            margin-bottom: 12px;
-            background: rgba(255, 255, 255, 0.03);
-            padding: 10px 14px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            width: 130px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .btn-launch-bet {
-            background: linear-gradient(135deg, #EF4444 0%, #B91C1C 100%);
-            color: #FFF;
-            font-size: 18px;
+        .xbet-btn-place:hover {
+            background-color: #ff661a;
+        }
+
+        .xbet-btn-cashout {
+            background-color: #10B981;
+            color: #ffffff;
             font-weight: 900;
-            border-radius: 14px;
-            box-shadow: 0 8px 25px var(--accent-gold-glow);
-            height: 100%;
-            min-height: 56px;
+            font-size: 14px;
+            border: none;
+            border-radius: 6px;
+            padding: 0 16px;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            transition: 0.2s;
+            width: 130px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulseCashout 1s infinite alternate;
         }
 
-        .btn-cashout-now {
-            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
-            color: #FFF;
-            font-size: 20px;
-            font-weight: 900;
-            border-radius: 14px;
-            box-shadow: 0 8px 25px var(--accent-green-glow);
-            height: 100%;
-            min-height: 56px;
-            animation: pulseGlow 1s infinite alternate;
+        @keyframes pulseCashout {
+            from { box-shadow: 0 0 5px rgba(16, 185, 129, 0.4); }
+            to { box-shadow: 0 0 15px rgba(16, 185, 129, 0.8); }
         }
 
-        @keyframes pulseGlow {
-            from { box-shadow: 0 0 15px var(--accent-green-glow); }
-            to { box-shadow: 0 0 30px var(--accent-green-glow); }
+        .xbet-stats-bar {
+            background: linear-gradient(90deg, #ff5000 0%, #e63900 100%);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 12px;
+            color: #ffffff;
+            text-align: center;
         }
 
-        .bank-details-box {
-            background: var(--input-bg);
-            border: 1px solid rgba(239, 68, 68, 0.25);
-            border-radius: 14px;
-            padding: 16px;
-            margin-bottom: 16px;
+        .xbet-stat-col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .xbet-stat-label {
+            font-size: 10px;
+            font-weight: 600;
+            opacity: 0.9;
+        }
+
+        .xbet-stat-val {
+            font-size: 12px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 2px;
+        }
+
+        .xbet-table-container {
+            background-color: #0a101d;
+            max-height: 280px;
+            overflow-y: auto;
+        }
+
+        .xbet-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .xbet-table th {
+            font-size: 10px;
+            color: #5c7099;
+            text-transform: uppercase;
+            padding: 8px 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            text-align: left;
+        }
+
+        .xbet-table td {
+            font-size: 11px;
+            color: #8fa0c0;
+            padding: 8px 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.02);
+        }
+
+        .xbet-table tr:nth-child(even) {
+            background-color: rgba(255,255,255,0.01);
         }
 
         /* PAID STATUS STYLING */
@@ -1023,86 +1135,108 @@
 
             </div>
 
-            <!-- VIEW 2: REDESIGNED NEON RADAR AUTOMATED DOLLAR CRASH GAME -->
+            <!-- VIEW 2: EXACT MATCHING 1XBET CRASH GAME INTERFACE -->
             <div id="games" class="page-view">
-                <div class="crash-wrapper">
+                <div class="xbet-wrapper">
                     
-                    <!-- CRASH TOP HEADER -->
-                    <div class="crash-header-info">
-                        <div>
-                            <h2 style="font-size: 24px; font-weight: 900; color: #FFF; font-family: 'Plus Jakarta Sans'; display: flex; align-items: center; gap: 10px;">
-                                <i class="fa-solid fa-crosshairs" style="color: #06B6D4;"></i> DOLLAR CRASH LIVE RADAR
-                            </h2>
-                            <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Automated 24/7 Live Multiplier Engine | Minimum Bet $5.00</p>
-                        </div>
-                        <div class="history-pills-bar" id="crashHistory">
-                            <div class="history-pill bust">1.24x</div>
-                            <div class="history-pill bust">1.45x</div>
-                            <div class="history-pill bust">1.08x</div>
-                            <div class="history-pill bust">1.82x</div>
-                            <div class="history-pill bust">1.10x</div>
-                        </div>
+                    <!-- TOP NAV TABS -->
+                    <div class="xbet-top-nav">
+                        <div class="xbet-nav-btn" onclick="switchXbetTab(this, 'tc')">T&C</div>
+                        <div class="xbet-nav-btn active" onclick="switchXbetTab(this, 'history')"><i class="fa-solid fa-clock-rotate-left"></i> HISTORY</div>
                     </div>
 
-                    <!-- CRASH LIVE CANVAS DISPLAY GRAPH -->
-                    <div class="crash-display-board">
+                    <!-- DISPLAY CANVAS BOX WITH COUNTDOWN & MULTIPLIER -->
+                    <div class="xbet-display-canvas-box">
                         <canvas id="crashGraphCanvas"></canvas>
-                        
-                        <div class="crash-overlay-center">
-                            <div class="crash-multiplier-text" id="crashMultiplierDisplay">1.00x</div>
-                            <div class="crash-status-sub" id="crashStatusText">SYSTEM INITIALIZING...</div>
+
+                        <!-- COUNTDOWN CLOCK OVERLAY -->
+                        <div class="xbet-clock-overlay" id="xbetClockWrap">
+                            <div class="xbet-clock-icon">
+                                <div class="xbet-clock-hand"></div>
+                            </div>
+                            <div class="xbet-countdown-text" id="xbetCountdownText">5</div>
+                        </div>
+
+                        <!-- LIVE MULTIPLIER OVERLAY -->
+                        <div class="xbet-multiplier-text" id="xbetMultiplierDisplay">1.00x</div>
+                    </div>
+
+                    <!-- DUAL BETTING PANELS -->
+                    <!-- PANEL 1 -->
+                    <div class="xbet-panel-box">
+                        <div class="xbet-panel-row">
+                            <div class="xbet-input-wrap">
+                                <input type="number" id="xbetBetInput1" value="200" min="10">
+                                <span class="xbet-input-clear" onclick="clearXbetInput('xbetBetInput1')">×</span>
+                            </div>
+                            <button class="xbet-btn-autoplay">ENABLE AUTOPLAY</button>
+                        </div>
+                        <div class="xbet-panel-row">
+                            <div class="xbet-presets-grid">
+                                <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput1', 100)">100</button>
+                                <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput1', 400)">400</button>
+                                <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput1', 1000)">1000</button>
+                                <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput1', 3000)">3000</button>
+                                <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput1', 10000)">10000</button>
+                                <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput1', 40000)">40000</button>
+                            </div>
+                            <button class="xbet-btn-place" id="btnPlaceXbet1" onclick="placeXbet(1)">PLACE A BET</button>
                         </div>
                     </div>
 
-                    <!-- CRASH INPUT & BET CONTROL PANEL -->
-                    <div class="crash-panel-grid">
-                        <div>
-                            <!-- WALLET FUND SOURCE SELECTOR -->
-                            <div class="wallet-select-group">
-                                <label style="font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; display: flex; justify-content: space-between; margin-bottom: 6px;">
-                                    <span>Fund Source Wallet</span>
-                                    <span style="color: var(--accent-cyan);" id="selectedWalletBalDisplay">Deposit: $0.00</span>
-                                </label>
-                                <select id="crashWalletSourceSelect" class="form-control" onchange="updateCrashWalletDisplay()" style="padding: 10px; font-size: 13px; font-weight: 700;">
-                                    <option value="deposit">Deposit Balance</option>
-                                    <option value="available">Available Withdrawal Balance</option>
-                                </select>
+                    <!-- PANEL 2 -->
+                    <div class="xbet-panel-box">
+                        <div class="xbet-panel-row">
+                            <div class="xbet-input-wrap">
+                                <input type="number" id="xbetBetInput2" value="200" min="10">
+                                <span class="xbet-input-clear" onclick="clearXbetInput('xbetBetInput2')">×</span>
                             </div>
-
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                <label style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Bet Amount ($)</label>
-                                <span style="font-size: 11px; color: var(--accent-gold); font-weight: 700;">Min Bet: $5.00</span>
-                            </div>
-                            <div style="position: relative;">
-                                <input type="number" id="crashBetInp" class="form-control" value="5.00" min="5" step="1" style="font-size: 18px; font-weight: 800; color: var(--accent-gold); padding-right: 60px;">
-                                <span style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); font-weight: 800; color: var(--text-muted);">USD</span>
-                            </div>
-                            <div class="preset-bets">
-                                <div class="preset-btn" onclick="setBetAmount(5)">$5</div>
-                                <div class="preset-btn" onclick="setBetAmount(10)">$10</div>
-                                <div class="preset-btn" onclick="setBetAmount(25)">$25</div>
-                                <div class="preset-btn" onclick="setBetAmount(50)">$50</div>
-                            </div>
+                            <button class="xbet-btn-autoplay">ENABLE AUTOPLAY</button>
                         </div>
-
-                        <div>
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                <label style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Auto Cashout Multiplier</label>
-                                <span style="font-size: 11px; color: var(--accent-cyan); font-weight: 700;">Max 1.99x</span>
+                        <div class="xbet-panel-row">
+                            <div class="xbet-presets-grid">
+                                <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput2', 100)">100</button>
+                                <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput2', 400)">400</button>
+                                <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput2', 1000)">1000</button>
+                                <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput2', 3000)">3000</button>
+                                <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput2', 10000)">10000</button>
+                                <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput2', 40000)">40000</button>
                             </div>
-                            <div style="position: relative; margin-bottom: 10px;">
-                                <input type="number" id="autoCashoutInp" class="form-control" placeholder="Off (e.g. 1.50)" min="1.01" max="1.99" step="0.05" style="font-size: 16px; font-weight: 700; color: var(--text-main);">
-                            </div>
-                            
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                                <button class="btn btn-launch-bet" id="btnPlaceBet" onclick="placeCrashBet()">
-                                    <i class="fa-solid fa-play"></i> PLACE BET
-                                </button>
-                                <button class="btn btn-cashout-now" id="btnCashOut" onclick="cashOutCrash()" disabled style="opacity: 0.4; pointer-events: none;">
-                                    CASHOUT
-                                </button>
-                            </div>
+                            <button class="xbet-btn-place" id="btnPlaceXbet2" onclick="placeXbet(2)">PLACE A BET</button>
                         </div>
+                    </div>
+
+                    <!-- LIVE STATS HEADER BAR -->
+                    <div class="xbet-stats-bar">
+                        <div class="xbet-stat-col">
+                            <span class="xbet-stat-label">Number of bets</span>
+                            <span class="xbet-stat-val"><i class="fa-solid fa-user"></i> <span id="xbetStatBetsCount">270</span></span>
+                        </div>
+                        <div class="xbet-stat-col">
+                            <span class="xbet-stat-label">Total bets</span>
+                            <span class="xbet-stat-val"><i class="fa-solid fa-dice"></i> <span id="xbetStatTotalBets">62465.97</span> LKR</span>
+                        </div>
+                        <div class="xbet-stat-col">
+                            <span class="xbet-stat-label">Total winnings</span>
+                            <span class="xbet-stat-val"><i class="fa-solid fa-money-bill-wave"></i> <span id="xbetStatTotalWin">0</span> LKR</span>
+                        </div>
+                    </div>
+
+                    <!-- LIVE BETS TABLE LIST -->
+                    <div class="xbet-table-container">
+                        <table class="xbet-table">
+                            <thead>
+                                <tr>
+                                    <th>USERNAME</th>
+                                    <th>ODDS</th>
+                                    <th>BET</th>
+                                    <th>WIN</th>
+                                </tr>
+                            </thead>
+                            <tbody id="xbetBetsTableBody">
+                                <!-- Dynamic simulated bets populated via JavaScript -->
+                            </tbody>
+                        </table>
                     </div>
 
                 </div>
@@ -1542,6 +1676,7 @@
             }
 
             initCrashCanvas();
+            initSimulatedBetsTable();
             startAutomatedCrashLoop();
         };
 
@@ -2247,8 +2382,6 @@
             document.getElementById('dashPending').innerText = `$${currentUserData.pending.toFixed(2)}`;
             document.getElementById('dashAvailable').innerText = `$${currentUserData.available.toFixed(2)}`;
             
-            updateCrashWalletDisplay();
-            
             const activeCount = currentUserData.activePlans ? currentUserData.activePlans.length : 0;
             document.getElementById('dashActiveCount').innerText = `${activeCount} / 2 Active`;
 
@@ -2295,35 +2428,18 @@
         }
 
         /* ========================================================= */
-        /* --- HIGH TECH REDESIGNED NEON RADAR AUTOMATED CRASH ---- */
+        /* --- 1XBET / AVIATOR EXACT MATCHING ENGINE LOGIC --------- */
         /* ========================================================= */
         let crashCanvas, crashCtx;
-        let crashAnimFrame = null;
         let currentMultiplier = 1.00;
         let crashTarget = 1.00;
         let isCrashRunning = false;
-        let isBetPlaced = false;
-        let isQueuedBet = false;
-        let activeBetAmount = 5.00;
-        let selectedWalletSource = 'deposit';
+        
+        let betsPlaced = { 1: false, 2: false };
+        let betAmounts = { 1: 0, 2: 0 };
+        let queuedBets = { 1: false, 2: false };
+
         let graphPoints = [];
-        let autoLoopTimer = null;
-        let radarAngle = 0;
-
-        function updateCrashWalletDisplay() {
-            if (!currentUserData) return;
-            selectedWalletSource = document.getElementById('crashWalletSourceSelect').value;
-            const display = document.getElementById('selectedWalletBalDisplay');
-            if (selectedWalletSource === 'deposit') {
-                display.innerText = `Deposit: $${currentUserData.deposit.toFixed(2)}`;
-            } else {
-                display.innerText = `Available: $${currentUserData.available.toFixed(2)}`;
-            }
-        }
-
-        function setBetAmount(val) {
-            document.getElementById('crashBetInp').value = val.toFixed(2);
-        }
 
         function initCrashCanvas() {
             crashCanvas = document.getElementById('crashGraphCanvas');
@@ -2340,148 +2456,148 @@
             crashCanvas.height = parent.clientHeight;
         }
 
-        function drawRadarBackground() {
-            if (!crashCtx) return;
-            const w = crashCanvas.width;
-            const h = crashCanvas.height;
+        function switchXbetTab(btn, tab) {
+            document.querySelectorAll('.xbet-nav-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
 
-            crashCtx.clearRect(0, 0, w, h);
+        function clearXbetInput(inputId) {
+            document.getElementById(inputId).value = '';
+        }
 
-            // Radar Grid Lines
-            crashCtx.strokeStyle = 'rgba(6, 182, 212, 0.08)';
-            crashCtx.lineWidth = 1;
-            for(let x=0; x<w; x+=40) {
-                crashCtx.beginPath(); crashCtx.moveTo(x, 0); crashCtx.lineTo(x, h); crashCtx.stroke();
+        function setXbetBet(inputId, val) {
+            document.getElementById(inputId).value = val;
+        }
+
+        function initSimulatedBetsTable() {
+            const tbody = document.getElementById('xbetBetsTableBody');
+            const sampleUsers = ["01", "63", "53", "15", "79", "13", "89", "37", "61", "77", "45", "85", "33"];
+            
+            tbody.innerHTML = sampleUsers.map(u => {
+                const betVal = (Math.random() * 1200 + 200).toFixed(2);
+                return `
+                    <tr>
+                        <td>********${u}</td>
+                        <td style="color: #ff5000; font-weight: 700;">x0</td>
+                        <td>${betVal} LKR</td>
+                        <td>0 LKR</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function placeXbet(panelNum) {
+            const inputId = `xbetBetInput${panelNum}`;
+            const btnId = `btnPlaceXbet${panelNum}`;
+            const amt = parseFloat(document.getElementById(inputId).value);
+
+            if (isNaN(amt) || amt <= 0) {
+                alert("Please enter a valid bet amount!");
+                return;
             }
-            for(let y=0; y<h; y+=40) {
-                crashCtx.beginPath(); crashCtx.moveTo(0, y); crashCtx.lineTo(w, y); crashCtx.stroke();
+
+            if (currentUserData.deposit < amt) {
+                alert(`Insufficient Deposit Balance! Deposit: $${currentUserData.deposit.toFixed(2)}`);
+                return;
             }
 
-            // Radar Concentric Telemetry Circles
-            const cx = w / 2;
-            const cy = h / 2;
-            crashCtx.strokeStyle = 'rgba(6, 182, 212, 0.12)';
-            for(let r=50; r<Math.max(w,h); r+=60) {
-                crashCtx.beginPath();
-                crashCtx.arc(cx, cy, r, 0, Math.PI * 2);
-                crashCtx.stroke();
+            if (isCrashRunning) {
+                queuedBets[panelNum] = true;
+                betAmounts[panelNum] = amt;
+                const btn = document.getElementById(btnId);
+                btn.innerText = "WAITING...";
+                btn.style.opacity = '0.7';
+                return;
             }
 
-            // Radar Sweeping Line Effect
-            radarAngle += 0.015;
-            crashCtx.beginPath();
-            crashCtx.moveTo(cx, cy);
-            crashCtx.arc(cx, cy, Math.max(w, h), radarAngle, radarAngle + 0.25);
-            crashCtx.closePath();
-            const grad = crashCtx.createRadialGradient(cx, cy, 10, cx, cy, Math.max(w, h));
-            grad.addColorStop(0, 'rgba(6, 182, 212, 0.15)');
-            grad.addColorStop(1, 'rgba(6, 182, 212, 0)');
-            crashCtx.fillStyle = grad;
-            crashCtx.fill();
+            currentUserData.deposit -= amt;
+            saveSystemDB();
+            updateUI();
+
+            betsPlaced[panelNum] = true;
+            betAmounts[panelNum] = amt;
+
+            const btn = document.getElementById(btnId);
+            btn.className = "xbet-btn-cashout";
+            btn.innerText = "CASHOUT";
+            btn.onclick = function() { cashOutXbet(panelNum); };
+        }
+
+        function cashOutXbet(panelNum) {
+            if (!isCrashRunning || !betsPlaced[panelNum]) return;
+
+            const winMult = currentMultiplier;
+            const winAmt = parseFloat((betAmounts[panelNum] * winMult).toFixed(2));
+
+            betsPlaced[panelNum] = false;
+
+            currentUserData.available += winAmt;
+            addTx(`Crash Win Panel ${panelNum} (${winMult.toFixed(2)}x)`, `+$${winAmt.toFixed(2)}`, "Completed");
+            saveSystemDB();
+            updateUI();
+
+            const btnId = `btnPlaceXbet${panelNum}`;
+            const btn = document.getElementById(btnId);
+            btn.className = "xbet-btn-place";
+            btn.innerText = "WIN +$" + winAmt.toFixed(0);
+            btn.disabled = true;
+            btn.onclick = function() { placeXbet(panelNum); };
+
+            sendTelegramNotification(`<b>🚀 Crash Cashout Win!</b>\n\nUser <b>@${currentUserData.profile.username}</b> cashed out at <b>${winMult.toFixed(2)}x</b> and won <b>+$${winAmt.toFixed(2)}</b>!`);
         }
 
         function startAutomatedCrashLoop() {
-            if (isCrashRunning) return;
-
             let countdown = 5;
-            const status = document.getElementById('crashStatusText');
-            const display = document.getElementById('crashMultiplierDisplay');
+            const clockWrap = document.getElementById('xbetClockWrap');
+            const countdownText = document.getElementById('xbetCountdownText');
+            const multiplierDisplay = document.getElementById('xbetMultiplierDisplay');
 
-            display.innerText = "1.00x";
-            display.style.color = '#06B6D4';
-            display.style.textShadow = '0 0 35px rgba(6, 182, 212, 0.8)';
+            clockWrap.style.display = 'flex';
+            multiplierDisplay.style.display = 'none';
+            countdownText.innerText = countdown;
+
+            resetXbetButtons();
 
             const countdownInterval = setInterval(() => {
-                if (isQueuedBet) {
-                    status.innerText = `NEXT ROUND IN ${countdown}s (BET QUEUED)`;
-                    status.style.color = '#10B981';
-                } else {
-                    status.innerText = `NEXT LAUNCH IN ${countdown}s...`;
-                    status.style.color = '#94A3B8';
-                }
-                drawRadarBackground();
-
                 countdown--;
-                if (countdown < 0) {
+                countdownText.innerText = countdown;
+
+                if (countdown <= 0) {
                     clearInterval(countdownInterval);
                     launchCrashRound();
                 }
             }, 1000);
         }
 
-        function placeCrashBet() {
-            const betInpVal = parseFloat(document.getElementById('crashBetInp').value);
-            if (isNaN(betInpVal) || betInpVal < 5) {
-                alert("Minimum Bet Amount is $5.00!");
-                return;
-            }
+        function launchCrashRound() {
+            isCrashRunning = true;
 
-            selectedWalletSource = document.getElementById('crashWalletSourceSelect').value;
-            let currentBal = selectedWalletSource === 'deposit' ? currentUserData.deposit : currentUserData.available;
+            [1, 2].forEach(p => {
+                if (queuedBets[p]) {
+                    betsPlaced[p] = true;
+                    queuedBets[p] = false;
+                    currentUserData.deposit -= betAmounts[p];
+                    
+                    const btn = document.getElementById(`btnPlaceXbet${p}`);
+                    btn.className = "xbet-btn-cashout";
+                    btn.innerText = "CASHOUT";
+                    btn.onclick = function() { cashOutXbet(p); };
+                }
+            });
 
-            if (currentBal < betInpVal) {
-                alert(`Insufficient Balance in selected wallet (${selectedWalletSource.toUpperCase()})!\n\nBet: $${betInpVal.toFixed(2)}\nBalance: $${currentBal.toFixed(2)}`);
-                return;
-            }
-
-            activeBetAmount = betInpVal;
-
-            if (selectedWalletSource === 'deposit') {
-                currentUserData.deposit -= activeBetAmount;
-            } else {
-                currentUserData.available -= activeBetAmount;
-            }
-
-            addTx(`Dollar Crash Bet (${selectedWalletSource.toUpperCase()})`, `-$${activeBetAmount.toFixed(2)}`, "Completed");
             saveSystemDB();
             updateUI();
 
-            if (isCrashRunning) {
-                isQueuedBet = true;
-                const btn = document.getElementById('btnPlaceBet');
-                btn.disabled = true;
-                btn.innerText = "BET QUEUED";
-                btn.style.opacity = '0.6';
-            } else {
-                isBetPlaced = true;
-                const btn = document.getElementById('btnPlaceBet');
-                btn.disabled = true;
-                btn.innerText = "BET ACCEPTED";
-                btn.style.opacity = '0.6';
-            }
-        }
-
-        function launchCrashRound() {
-            isCrashRunning = true;
-            if (isQueuedBet) {
-                isBetPlaced = true;
-                isQueuedBet = false;
-            }
+            document.getElementById('xbetClockWrap').style.display = 'none';
+            const multDisp = document.getElementById('xbetMultiplierDisplay');
+            multDisp.style.display = 'block';
+            multDisp.style.color = '#ffffff';
 
             currentMultiplier = 1.00;
-            graphPoints = [{ x: 0, y: 0 }];
+            graphPoints = [{ x: 0, y: crashCanvas.height }];
 
             // CRITICAL REQUIREMENT: STRICTLY ALL ODDS CRASH UNDER 2.00x (Range: 1.01x - 1.99x)
             crashTarget = parseFloat((1.01 + Math.random() * 0.98).toFixed(2));
-
-            const display = document.getElementById('crashMultiplierDisplay');
-            const status = document.getElementById('crashStatusText');
-
-            display.style.color = '#10B981';
-            display.style.textShadow = '0 0 30px rgba(16, 185, 129, 0.8)';
-            status.innerText = "TELEMETRY BOOST ACTIVE...";
-            status.style.color = '#06B6D4';
-
-            const btnBet = document.getElementById('btnPlaceBet');
-            btnBet.disabled = true;
-            btnBet.style.opacity = '0.4';
-
-            if (isBetPlaced) {
-                const btnCash = document.getElementById('btnCashOut');
-                btnCash.disabled = false;
-                btnCash.style.opacity = '1';
-                btnCash.style.pointerEvents = 'auto';
-            }
 
             runCrashLoop();
         }
@@ -2489,160 +2605,81 @@
         function runCrashLoop() {
             if (!isCrashRunning) return;
 
-            currentMultiplier += 0.006 + (currentMultiplier * 0.0035);
+            currentMultiplier += 0.005 + (currentMultiplier * 0.0025);
+            document.getElementById('xbetMultiplierDisplay').innerText = `${currentMultiplier.toFixed(2)}x`;
 
-            const autoCashoutVal = parseFloat(document.getElementById('autoCashoutInp').value);
-            if (!isNaN(autoCashoutVal) && autoCashoutVal > 1.00 && currentMultiplier >= autoCashoutVal && isBetPlaced) {
-                cashOutCrash();
-            }
-
-            document.getElementById('crashMultiplierDisplay').innerText = `${currentMultiplier.toFixed(2)}x`;
-
-            drawLiveGraph();
+            drawXbetGraph();
 
             if (currentMultiplier >= crashTarget) {
                 isCrashRunning = false;
                 currentMultiplier = crashTarget;
-                
-                const display = document.getElementById('crashMultiplierDisplay');
-                const status = document.getElementById('crashStatusText');
 
-                display.innerText = `${crashTarget.toFixed(2)}x`;
-                display.style.color = '#EF4444';
-                display.style.textShadow = '0 0 35px rgba(239, 68, 68, 0.9)';
-                status.innerText = `CRASHED AT ${crashTarget.toFixed(2)}x`;
-                status.style.color = '#EF4444';
+                const multDisp = document.getElementById('xbetMultiplierDisplay');
+                multDisp.innerText = `${crashTarget.toFixed(2)}x`;
+                multDisp.style.color = '#ff5000';
 
-                drawCrashExplosion();
-                addCrashHistory(crashTarget, false);
+                betsPlaced[1] = false;
+                betsPlaced[2] = false;
 
-                if (isBetPlaced) {
-                    sendTelegramNotification(`<b>💥 Dollar Crash Bust!</b>\n\nUser <b>@${currentUserData.profile.username}</b> lost $${activeBetAmount.toFixed(2)} bet (Crashed at <b>${crashTarget.toFixed(2)}x</b>)`);
-                }
-
-                resetCrashControls();
                 setTimeout(startAutomatedCrashLoop, 3000);
                 return;
             }
 
-            crashAnimFrame = requestAnimationFrame(runCrashLoop);
+            requestAnimationFrame(runCrashLoop);
         }
 
-        function drawLiveGraph() {
+        function drawXbetGraph() {
             if (!crashCtx) return;
             const w = crashCanvas.width;
             const h = crashCanvas.height;
 
-            drawRadarBackground();
+            crashCtx.clearRect(0, 0, w, h);
+
+            // Dotted Background Grid
+            crashCtx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+            crashCtx.lineWidth = 1;
+            for(let x=0; x<w; x+=30) {
+                crashCtx.beginPath(); crashCtx.moveTo(x, 0); crashCtx.lineTo(x, h); crashCtx.stroke();
+            }
+            for(let y=0; y<h; y+=30) {
+                crashCtx.beginPath(); crashCtx.moveTo(0, y); crashCtx.lineTo(w, y); crashCtx.stroke();
+            }
 
             const progress = Math.min((currentMultiplier - 1) / 1.0, 1);
-            const currX = progress * (w - 80) + 30;
-            const currY = h - (Math.pow(progress, 0.85) * (h - 90)) - 30;
+            const currX = progress * (w - 40) + 20;
+            const currY = h - (Math.pow(progress, 0.8) * (h - 40)) - 20;
 
             graphPoints.push({ x: currX, y: currY });
 
-            // Glowing Trajectory Curve
+            // Orange Line Curve
             crashCtx.beginPath();
             crashCtx.moveTo(0, h);
             for(let i=0; i<graphPoints.length; i++) {
                 crashCtx.lineTo(graphPoints[i].x, graphPoints[i].y);
             }
-            
-            crashCtx.strokeStyle = '#06B6D4';
-            crashCtx.lineWidth = 5;
-            crashCtx.shadowColor = '#06B6D4';
-            crashCtx.shadowBlur = 20;
+            crashCtx.strokeStyle = '#ff5000';
+            crashCtx.lineWidth = 4;
             crashCtx.stroke();
-            crashCtx.shadowBlur = 0;
 
+            // Fill Below Line
             crashCtx.lineTo(currX, h);
             crashCtx.lineTo(0, h);
             const grad = crashCtx.createLinearGradient(0, 0, 0, h);
-            grad.addColorStop(0, 'rgba(6, 182, 212, 0.35)');
-            grad.addColorStop(1, 'rgba(6, 182, 212, 0.0)');
+            grad.addColorStop(0, 'rgba(255, 80, 0, 0.3)');
+            grad.addColorStop(1, 'rgba(255, 80, 0, 0.0)');
             crashCtx.fillStyle = grad;
             crashCtx.fill();
-
-            // Rocket Pointer Icon
-            crashCtx.save();
-            crashCtx.translate(currX, currY);
-            crashCtx.fillStyle = '#10B981';
-            crashCtx.font = '24px "Font Awesome 6 Free"';
-            crashCtx.fontWeight = '900';
-            crashCtx.shadowColor = '#10B981';
-            crashCtx.shadowBlur = 20;
-            crashCtx.fillText('\uf135', -12, 8);
-            crashCtx.restore();
         }
 
-        function drawCrashExplosion() {
-            if (!crashCtx) return;
-            const w = crashCanvas.width;
-            const h = crashCanvas.height;
-            const lastP = graphPoints[graphPoints.length - 1] || { x: w/2, y: h/2 };
-
-            crashCtx.beginPath();
-            crashCtx.arc(lastP.x, lastP.y, 45, 0, Math.PI * 2);
-            crashCtx.fillStyle = 'rgba(239, 68, 68, 0.85)';
-            crashCtx.shadowColor = '#EF4444';
-            crashCtx.shadowBlur = 40;
-            crashCtx.fill();
-        }
-
-        function cashOutCrash() {
-            if (!isCrashRunning || !isBetPlaced) return;
-
-            const winMultiplier = currentMultiplier;
-            const winAmount = parseFloat((activeBetAmount * winMultiplier).toFixed(2));
-
-            isBetPlaced = false;
-
-            currentUserData.available += winAmount;
-            addTx(`Dollar Crash Win (${winMultiplier.toFixed(2)}x)`, `+$${winAmount.toFixed(2)}`, "Completed");
-            saveSystemDB();
-            updateUI();
-
-            const cashoutBtn = document.getElementById('btnCashOut');
-            cashoutBtn.disabled = true;
-            cashoutBtn.style.opacity = '0.4';
-            cashoutBtn.style.pointerEvents = 'none';
-
-            const status = document.getElementById('crashStatusText');
-            status.innerText = `CASHED OUT AT ${winMultiplier.toFixed(2)}x! (+$${winAmount.toFixed(2)})`;
-            status.style.color = '#10B981';
-
-            addCrashHistory(winMultiplier, true);
-
-            sendTelegramNotification(`<b>🚀 Dollar Crash Cash Out Win!</b>\n\nUser <b>@${currentUserData.profile.username}</b> cashed out at <b>${winMultiplier.toFixed(2)}x</b> and won <b>+$${winAmount.toFixed(2)}</b>!`);
-
-            alert(`CASH OUT SUCCESSFUL!\n\nYou cashed out at ${winMultiplier.toFixed(2)}x and won +$${winAmount.toFixed(2)} credited to your Available Balance!`);
-        }
-
-        function resetCrashControls() {
-            isBetPlaced = false;
-            const betBtn = document.getElementById('btnPlaceBet');
-            betBtn.disabled = false;
-            betBtn.innerText = "PLACE BET";
-            betBtn.style.opacity = '1';
-            betBtn.style.pointerEvents = 'auto';
-
-            const cashoutBtn = document.getElementById('btnCashOut');
-            cashoutBtn.disabled = true;
-            cashoutBtn.style.opacity = '0.4';
-            cashoutBtn.style.pointerEvents = 'none';
-        }
-
-        function addCrashHistory(multiplier, isWin) {
-            const historyContainer = document.getElementById('crashHistory');
-            const pill = document.createElement('div');
-            pill.className = `history-pill ${isWin ? 'win' : 'bust'}`;
-            pill.innerText = `${multiplier.toFixed(2)}x`;
-
-            historyContainer.insertBefore(pill, historyContainer.firstChild);
-
-            if (historyContainer.children.length > 8) {
-                historyContainer.removeChild(historyContainer.lastChild);
-            }
+        function resetXbetButtons() {
+            [1, 2].forEach(p => {
+                const btn = document.getElementById(`btnPlaceXbet${p}`);
+                btn.className = "xbet-btn-place";
+                btn.innerText = "PLACE A BET";
+                btn.disabled = false;
+                btn.style.opacity = '1';
+                btn.onclick = function() { placeXbet(p); };
+            });
         }
     </script>
 </body>

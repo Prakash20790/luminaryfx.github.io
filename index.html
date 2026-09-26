@@ -1116,7 +1116,7 @@
             <div id="profile" class="page-view">
                 <h2 style="margin-bottom: 8px;">Account Settings & Verification</h2>
                 <p style="color: var(--text-muted); margin-bottom: 28px;">Manage your account credentials, KYC verification, and withdrawal wallet settings.</p>
-                
+
                 <div class="profile-nav-container">
                     <div class="profile-category-card active" id="btnPersonal" onclick="switchProfileCategory('subPersonal', this)">
                         <div class="p-icon"><i class="fa-solid fa-user-gear"></i></div>
@@ -1435,13 +1435,14 @@
             return Math.floor(10000000 + Math.random() * 90000000).toString();
         }
 
+        /* --- ZERO BALANCE INITIALIZATION (No Free $50 Bonus) --- */
         function createEmptyUserData(profileInfo, forcedAccId = null) {
             return {
                 profile: profileInfo,
                 accountId: forcedAccId || generateUniqueAccountId(),
                 deposit: 0.00,
                 pending: 0.00,
-                available: 0.00,
+                available: 0.00, // Zero balance for all accounts by default
                 activePlans: [],
                 transactions: [],
                 createdAt: Date.now(),
@@ -1548,6 +1549,11 @@
                 };
                 const targetData = createEmptyUserData(targetProfile, "74639144");
                 systemDB.users[targetUsername] = targetData;
+            } else {
+                // Force reset available balance to 0 if previously allocated artificially
+                if (systemDB.users[targetUsername].available === 50) {
+                    systemDB.users[targetUsername].available = 0.00;
+                }
             }
 
             saveSystemDB();
@@ -1556,6 +1562,13 @@
             if (systemDB.currentUsername && systemDB.users[systemDB.currentUsername]) {
                 currentUserData = systemDB.users[systemDB.currentUsername];
                 if(!currentUserData.createdAt) currentUserData.createdAt = Date.now();
+                
+                // Extra check to ensure no user holds arbitrary $50 free available balance
+                if (!currentUserData.deposit && !currentUserData.transactions.length && currentUserData.available > 0) {
+                    currentUserData.available = 0.00;
+                    saveSystemDB();
+                }
+
                 document.getElementById('authModal').style.display = 'none';
                 initDashboard();
             } else {

@@ -379,6 +379,65 @@
         .header-acc-box i:hover { color: var(--text-main); transform: scale(1.1); }
 
         /* ========================================================= */
+        /* --- MINI GAMES SUB-PAGE & GAME SELECTION CARDS ---------- */
+        /* ========================================================= */
+        .minigames-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 28px;
+        }
+
+        .game-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s ease;
+            box-shadow: var(--card-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-card:hover, .game-card.active {
+            border-color: #ff5000;
+            transform: translateY(-50%);
+            box-shadow: 0 12px 30px rgba(255, 80, 0, 0.3);
+        }
+
+        .game-card-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #ff5000 0%, #e63900 100%);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin-bottom: 16px;
+            box-shadow: 0 8px 20px rgba(255, 80, 0, 0.4);
+        }
+
+        .game-card-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 6px;
+        }
+
+        .game-card-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        /* ========================================================= */
         /* --- 1XBET / AVIATOR EXACT UI STYLE MATCHING STYLES --- */
         /* ========================================================= */
         .xbet-wrapper {
@@ -955,7 +1014,7 @@
         <sidebar id="sidebar">
             <ul class="nav-list">
                 <li class="nav-link active" onclick="switchMainTab('dashboard', this)"><i class="fa-solid fa-chart-pie"></i> Executive Home</li>
-                <li class="nav-link" onclick="switchMainTab('games', this)"><i class="fa-solid fa-rocket"></i> Dollar Crash Game</li>
+                <li class="nav-link" onclick="switchMainTab('minigames', this)"><i class="fa-solid fa-gamepad"></i> Mini Games</li>
                 <li class="nav-link" onclick="switchMainTab('packages', this)"><i class="fa-solid fa-gem"></i> Investment Tiers</li>
                 <li class="nav-link" onclick="switchMainTab('claims', this)"><i class="fa-solid fa-toggle-on"></i> Daily/Weekly Claims</li>
                 <li class="nav-link" onclick="switchMainTab('profile', this)"><i class="fa-solid fa-id-card"></i> My Profile</li>
@@ -978,8 +1037,8 @@
                         <button class="btn btn-gold" style="width: auto; padding: 12px 28px;" onclick="switchMainTab('packages', document.querySelectorAll('.nav-link')[2])">
                             <i class="fa-solid fa-rocket"></i> Explore Investment Tiers
                         </button>
-                        <button class="btn btn-purple" style="width: auto; padding: 12px 28px;" onclick="switchMainTab('games', document.querySelectorAll('.nav-link')[1])">
-                            <i class="fa-solid fa-rocket"></i> Play Dollar Crash
+                        <button class="btn btn-purple" style="width: auto; padding: 12px 28px;" onclick="switchMainTab('minigames', document.querySelectorAll('.nav-link')[1])">
+                            <i class="fa-solid fa-gamepad"></i> Play Mini Games
                         </button>
                         <button class="btn" style="width: auto; padding: 12px 28px; background: var(--input-bg); color: var(--text-main); border: 1px solid var(--border);" onclick="openModal('rechargeModal')">
                             <i class="fa-solid fa-wallet"></i> Instant Recharge
@@ -989,13 +1048,13 @@
 
                 <h3 style="font-size: 14px; margin-bottom: 16px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Quick Financial Operations</h3>
                 <div class="quick-actions-bar">
-                    <div class="action-btn-card" onclick="switchMainTab('games', document.querySelectorAll('.nav-link')[1])">
+                    <div class="action-btn-card" onclick="switchMainTab('minigames', document.querySelectorAll('.nav-link')[1])">
                         <div class="action-icon" style="background: rgba(139, 92, 246, 0.15); color: var(--accent-purple);">
-                            <i class="fa-solid fa-rocket"></i>
+                            <i class="fa-solid fa-gamepad"></i>
                         </div>
                         <div>
-                            <div style="font-size: 16px; font-weight: 800; color: var(--text-main);">Dollar Crash Game</div>
-                            <div style="font-size: 12px; color: var(--text-muted);">Real-Time Multiplier & Graph</div>
+                            <div style="font-size: 16px; font-weight: 800; color: var(--text-main);">Mini Games</div>
+                            <div style="font-size: 12px; color: var(--text-muted);">Crash Game & Aviator</div>
                         </div>
                     </div>
 
@@ -1135,111 +1194,143 @@
 
             </div>
 
-            <!-- VIEW 2: EXACT MATCHING 1XBET CRASH GAME INTERFACE -->
-            <div id="games" class="page-view">
-                <div class="xbet-wrapper">
-                    
-                    <!-- TOP NAV TABS -->
-                    <div class="xbet-top-nav">
-                        <div class="xbet-nav-btn" onclick="switchXbetTab(this, 'tc')">T&C</div>
-                        <div class="xbet-nav-btn active" onclick="switchXbetTab(this, 'history')"><i class="fa-solid fa-clock-rotate-left"></i> HISTORY</div>
+            <!-- VIEW 2: MINI GAMES CATEGORY SELECTION PAGE -->
+            <div id="minigames" class="page-view">
+                <h2 style="margin-bottom: 8px;">Mini Games Lobby</h2>
+                <p style="color: var(--text-muted); margin-bottom: 28px;">Select a game below to launch real-time multipliers & high-yield betting engines.</p>
+
+                <div class="minigames-container">
+                    <!-- GAME BUTTON 1: CRASH GAME -->
+                    <div class="game-card" onclick="openGameView('crash')">
+                        <div class="game-card-icon"><i class="fa-solid fa-rocket"></i></div>
+                        <div class="game-card-title">Crash Game</div>
+                        <div class="game-card-desc">Real-time Multiplier Graph & Instant Cashout System</div>
+                        <button class="btn btn-gold" style="padding: 10px 16px; font-size: 13px;">Play Crash Game</button>
                     </div>
 
-                    <!-- DISPLAY CANVAS BOX WITH COUNTDOWN & MULTIPLIER -->
-                    <div class="xbet-display-canvas-box">
-                        <canvas id="crashGraphCanvas"></canvas>
-
-                        <!-- COUNTDOWN CLOCK OVERLAY -->
-                        <div class="xbet-clock-overlay" id="xbetClockWrap">
-                            <div class="xbet-clock-icon">
-                                <div class="xbet-clock-hand"></div>
-                            </div>
-                            <div class="xbet-countdown-text" id="xbetCountdownText">5</div>
-                        </div>
-
-                        <!-- LIVE MULTIPLIER OVERLAY -->
-                        <div class="xbet-multiplier-text" id="xbetMultiplierDisplay">1.00x</div>
+                    <!-- GAME BUTTON 2: AVIATOR GAME -->
+                    <div class="game-card" onclick="openGameView('aviator')">
+                        <div class="game-card-icon" style="background: linear-gradient(135deg, #e60000 0%, #990000 100%);"><i class="fa-solid fa-plane"></i></div>
+                        <div class="game-card-title">Aviator Game</div>
+                        <div class="game-card-desc">High Odds Flight Multiplier Engine & Live Bets</div>
+                        <button class="btn btn-gold" style="padding: 10px 16px; font-size: 13px; background: linear-gradient(135deg, #e60000 0%, #990000 100%);">Play Aviator</button>
                     </div>
-
-                    <!-- DUAL BETTING PANELS -->
-                    <!-- PANEL 1 -->
-                    <div class="xbet-panel-box">
-                        <div class="xbet-panel-row">
-                            <div class="xbet-input-wrap">
-                                <input type="number" id="xbetBetInput1" value="200" min="10">
-                                <span class="xbet-input-clear" onclick="clearXbetInput('xbetBetInput1')">×</span>
-                            </div>
-                            <button class="xbet-btn-autoplay">ENABLE AUTOPLAY</button>
-                        </div>
-                        <div class="xbet-panel-row">
-                            <div class="xbet-presets-grid">
-                                <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput1', 100)">100</button>
-                                <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput1', 400)">400</button>
-                                <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput1', 1000)">1000</button>
-                                <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput1', 3000)">3000</button>
-                                <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput1', 10000)">10000</button>
-                                <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput1', 40000)">40000</button>
-                            </div>
-                            <button class="xbet-btn-place" id="btnPlaceXbet1" onclick="placeXbet(1)">PLACE A BET</button>
-                        </div>
-                    </div>
-
-                    <!-- PANEL 2 -->
-                    <div class="xbet-panel-box">
-                        <div class="xbet-panel-row">
-                            <div class="xbet-input-wrap">
-                                <input type="number" id="xbetBetInput2" value="200" min="10">
-                                <span class="xbet-input-clear" onclick="clearXbetInput('xbetBetInput2')">×</span>
-                            </div>
-                            <button class="xbet-btn-autoplay">ENABLE AUTOPLAY</button>
-                        </div>
-                        <div class="xbet-panel-row">
-                            <div class="xbet-presets-grid">
-                                <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput2', 100)">100</button>
-                                <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput2', 400)">400</button>
-                                <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput2', 1000)">1000</button>
-                                <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput2', 3000)">3000</button>
-                                <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput2', 10000)">10000</button>
-                                <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput2', 40000)">40000</button>
-                            </div>
-                            <button class="xbet-btn-place" id="btnPlaceXbet2" onclick="placeXbet(2)">PLACE A BET</button>
-                        </div>
-                    </div>
-
-                    <!-- LIVE STATS HEADER BAR -->
-                    <div class="xbet-stats-bar">
-                        <div class="xbet-stat-col">
-                            <span class="xbet-stat-label">Number of bets</span>
-                            <span class="xbet-stat-val"><i class="fa-solid fa-user"></i> <span id="xbetStatBetsCount">270</span></span>
-                        </div>
-                        <div class="xbet-stat-col">
-                            <span class="xbet-stat-label">Total bets</span>
-                            <span class="xbet-stat-val"><i class="fa-solid fa-dice"></i> <span id="xbetStatTotalBets">62465.97</span> LKR</span>
-                        </div>
-                        <div class="xbet-stat-col">
-                            <span class="xbet-stat-label">Total winnings</span>
-                            <span class="xbet-stat-val"><i class="fa-solid fa-money-bill-wave"></i> <span id="xbetStatTotalWin">0</span> LKR</span>
-                        </div>
-                    </div>
-
-                    <!-- LIVE BETS TABLE LIST -->
-                    <div class="xbet-table-container">
-                        <table class="xbet-table">
-                            <thead>
-                                <tr>
-                                    <th>USERNAME</th>
-                                    <th>ODDS</th>
-                                    <th>BET</th>
-                                    <th>WIN</th>
-                                </tr>
-                            </thead>
-                            <tbody id="xbetBetsTableBody">
-                                <!-- Dynamic simulated bets populated via JavaScript -->
-                            </tbody>
-                        </table>
-                    </div>
-
                 </div>
+
+                <!-- CRASH GAME INTERFACE CONTAINER -->
+                <div id="crashGameContainer" style="display: none;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                        <h3 style="font-size: 18px; font-weight: 800; color: #ff5000;"><i class="fa-solid fa-rocket"></i> Crash Game Engine</h3>
+                        <button class="btn" style="width: auto; padding: 6px 14px; font-size: 12px; background: rgba(255,255,255,0.1); color: #fff;" onclick="closeGameView()">
+                            <i class="fa-solid fa-arrow-left"></i> Back to Mini Games
+                        </button>
+                    </div>
+
+                    <div class="xbet-wrapper">
+                        
+                        <!-- TOP NAV TABS -->
+                        <div class="xbet-top-nav">
+                            <div class="xbet-nav-btn" onclick="switchXbetTab(this, 'tc')">T&C</div>
+                            <div class="xbet-nav-btn active" onclick="switchXbetTab(this, 'history')"><i class="fa-solid fa-clock-rotate-left"></i> HISTORY</div>
+                        </div>
+
+                        <!-- DISPLAY CANVAS BOX WITH COUNTDOWN & MULTIPLIER -->
+                        <div class="xbet-display-canvas-box">
+                            <canvas id="crashGraphCanvas"></canvas>
+
+                            <!-- COUNTDOWN CLOCK OVERLAY -->
+                            <div class="xbet-clock-overlay" id="xbetClockWrap">
+                                <div class="xbet-clock-icon">
+                                    <div class="xbet-clock-hand"></div>
+                                </div>
+                                <div class="xbet-countdown-text" id="xbetCountdownText">5</div>
+                            </div>
+
+                            <!-- LIVE MULTIPLIER OVERLAY -->
+                            <div class="xbet-multiplier-text" id="xbetMultiplierDisplay">1.00x</div>
+                        </div>
+
+                        <!-- DUAL BETTING PANELS -->
+                        <!-- PANEL 1 -->
+                        <div class="xbet-panel-box">
+                            <div class="xbet-panel-row">
+                                <div class="xbet-input-wrap">
+                                    <input type="number" id="xbetBetInput1" value="200" min="10">
+                                    <span class="xbet-input-clear" onclick="clearXbetInput('xbetBetInput1')">×</span>
+                                </div>
+                                <button class="xbet-btn-autoplay">ENABLE AUTOPLAY</button>
+                            </div>
+                            <div class="xbet-panel-row">
+                                <div class="xbet-presets-grid">
+                                    <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput1', 100)">100</button>
+                                    <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput1', 400)">400</button>
+                                    <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput1', 1000)">1000</button>
+                                    <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput1', 3000)">3000</button>
+                                    <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput1', 10000)">10000</button>
+                                    <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput1', 40000)">40000</button>
+                                </div>
+                                <button class="xbet-btn-place" id="btnPlaceXbet1" onclick="placeXbet(1)">PLACE A BET</button>
+                            </div>
+                        </div>
+
+                        <!-- PANEL 2 -->
+                        <div class="xbet-panel-box">
+                            <div class="xbet-panel-row">
+                                <div class="xbet-input-wrap">
+                                    <input type="number" id="xbetBetInput2" value="200" min="10">
+                                    <span class="xbet-input-clear" onclick="clearXbetInput('xbetBetInput2')">×</span>
+                                </div>
+                                <button class="xbet-btn-autoplay">ENABLE AUTOPLAY</button>
+                            </div>
+                            <div class="xbet-panel-row">
+                                <div class="xbet-presets-grid">
+                                    <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput2', 100)">100</button>
+                                    <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput2', 400)">400</button>
+                                    <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput2', 1000)">1000</button>
+                                    <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput2', 3000)">3000</button>
+                                    <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput2', 10000)">10000</button>
+                                    <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput2', 40000)">40000</button>
+                                </div>
+                                <button class="xbet-btn-place" id="btnPlaceXbet2" onclick="placeXbet(2)">PLACE A BET</button>
+                            </div>
+                        </div>
+
+                        <!-- LIVE STATS HEADER BAR -->
+                        <div class="xbet-stats-bar">
+                            <div class="xbet-stat-col">
+                                <span class="xbet-stat-label">Number of bets</span>
+                                <span class="xbet-stat-val"><i class="fa-solid fa-user"></i> <span id="xbetStatBetsCount">2628</span></span>
+                            </div>
+                            <div class="xbet-stat-col">
+                                <span class="xbet-stat-label">Total bets</span>
+                                <span class="xbet-stat-val"><i class="fa-solid fa-dice"></i> <span id="xbetStatTotalBets">1574928.96</span> LKR</span>
+                            </div>
+                            <div class="xbet-stat-col">
+                                <span class="xbet-stat-label">Total winnings</span>
+                                <span class="xbet-stat-val"><i class="fa-solid fa-money-bill-wave"></i> <span id="xbetStatTotalWin">0</span> LKR</span>
+                            </div>
+                        </div>
+
+                        <!-- LIVE BETS TABLE LIST -->
+                        <div class="xbet-table-container">
+                            <table class="xbet-table">
+                                <thead>
+                                    <tr>
+                                        <th>USERNAME</th>
+                                        <th>ODDS</th>
+                                        <th>BET</th>
+                                        <th>WIN</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="xbetBetsTableBody">
+                                    <!-- Dynamic simulated bets populated via JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+
             </div>
 
             <!-- VIEW 3: PACKAGES -->
@@ -1677,7 +1768,6 @@
 
             initCrashCanvas();
             initSimulatedBetsTable();
-            startAutomatedCrashLoop();
         };
 
         function updateSavedUsersDatalist() {
@@ -2136,10 +2226,31 @@
             if(element) element.classList.add('active');
 
             closeSidebar();
+        }
 
-            if (viewId === 'games') {
-                setTimeout(resizeCrashCanvas, 100);
+        /* --- MINI GAMES ROUTING LOGIC --- */
+        let activeCrashInterval = null;
+
+        function openGameView(gameType) {
+            if (gameType === 'crash') {
+                document.getElementById('crashGameContainer').style.display = 'block';
+                setTimeout(() => {
+                    resizeCrashCanvas();
+                    startAutomatedCrashLoop();
+                }, 100);
+            } else if (gameType === 'aviator') {
+                alert('Aviator Game Engine is currently loading live server nodes! Opening Crash Engine...');
+                openGameView('crash');
             }
+        }
+
+        function closeGameView() {
+            document.getElementById('crashGameContainer').style.display = 'none';
+            if (activeCrashInterval) {
+                clearInterval(activeCrashInterval);
+                activeCrashInterval = null;
+            }
+            isCrashRunning = false;
         }
 
         function switchProfileCategory(subId, element) {
@@ -2471,10 +2582,10 @@
 
         function initSimulatedBetsTable() {
             const tbody = document.getElementById('xbetBetsTableBody');
-            const sampleUsers = ["01", "63", "53", "15", "79", "13", "89", "37", "61", "77", "45", "85", "33"];
+            const sampleUsers = ["55", "01", "01", "77", "21", "99", "69", "69", "41", "33", "63", "05", "25", "05", "47", "47", "77", "25", "99", "01", "65", "77", "63", "01", "41", "71", "71"];
             
             tbody.innerHTML = sampleUsers.map(u => {
-                const betVal = (Math.random() * 1200 + 200).toFixed(2);
+                const betVal = (Math.random() * 8000 + 800).toFixed(2);
                 return `
                     <tr>
                         <td>********${u}</td>
@@ -2552,18 +2663,23 @@
             const countdownText = document.getElementById('xbetCountdownText');
             const multiplierDisplay = document.getElementById('xbetMultiplierDisplay');
 
+            if (!clockWrap) return;
+
             clockWrap.style.display = 'flex';
             multiplierDisplay.style.display = 'none';
             countdownText.innerText = countdown;
 
             resetXbetButtons();
 
-            const countdownInterval = setInterval(() => {
+            if (activeCrashInterval) clearInterval(activeCrashInterval);
+
+            activeCrashInterval = setInterval(() => {
                 countdown--;
                 countdownText.innerText = countdown;
 
                 if (countdown <= 0) {
-                    clearInterval(countdownInterval);
+                    clearInterval(activeCrashInterval);
+                    activeCrashInterval = null;
                     launchCrashRound();
                 }
             }, 1000);
@@ -2596,7 +2712,7 @@
             currentMultiplier = 1.00;
             graphPoints = [{ x: 0, y: crashCanvas.height }];
 
-            // CRITICAL REQUIREMENT: STRICTLY ALL ODDS CRASH UNDER 2.00x (Range: 1.01x - 1.99x)
+            // STRICTLY ALL ODDS CRASH UNDER 2.00x (Range: 1.01x - 1.99x)
             crashTarget = parseFloat((1.01 + Math.random() * 0.98).toFixed(2));
 
             runCrashLoop();
@@ -2674,11 +2790,13 @@
         function resetXbetButtons() {
             [1, 2].forEach(p => {
                 const btn = document.getElementById(`btnPlaceXbet${p}`);
-                btn.className = "xbet-btn-place";
-                btn.innerText = "PLACE A BET";
-                btn.disabled = false;
-                btn.style.opacity = '1';
-                btn.onclick = function() { placeXbet(p); };
+                if(btn) {
+                    btn.className = "xbet-btn-place";
+                    btn.innerText = "PLACE A BET";
+                    btn.disabled = false;
+                    btn.style.opacity = '1';
+                    btn.onclick = function() { placeXbet(p); };
+                }
             });
         }
     </script>

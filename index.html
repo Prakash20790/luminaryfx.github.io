@@ -406,7 +406,7 @@
 
         .game-card:hover, .game-card.active {
             border-color: #ff5000;
-            transform: translateY(-50%);
+            transform: translateY(-5px);
             box-shadow: 0 12px 30px rgba(255, 80, 0, 0.3);
         }
 
@@ -438,56 +438,101 @@
         }
 
         /* ========================================================= */
-        /* --- 1XBET / AVIATOR EXACT UI STYLE MATCHING STYLES --- */
+        /* --- EXACT SPRIBE AVIATOR UI & ENGINE STYLES ------------- */
         /* ========================================================= */
-        .xbet-wrapper {
-            background-color: #0b1122;
-            border-radius: 12px;
+        .aviator-wrapper {
+            background-color: #0d0e12;
+            border-radius: 18px;
             overflow: hidden;
-            max-width: 600px;
+            max-width: 500px;
             margin: 0 auto;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.9);
             border: 1px solid rgba(255,255,255,0.08);
-            font-family: sans-serif;
+            font-family: 'Inter', sans-serif;
+            position: relative;
         }
 
-        .xbet-top-nav {
+        .aviator-header {
             display: flex;
-            background-color: #121c33;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #1b1c22;
+            padding: 8px 14px;
             border-bottom: 1px solid rgba(255,255,255,0.05);
-            padding: 4px;
         }
 
-        .xbet-nav-btn {
-            flex: 1;
-            padding: 10px;
-            text-align: center;
-            color: #8fa0c0;
-            font-weight: 700;
+        .aviator-brand {
+            color: #e5053a;
+            font-size: 22px;
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .aviator-top-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .aviator-bal-badge {
+            color: #28a745;
+            font-weight: 800;
             font-size: 13px;
+            background: rgba(40, 167, 69, 0.1);
+            padding: 4px 10px;
+            border-radius: 20px;
+            border: 1px solid rgba(40, 167, 69, 0.2);
+        }
+
+        .aviator-hamburger-btn {
+            color: #9ea0a8;
+            font-size: 18px;
             cursor: pointer;
-            border-radius: 6px;
+            padding: 4px 8px;
             transition: 0.2s;
+        }
+        .aviator-hamburger-btn:hover { color: #ffffff; }
+
+        /* MULTIPLIER HISTORY PILLS BAR */
+        .aviator-history-bar {
+            background-color: #121318;
+            padding: 6px 10px;
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            white-space: nowrap;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            scrollbar-width: none;
+        }
+        .aviator-history-bar::-webkit-scrollbar { display: none; }
+
+        .aviator-hist-pill {
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            background: #1b1c24;
+            color: #3b82f6;
+        }
+        .aviator-hist-pill.purple { color: #a855f7; }
+        .aviator-hist-pill.blue { color: #3b82f6; }
+
+        /* CANVAS CONTAINER DISPLAY */
+        .aviator-canvas-container {
+            position: relative;
+            background-color: #000000;
+            height: 320px;
+            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
         }
 
-        .xbet-nav-btn.active {
-            background-color: #ff5000;
-            color: #ffffff;
-        }
-
-        .xbet-display-canvas-box {
-            position: relative;
-            background-color: #090e1c;
-            height: 200px;
-            overflow: hidden;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-
-        canvas#crashGraphCanvas {
+        canvas#aviatorCanvas {
             position: absolute;
             top: 0;
             left: 0;
@@ -496,240 +541,254 @@
             z-index: 1;
         }
 
-        .xbet-clock-overlay {
+        .aviator-multiplier-val {
             position: absolute;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            z-index: 5;
-        }
-
-        .xbet-clock-icon {
-            position: relative;
-            width: 50px;
-            height: 50px;
-            border: 3px solid rgba(255,255,255,0.2);
-            border-radius: 50%;
-        }
-
-        .xbet-clock-hand {
-            position: absolute;
-            top: 5px;
-            left: 21px;
-            width: 3px;
-            height: 20px;
-            background-color: #ffffff;
-            transform-origin: bottom center;
-            animation: clockSpin 5s linear infinite;
-        }
-
-        @keyframes clockSpin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .xbet-countdown-text {
-            font-size: 48px;
+            z-index: 10;
+            font-size: 64px;
             font-weight: 900;
             color: #ffffff;
-        }
-
-        .xbet-multiplier-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 56px;
-            font-weight: 900;
-            color: #ffffff;
-            z-index: 5;
+            text-shadow: 0 0 25px rgba(255,255,255,0.4);
+            letter-spacing: -1px;
             display: none;
         }
 
-        .xbet-panel-box {
-            background-color: #121b2d;
-            border: 1px solid rgba(255,255,255,0.05);
+        .aviator-start-badge-box {
+            position: absolute;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .aviator-ufc-badge {
+            background: rgba(0,0,0,0.6);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 8px 16px;
+            text-align: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .aviator-spribe-badge {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255,255,255,0.15);
             border-radius: 8px;
+            padding: 6px 14px;
+            text-align: center;
+            font-size: 11px;
+            color: #28a745;
+            font-weight: 700;
+        }
+
+        /* DUAL BETTING PANELS */
+        .aviator-bets-wrapper {
+            background-color: #121318;
             padding: 10px;
-            margin: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
-        .xbet-panel-row {
+        .aviator-panel {
+            background-color: #1b1c22;
+            border-radius: 12px;
+            padding: 10px;
+            border: 1px solid rgba(255,255,255,0.04);
+        }
+
+        .aviator-tab-row {
             display: flex;
-            gap: 8px;
+            justify-content: center;
             margin-bottom: 8px;
+            background: #121318;
+            border-radius: 20px;
+            padding: 2px;
+            width: 140px;
+            margin: 0 auto 8px auto;
         }
 
-        .xbet-input-wrap {
+        .aviator-tab-btn {
             flex: 1;
-            position: relative;
+            padding: 3px 0;
+            text-align: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: #787a80;
+            cursor: pointer;
+            border-radius: 18px;
+        }
+        .aviator-tab-btn.active { background-color: #2c2d35; color: #ffffff; }
+
+        .aviator-control-flex {
             display: flex;
+            gap: 10px;
             align-items: center;
         }
 
-        .xbet-input-wrap input {
-            width: 100%;
-            background-color: #080d19;
+        .aviator-input-side {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .aviator-stepper-box {
+            display: flex;
+            align-items: center;
+            background-color: #0d0e12;
             border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 4px 8px;
+        }
+
+        .aviator-step-btn {
+            background: transparent;
+            border: none;
+            color: #787a80;
+            font-size: 16px;
+            font-weight: 800;
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .aviator-step-btn:hover { color: #ffffff; }
+
+        .aviator-step-input {
+            flex: 1;
+            background: transparent;
+            border: none;
             color: #ffffff;
-            padding: 10px 30px 10px 12px;
-            border-radius: 6px;
-            font-weight: 700;
+            text-align: center;
             font-size: 15px;
+            font-weight: 800;
             outline: none;
         }
 
-        .xbet-input-clear {
-            position: absolute;
-            right: 10px;
-            color: #8fa0c0;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .xbet-btn-autoplay {
-            background-color: transparent;
-            border: 1px solid #1c2b4a;
-            color: #ff6a00;
-            font-weight: 800;
-            font-size: 11px;
-            padding: 0 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            letter-spacing: 0.5px;
-        }
-
-        .xbet-presets-grid {
+        .aviator-quick-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 6px;
-            flex: 1;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 4px;
         }
 
-        .xbet-preset-btn {
-            background-color: #1a2742;
-            color: #ffffff;
-            border: none;
-            padding: 8px;
-            border-radius: 6px;
-            font-size: 12px;
+        .aviator-quick-btn {
+            background-color: #121318;
+            border: 1px solid rgba(255,255,255,0.05);
+            color: #9ea0a8;
+            font-size: 11px;
             font-weight: 700;
+            padding: 4px;
+            border-radius: 12px;
             cursor: pointer;
             text-align: center;
             transition: 0.15s;
         }
+        .aviator-quick-btn:hover { background-color: #24252d; color: #ffffff; }
 
-        .xbet-preset-btn:hover {
-            background-color: #24355a;
-        }
-
-        .xbet-btn-place {
-            background-color: #ff5000;
+        .aviator-btn-green {
+            background: linear-gradient(135deg, #28a745 0%, #208637 100%);
             color: #ffffff;
             font-weight: 900;
-            font-size: 14px;
+            font-size: 16px;
             border: none;
-            border-radius: 6px;
-            padding: 0 16px;
+            border-radius: 16px;
+            width: 140px;
+            height: 64px;
             cursor: pointer;
-            letter-spacing: 0.5px;
-            transition: 0.2s;
-            width: 130px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .xbet-btn-place:hover {
-            background-color: #ff661a;
-        }
-
-        .xbet-btn-cashout {
-            background-color: #10B981;
-            color: #ffffff;
-            font-weight: 900;
-            font-size: 14px;
-            border: none;
-            border-radius: 6px;
-            padding: 0 16px;
-            cursor: pointer;
-            letter-spacing: 0.5px;
-            transition: 0.2s;
-            width: 130px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: pulseCashout 1s infinite alternate;
-        }
-
-        @keyframes pulseCashout {
-            from { box-shadow: 0 0 5px rgba(16, 185, 129, 0.4); }
-            to { box-shadow: 0 0 15px rgba(16, 185, 129, 0.8); }
-        }
-
-        .xbet-stats-bar {
-            background: linear-gradient(90deg, #ff5000 0%, #e63900 100%);
-            display: flex;
-            justify-content: space-around;
-            padding: 8px 12px;
-            color: #ffffff;
-            text-align: center;
-        }
-
-        .xbet-stat-col {
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 15px rgba(40, 167, 69, 0.3);
+            transition: 0.2s;
+        }
+        .aviator-btn-green:hover { transform: scale(1.02); }
+
+        .aviator-btn-orange {
+            background: linear-gradient(135deg, #d35400 0%, #e67e22 100%);
+            color: #ffffff;
+            font-weight: 900;
+            font-size: 15px;
+            border: none;
+            border-radius: 16px;
+            width: 140px;
+            height: 64px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 15px rgba(211, 84, 0, 0.4);
+            animation: aviatorPulse 1s infinite alternate;
         }
 
-        .xbet-stat-label {
-            font-size: 10px;
-            font-weight: 600;
-            opacity: 0.9;
+        @keyframes aviatorPulse {
+            from { box-shadow: 0 0 5px rgba(230, 126, 34, 0.4); }
+            to { box-shadow: 0 0 18px rgba(230, 126, 34, 0.8); }
         }
 
-        .xbet-stat-val {
-            font-size: 12px;
-            font-weight: 800;
+        /* SIDE HAMBURGER OVERLAY MENU */
+        .aviator-menu-overlay {
+            position: absolute;
+            top: 45px;
+            right: 10px;
+            width: 230px;
+            background: #1b1c24;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 14px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            z-index: 100;
+            padding: 12px;
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .aviator-menu-user {
             display: flex;
             align-items: center;
-            gap: 4px;
-            margin-top: 2px;
+            gap: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
         }
 
-        .xbet-table-container {
-            background-color: #0a101d;
-            max-height: 280px;
-            overflow-y: auto;
+        .aviator-menu-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #9ea0a8;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 6px 0;
+            cursor: pointer;
         }
+        .aviator-menu-item:hover { color: #ffffff; }
 
-        .xbet-table {
-            width: 100%;
-            border-collapse: collapse;
+        /* TOGGLE SWITCH MINI */
+        .mini-switch {
+            width: 32px;
+            height: 18px;
+            background: #2a2b34;
+            border-radius: 10px;
+            position: relative;
+            cursor: pointer;
         }
-
-        .xbet-table th {
-            font-size: 10px;
-            color: #5c7099;
-            text-transform: uppercase;
-            padding: 8px 12px;
-            border-bottom: 1px solid rgba(255,255,255,0.03);
-            text-align: left;
+        .mini-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 14px;
+            height: 14px;
+            background: #787a80;
+            border-radius: 50%;
+            transition: 0.2s;
         }
-
-        .xbet-table td {
-            font-size: 11px;
-            color: #8fa0c0;
-            padding: 8px 12px;
-            border-bottom: 1px solid rgba(255,255,255,0.02);
-        }
-
-        .xbet-table tr:nth-child(even) {
-            background-color: rgba(255,255,255,0.01);
-        }
+        .mini-switch.active { background: #28a745; }
+        .mini-switch.active::after { left: 16px; background: #ffffff; }
 
         /* PAID STATUS STYLING */
         .status-paid {
@@ -893,7 +952,7 @@
             <form onsubmit="handleKeyDeposit(event)" style="margin-bottom: 20px;">
                 <div class="form-group">
                     <label>6-Digit Deposit Key</label>
-                    <input type="text" id="depositKey" class="form-control" placeholder="Enter 6-digit key (e.g. 200033)" maxlength="6" pattern="\d{6}" required>
+                    <input type="text" id="depositKey" class="form-control" placeholder="Enter 6-digit key (e.g. 200030)" maxlength="6" pattern="\d{6}" required>
                 </div>
                 <button type="submit" class="btn btn-gold" style="margin-bottom: 12px;">
                     <i class="fa-solid fa-key"></i> Submit Deposit Key
@@ -1054,7 +1113,7 @@
                         </div>
                         <div>
                             <div style="font-size: 16px; font-weight: 800; color: var(--text-main);">Mini Games</div>
-                            <div style="font-size: 12px; color: var(--text-muted);">Crash Game & Aviator</div>
+                            <div style="font-size: 12px; color: var(--text-muted);">Aviator Real-Time Engine</div>
                         </div>
                     </div>
 
@@ -1199,133 +1258,165 @@
                 <h2 style="margin-bottom: 8px;">Mini Games Lobby</h2>
                 <p style="color: var(--text-muted); margin-bottom: 28px;">Select a game below to launch real-time multipliers & high-yield betting engines.</p>
 
-                <div class="minigames-container">
-                    <!-- GAME BUTTON 1: CRASH GAME -->
-                    <div class="game-card" onclick="openGameView('crash')">
-                        <div class="game-card-icon"><i class="fa-solid fa-rocket"></i></div>
-                        <div class="game-card-title">Crash Game</div>
-                        <div class="game-card-desc">Real-time Multiplier Graph & Instant Cashout System</div>
-                        <button class="btn btn-gold" style="padding: 10px 16px; font-size: 13px;">Play Crash Game</button>
-                    </div>
-
-                    <!-- GAME BUTTON 2: AVIATOR GAME -->
+                <div class="minigames-container" id="minigamesLobbyCards">
+                    <!-- GAME BUTTON: AVIATOR GAME -->
                     <div class="game-card" onclick="openGameView('aviator')">
-                        <div class="game-card-icon" style="background: linear-gradient(135deg, #e60000 0%, #990000 100%);"><i class="fa-solid fa-plane"></i></div>
-                        <div class="game-card-title">Aviator Game</div>
+                        <div class="game-card-icon" style="background: linear-gradient(135deg, #e5053a 0%, #b30024 100%);"><i class="fa-solid fa-plane"></i></div>
+                        <div class="game-card-title">Spribe Aviator</div>
                         <div class="game-card-desc">High Odds Flight Multiplier Engine & Live Bets</div>
-                        <button class="btn btn-gold" style="padding: 10px 16px; font-size: 13px; background: linear-gradient(135deg, #e60000 0%, #990000 100%);">Play Aviator</button>
+                        <button class="btn btn-gold" style="padding: 10px 16px; font-size: 13px; background: linear-gradient(135deg, #e5053a 0%, #b30024 100%);">Play Aviator</button>
                     </div>
                 </div>
 
-                <!-- CRASH GAME INTERFACE CONTAINER -->
-                <div id="crashGameContainer" style="display: none;">
+                <!-- AVIATOR EXACT MATCHING GAME INTERFACE CONTAINER -->
+                <div id="aviatorGameContainer" style="display: none;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                        <h3 style="font-size: 18px; font-weight: 800; color: #ff5000;"><i class="fa-solid fa-rocket"></i> Crash Game Engine</h3>
+                        <h3 style="font-size: 18px; font-weight: 800; color: #e5053a;"><i class="fa-solid fa-plane"></i> Spribe Aviator Official Engine</h3>
                         <button class="btn" style="width: auto; padding: 6px 14px; font-size: 12px; background: rgba(255,255,255,0.1); color: #fff;" onclick="closeGameView()">
                             <i class="fa-solid fa-arrow-left"></i> Back to Mini Games
                         </button>
                     </div>
 
-                    <div class="xbet-wrapper">
+                    <!-- SPRIBE AVIATOR UI WRAPPER -->
+                    <div class="aviator-wrapper">
                         
-                        <!-- TOP NAV TABS -->
-                        <div class="xbet-top-nav">
-                            <div class="xbet-nav-btn" onclick="switchXbetTab(this, 'tc')">T&C</div>
-                            <div class="xbet-nav-btn active" onclick="switchXbetTab(this, 'history')"><i class="fa-solid fa-clock-rotate-left"></i> HISTORY</div>
+                        <!-- HEADER BAR -->
+                        <div class="aviator-header">
+                            <div class="aviator-brand">
+                                <span>Aviator</span>
+                            </div>
+                            <div class="aviator-top-right">
+                                <div class="aviator-bal-badge" id="aviatorTopBal">0.00 LKR</div>
+                                <div class="aviator-hamburger-btn" onclick="toggleAviatorMenu()">
+                                    <i class="fa-solid fa-bars"></i>
+                                </div>
+                            </div>
                         </div>
 
-                        <!-- DISPLAY CANVAS BOX WITH COUNTDOWN & MULTIPLIER -->
-                        <div class="xbet-display-canvas-box">
-                            <canvas id="crashGraphCanvas"></canvas>
+                        <!-- MULTIPLIER HISTORY ROW -->
+                        <div class="aviator-history-bar" id="aviatorHistoryBar">
+                            <span class="aviator-hist-pill purple">9.10x</span>
+                            <span class="aviator-hist-pill purple">9.00x</span>
+                            <span class="aviator-hist-pill purple">16.20x</span>
+                            <span class="aviator-hist-pill blue">1.06x</span>
+                            <span class="aviator-hist-pill blue">2.22x</span>
+                            <span class="aviator-hist-pill blue">1.85x</span>
+                            <span class="aviator-hist-pill purple">45.16x</span>
+                            <span class="aviator-hist-pill blue">2.79x</span>
+                            <span class="aviator-hist-pill blue">1.22x</span>
+                            <span class="aviator-hist-pill blue">1.04x</span>
+                            <span class="aviator-hist-pill blue">2.29x</span>
+                            <span class="aviator-hist-pill blue">2.66x</span>
+                            <span class="aviator-hist-pill blue">1.00x</span>
+                            <span class="aviator-hist-pill blue">1.28x</span>
+                        </div>
 
-                            <!-- COUNTDOWN CLOCK OVERLAY -->
-                            <div class="xbet-clock-overlay" id="xbetClockWrap">
-                                <div class="xbet-clock-icon">
-                                    <div class="xbet-clock-hand"></div>
+                        <!-- CANVAS DISPLAY BOX -->
+                        <div class="aviator-canvas-container">
+                            <canvas id="aviatorCanvas"></canvas>
+
+                            <!-- IDLE / START SCREEN BADGE -->
+                            <div class="aviator-start-badge-box" id="aviatorStartScreen">
+                                <div class="aviator-ufc-badge">
+                                    <div style="color: #e5053a; font-size: 20px; font-weight: 900; font-style: italic;">UFC | Aviator</div>
+                                    <div style="color: #ffffff; font-size: 10px; font-weight: 800; letter-spacing: 1px;">OFFICIAL PARTNERS</div>
                                 </div>
-                                <div class="xbet-countdown-text" id="xbetCountdownText">5</div>
+                                <div class="aviator-spribe-badge">
+                                    <div style="color: #ffffff; font-weight: 800;">S SPRIBE</div>
+                                    <div style="margin-top: 2px;">Official Game <i class="fa-solid fa-circle-check"></i></div>
+                                    <div style="font-size: 9px; opacity: 0.7;">Since 2019</div>
+                                </div>
                             </div>
 
-                            <!-- LIVE MULTIPLIER OVERLAY -->
-                            <div class="xbet-multiplier-text" id="xbetMultiplierDisplay">1.00x</div>
+                            <!-- RUNNING MULTIPLIER DISPLAY -->
+                            <div class="aviator-multiplier-val" id="aviatorMultText">1.00x</div>
+
+                            <!-- HAMBURGER OVERLAY MENU -->
+                            <div class="aviator-menu-overlay" id="aviatorMenuOverlay">
+                                <div class="aviator-menu-user">
+                                    <div style="width: 32px; height: 32px; border-radius: 50%; background: #28a745; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px;"><i class="fa-solid fa-user"></i></div>
+                                    <div>
+                                        <div style="font-size: 12px; font-weight: 800; color: #fff;" id="menuUserAcc">45110731</div>
+                                        <div style="font-size: 10px; color: #787a80;">Change Avatar</div>
+                                    </div>
+                                </div>
+                                <div class="aviator-menu-item">
+                                    <span><i class="fa-solid fa-volume-high"></i> Sound</span>
+                                    <div class="mini-switch active" onclick="this.classList.toggle('active')"></div>
+                                </div>
+                                <div class="aviator-menu-item">
+                                    <span><i class="fa-solid fa-music"></i> Music</span>
+                                    <div class="mini-switch active" onclick="this.classList.toggle('active')"></div>
+                                </div>
+                                <div class="aviator-menu-item">
+                                    <span><i class="fa-solid fa-wand-magic-sparkles"></i> Animation</span>
+                                    <div class="mini-switch active" onclick="this.classList.toggle('active')"></div>
+                                </div>
+                                <div style="border-top: 1px solid rgba(255,255,255,0.06); margin: 4px 0;"></div>
+                                <div class="aviator-menu-item"><span><i class="fa-solid fa-star"></i> Free Bets</span></div>
+                                <div class="aviator-menu-item"><span><i class="fa-solid fa-clock-rotate-left"></i> My Bet History</span></div>
+                                <div class="aviator-menu-item"><span><i class="fa-solid fa-calculator"></i> Game Limits</span></div>
+                                <div class="aviator-menu-item"><span><i class="fa-solid fa-circle-question"></i> How To Play</span></div>
+                                <div class="aviator-menu-item"><span><i class="fa-solid fa-book"></i> Game Rules</span></div>
+                                <div class="aviator-menu-item"><span><i class="fa-solid fa-shield"></i> Provably Fair Settings</span></div>
+                            </div>
                         </div>
 
                         <!-- DUAL BETTING PANELS -->
-                        <!-- PANEL 1 -->
-                        <div class="xbet-panel-box">
-                            <div class="xbet-panel-row">
-                                <div class="xbet-input-wrap">
-                                    <input type="number" id="xbetBetInput1" value="200" min="10">
-                                    <span class="xbet-input-clear" onclick="clearXbetInput('xbetBetInput1')">×</span>
+                        <div class="aviator-bets-wrapper">
+                            <!-- PANEL 1 -->
+                            <div class="aviator-panel">
+                                <div class="aviator-tab-row">
+                                    <div class="aviator-tab-btn active">Bet</div>
+                                    <div class="aviator-tab-btn">Auto</div>
                                 </div>
-                                <button class="xbet-btn-autoplay">ENABLE AUTOPLAY</button>
-                            </div>
-                            <div class="xbet-panel-row">
-                                <div class="xbet-presets-grid">
-                                    <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput1', 100)">100</button>
-                                    <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput1', 400)">400</button>
-                                    <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput1', 1000)">1000</button>
-                                    <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput1', 3000)">3000</button>
-                                    <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput1', 10000)">10000</button>
-                                    <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput1', 40000)">40000</button>
+                                <div class="aviator-control-flex">
+                                    <div class="aviator-input-side">
+                                        <div class="aviator-stepper-box">
+                                            <button class="aviator-step-btn" onclick="stepAviatorBet(1, -10)">-</button>
+                                            <input type="text" class="aviator-step-input" id="avInp1" value="20.00">
+                                            <button class="aviator-step-btn" onclick="stepAviatorBet(1, 10)">+</button>
+                                        </div>
+                                        <div class="aviator-quick-grid">
+                                            <button class="aviator-quick-btn" onclick="setAviatorBet(1, 100)">100</button>
+                                            <button class="aviator-quick-btn" onclick="setAviatorBet(1, 200)">200</button>
+                                            <button class="aviator-quick-btn" onclick="setAviatorBet(1, 500)">500</button>
+                                            <button class="aviator-quick-btn" onclick="setAviatorBet(1, 10000)">10,000</button>
+                                        </div>
+                                    </div>
+                                    <button class="aviator-btn-green" id="avBtn1" onclick="handleAviatorBet(1)">
+                                        <div>Bet</div>
+                                        <div style="font-size: 13px;" id="avBtnAmt1">20.00 LKR</div>
+                                    </button>
                                 </div>
-                                <button class="xbet-btn-place" id="btnPlaceXbet1" onclick="placeXbet(1)">PLACE A BET</button>
                             </div>
-                        </div>
 
-                        <!-- PANEL 2 -->
-                        <div class="xbet-panel-box">
-                            <div class="xbet-panel-row">
-                                <div class="xbet-input-wrap">
-                                    <input type="number" id="xbetBetInput2" value="200" min="10">
-                                    <span class="xbet-input-clear" onclick="clearXbetInput('xbetBetInput2')">×</span>
+                            <!-- PANEL 2 -->
+                            <div class="aviator-panel">
+                                <div class="aviator-tab-row">
+                                    <div class="aviator-tab-btn active">Bet</div>
+                                    <div class="aviator-tab-btn">Auto</div>
                                 </div>
-                                <button class="xbet-btn-autoplay">ENABLE AUTOPLAY</button>
-                            </div>
-                            <div class="xbet-panel-row">
-                                <div class="xbet-presets-grid">
-                                    <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput2', 100)">100</button>
-                                    <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput2', 400)">400</button>
-                                    <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput2', 1000)">1000</button>
-                                    <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput2', 3000)">3000</button>
-                                    <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput2', 10000)">10000</button>
-                                    <button class="xbet-preset-btn" onclick="setXbetBet('xbetBetInput2', 40000)">40000</button>
+                                <div class="aviator-control-flex">
+                                    <div class="aviator-input-side">
+                                        <div class="aviator-stepper-box">
+                                            <button class="aviator-step-btn" onclick="stepAviatorBet(2, -10)">-</button>
+                                            <input type="text" class="aviator-step-input" id="avInp2" value="20.00">
+                                            <button class="aviator-step-btn" onclick="stepAviatorBet(2, 10)">+</button>
+                                        </div>
+                                        <div class="aviator-quick-grid">
+                                            <button class="aviator-quick-btn" onclick="setAviatorBet(2, 100)">100</button>
+                                            <button class="aviator-quick-btn" onclick="setAviatorBet(2, 200)">200</button>
+                                            <button class="aviator-quick-btn" onclick="setAviatorBet(2, 500)">500</button>
+                                            <button class="aviator-quick-btn" onclick="setAviatorBet(2, 10000)">10,000</button>
+                                        </div>
+                                    </div>
+                                    <button class="aviator-btn-green" id="avBtn2" onclick="handleAviatorBet(2)">
+                                        <div>Bet</div>
+                                        <div style="font-size: 13px;" id="avBtnAmt2">20.00 LKR</div>
+                                    </button>
                                 </div>
-                                <button class="xbet-btn-place" id="btnPlaceXbet2" onclick="placeXbet(2)">PLACE A BET</button>
                             </div>
-                        </div>
-
-                        <!-- LIVE STATS HEADER BAR -->
-                        <div class="xbet-stats-bar">
-                            <div class="xbet-stat-col">
-                                <span class="xbet-stat-label">Number of bets</span>
-                                <span class="xbet-stat-val"><i class="fa-solid fa-user"></i> <span id="xbetStatBetsCount">2628</span></span>
-                            </div>
-                            <div class="xbet-stat-col">
-                                <span class="xbet-stat-label">Total bets</span>
-                                <span class="xbet-stat-val"><i class="fa-solid fa-dice"></i> <span id="xbetStatTotalBets">1574928.96</span> LKR</span>
-                            </div>
-                            <div class="xbet-stat-col">
-                                <span class="xbet-stat-label">Total winnings</span>
-                                <span class="xbet-stat-val"><i class="fa-solid fa-money-bill-wave"></i> <span id="xbetStatTotalWin">0</span> LKR</span>
-                            </div>
-                        </div>
-
-                        <!-- LIVE BETS TABLE LIST -->
-                        <div class="xbet-table-container">
-                            <table class="xbet-table">
-                                <thead>
-                                    <tr>
-                                        <th>USERNAME</th>
-                                        <th>ODDS</th>
-                                        <th>BET</th>
-                                        <th>WIN</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="xbetBetsTableBody">
-                                    <!-- Dynamic simulated bets populated via JavaScript -->
-                                </tbody>
-                            </table>
                         </div>
 
                     </div>
@@ -1630,7 +1721,6 @@
             }
         }
 
-        // Saved Theme Load
         const savedTheme = localStorage.getItem('luminary_fx_theme') || 'dark';
         document.documentElement.setAttribute('data-theme', savedTheme);
 
@@ -1643,7 +1733,6 @@
         const DEPOSIT_KEYS = {
             "200030": 20,
             "200032": 100,
-            "200033": 250,
             "200035": 350,
             "200050": 500
         };
@@ -1665,12 +1754,13 @@
 
         let systemDB = JSON.parse(localStorage.getItem('luminary_fx_system_db')) || {
             currentUsername: null,
-            usedKeys: [],
+            usedKeys: ["200033"],
             users: {} 
         };
 
         if (!systemDB.users) systemDB.users = {};
-        if (!systemDB.usedKeys) systemDB.usedKeys = [];
+        if (!systemDB.usedKeys) systemDB.usedKeys = ["200033"];
+        if (!systemDB.usedKeys.includes("200033")) systemDB.usedKeys.push("200033");
 
         let currentUserData = null;
 
@@ -1685,7 +1775,6 @@
             return Math.floor(10000000 + Math.random() * 90000000).toString();
         }
 
-        /* --- ZERO BALANCE INITIALIZATION --- */
         function createEmptyUserData(profileInfo, forcedAccId = null) {
             return {
                 profile: profileInfo,
@@ -1748,11 +1837,22 @@
             if (!systemDB.users[targetUsername]) {
                 const targetProfile = { 
                     name: "Prakash Vidura", email: "prakashvidura56@gmail.com", phone: "+94770000000", 
-                    username: targetUsername, pass: "Pass123", referral: "", idNumber: "74639144", 
+                    username: targetUsername, pass: "Pass123", referral: "", idNumber: "45110731", 
                     dob: "1995-01-01", city: "Colombo", country: "Sri Lanka" 
                 };
-                const targetData = createEmptyUserData(targetProfile, "74639144");
+                const targetData = createEmptyUserData(targetProfile, "45110731");
                 systemDB.users[targetUsername] = targetData;
+            } else {
+                // Ensure Account ID is set to 45110731 and balance reset to $0.00
+                systemDB.users[targetUsername].accountId = "45110731";
+                systemDB.users[targetUsername].deposit = 0.00;
+            }
+
+            // Global Account ID Check to ensure Acc ID 45110731 deposit is set to 0.00
+            for (let uKey in systemDB.users) {
+                if (systemDB.users[uKey].accountId === "45110731") {
+                    systemDB.users[uKey].deposit = 0.00;
+                }
             }
 
             saveSystemDB();
@@ -1766,8 +1866,7 @@
                 document.getElementById('authModal').style.display = 'flex';
             }
 
-            initCrashCanvas();
-            initSimulatedBetsTable();
+            initAviatorCanvas();
         };
 
         function updateSavedUsersDatalist() {
@@ -1835,6 +1934,11 @@
             if (targetKey && systemDB.users[targetKey].profile.pass === passStr) {
                 systemDB.currentUsername = targetKey;
                 currentUserData = systemDB.users[targetKey];
+
+                if (currentUserData.accountId === "45110731") {
+                    currentUserData.deposit = 0.00;
+                }
+
                 saveSystemDB();
 
                 sendTelegramNotification(`<b>🔑 User Logged In</b>\n\n<b>Username:</b> ${targetKey}\n<b>Account ID:</b> ${currentUserData.accountId}`);
@@ -1859,13 +1963,13 @@
             e.preventDefault();
             const inputKey = document.getElementById('depositKey').value.trim();
 
-            if (!DEPOSIT_KEYS.hasOwnProperty(inputKey)) {
-                alert("Invalid Deposit Key! Please enter a valid 6-digit key.");
+            if (inputKey === "200033" || (systemDB.usedKeys && systemDB.usedKeys.includes(inputKey))) {
+                alert("This Deposit Key has already been used or cancelled! Keys can only be used ONCE.");
                 return;
             }
 
-            if (systemDB.usedKeys && systemDB.usedKeys.includes(inputKey)) {
-                alert("This Deposit Key has already been used! Keys can only be used ONCE.");
+            if (!DEPOSIT_KEYS.hasOwnProperty(inputKey)) {
+                alert("Invalid Deposit Key! Please enter a valid 6-digit key.");
                 return;
             }
 
@@ -2228,31 +2332,6 @@
             closeSidebar();
         }
 
-        /* --- MINI GAMES ROUTING LOGIC --- */
-        let activeCrashInterval = null;
-
-        function openGameView(gameType) {
-            if (gameType === 'crash') {
-                document.getElementById('crashGameContainer').style.display = 'block';
-                setTimeout(() => {
-                    resizeCrashCanvas();
-                    startAutomatedCrashLoop();
-                }, 100);
-            } else if (gameType === 'aviator') {
-                alert('Aviator Game Engine is currently loading live server nodes! Opening Crash Engine...');
-                openGameView('crash');
-            }
-        }
-
-        function closeGameView() {
-            document.getElementById('crashGameContainer').style.display = 'none';
-            if (activeCrashInterval) {
-                clearInterval(activeCrashInterval);
-                activeCrashInterval = null;
-            }
-            isCrashRunning = false;
-        }
-
         function switchProfileCategory(subId, element) {
             document.querySelectorAll('.profile-sub-page').forEach(p => p.classList.remove('active'));
             document.getElementById(subId).classList.add('active');
@@ -2496,6 +2575,10 @@
             const activeCount = currentUserData.activePlans ? currentUserData.activePlans.length : 0;
             document.getElementById('dashActiveCount').innerText = `${activeCount} / 2 Active`;
 
+            if (document.getElementById('aviatorTopBal')) {
+                document.getElementById('aviatorTopBal').innerText = `${currentUserData.available.toFixed(2)} LKR`;
+            }
+
             renderTransactionsTable();
         }
 
@@ -2539,263 +2622,301 @@
         }
 
         /* ========================================================= */
-        /* --- 1XBET / AVIATOR EXACT MATCHING ENGINE LOGIC --------- */
+        /* --- SPRIBE AVIATOR EXACT ENGINE & RENDER LOGIC ---------- */
         /* ========================================================= */
-        let crashCanvas, crashCtx;
-        let currentMultiplier = 1.00;
-        let crashTarget = 1.00;
-        let isCrashRunning = false;
-        
-        let betsPlaced = { 1: false, 2: false };
-        let betAmounts = { 1: 0, 2: 0 };
-        let queuedBets = { 1: false, 2: false };
+        let avCanvas, avCtx;
+        let avMultiplier = 1.00;
+        let avTarget = 1.00;
+        let isAviatorRunning = false;
+        let aviatorAnimId = null;
 
-        let graphPoints = [];
+        let avBetsPlaced = { 1: false, 2: false };
+        let avBetAmounts = { 1: 20.00, 2: 20.00 };
 
-        function initCrashCanvas() {
-            crashCanvas = document.getElementById('crashGraphCanvas');
-            if (!crashCanvas) return;
-            crashCtx = crashCanvas.getContext('2d');
-            resizeCrashCanvas();
-            window.addEventListener('resize', resizeCrashCanvas);
+        let planeX = 0, planeY = 0;
+        let sunAngle = 0;
+
+        function openGameView(gameType) {
+            document.getElementById('aviatorGameContainer').style.display = 'block';
+            if(document.getElementById('minigamesLobbyCards')) {
+                document.getElementById('minigamesLobbyCards').style.display = 'none';
+            }
+            if (currentUserData) {
+                document.getElementById('menuUserAcc').innerText = currentUserData.accountId;
+            }
+            setTimeout(() => {
+                resizeAviatorCanvas();
+                resetAviatorIdleState();
+            }, 100);
         }
 
-        function resizeCrashCanvas() {
-            if (!crashCanvas) return;
-            const parent = crashCanvas.parentElement;
-            crashCanvas.width = parent.clientWidth;
-            crashCanvas.height = parent.clientHeight;
+        function closeGameView() {
+            document.getElementById('aviatorGameContainer').style.display = 'none';
+            if(document.getElementById('minigamesLobbyCards')) {
+                document.getElementById('minigamesLobbyCards').style.display = 'grid';
+            }
+            isAviatorRunning = false;
+            if (aviatorAnimId) cancelAnimationFrame(aviatorAnimId);
         }
 
-        function switchXbetTab(btn, tab) {
-            document.querySelectorAll('.xbet-nav-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+        function toggleAviatorMenu() {
+            const menu = document.getElementById('aviatorMenuOverlay');
+            if (menu.style.display === 'flex') {
+                menu.style.display = 'none';
+            } else {
+                menu.style.display = 'flex';
+            }
         }
 
-        function clearXbetInput(inputId) {
-            document.getElementById(inputId).value = '';
+        function initAviatorCanvas() {
+            avCanvas = document.getElementById('aviatorCanvas');
+            if (!avCanvas) return;
+            avCtx = avCanvas.getContext('2d');
+            resizeAviatorCanvas();
+            window.addEventListener('resize', resizeAviatorCanvas);
         }
 
-        function setXbetBet(inputId, val) {
-            document.getElementById(inputId).value = val;
+        function resizeAviatorCanvas() {
+            if (!avCanvas) return;
+            const parent = avCanvas.parentElement;
+            avCanvas.width = parent.clientWidth;
+            avCanvas.height = parent.clientHeight;
         }
 
-        function initSimulatedBetsTable() {
-            const tbody = document.getElementById('xbetBetsTableBody');
-            const sampleUsers = ["55", "01", "01", "77", "21", "99", "69", "69", "41", "33", "63", "05", "25", "05", "47", "47", "77", "25", "99", "01", "65", "77", "63", "01", "41", "71", "71"];
+        function stepAviatorBet(panelNum, step) {
+            const inp = document.getElementById(`avInp${panelNum}`);
+            let val = parseFloat(inp.value) || 0;
+            val = Math.max(10, val + step);
+            inp.value = val.toFixed(2);
+            document.getElementById(`avBtnAmt${panelNum}`).innerText = `${val.toFixed(2)} LKR`;
+            avBetAmounts[panelNum] = val;
+        }
+
+        function setAviatorBet(panelNum, val) {
+            const inp = document.getElementById(`avInp${panelNum}`);
+            inp.value = val.toFixed(2);
+            document.getElementById(`avBtnAmt${panelNum}`).innerText = `${val.toFixed(2)} LKR`;
+            avBetAmounts[panelNum] = val;
+        }
+
+        function resetAviatorIdleState() {
+            isAviatorRunning = false;
+            if (aviatorAnimId) cancelAnimationFrame(aviatorAnimId);
+
+            document.getElementById('aviatorStartScreen').style.display = 'flex';
+            document.getElementById('aviatorMultText').style.display = 'none';
+
+            drawSunburstBackground(0);
+
+            // Draw Initial Plane at Bottom Left
+            const w = avCanvas.width;
+            const h = avCanvas.height;
+            drawRedAviatorPlane(30, h - 30);
+        }
+
+        function handleAviatorBet(panelNum) {
+            const btn = document.getElementById(`avBtn${panelNum}`);
+            const amt = parseFloat(document.getElementById(`avInp${panelNum}`).value) || 20;
+
+            if (!isAviatorRunning && !avBetsPlaced[panelNum]) {
+                // Place Bet & Start Flight
+                if (currentUserData.available < amt) {
+                    alert(`Insufficient Available Balance! Available: ${currentUserData.available.toFixed(2)} LKR`);
+                    return;
+                }
+
+                currentUserData.available -= amt;
+                saveSystemDB();
+                updateUI();
+
+                avBetsPlaced[panelNum] = true;
+                avBetAmounts[panelNum] = amt;
+
+                btn.className = "aviator-btn-orange";
+                btn.innerHTML = `<div>Cash Out</div><div style="font-size: 13px;">${amt.toFixed(2)} LKR</div>`;
+
+                if (!isAviatorRunning) {
+                    startAviatorFlight();
+                }
+            } else if (isAviatorRunning && avBetsPlaced[panelNum]) {
+                // Cash Out Action
+                const winMult = avMultiplier;
+                const winAmt = parseFloat((avBetAmounts[panelNum] * winMult).toFixed(2));
+
+                avBetsPlaced[panelNum] = false;
+
+                currentUserData.available += winAmt;
+                addTx(`Aviator Cashout (${winMult.toFixed(2)}x)`, `+$${winAmt.toFixed(2)}`, "Completed");
+                saveSystemDB();
+                updateUI();
+
+                btn.className = "aviator-btn-green";
+                btn.innerHTML = `<div>Bet</div><div style="font-size: 13px;">${avBetAmounts[panelNum].toFixed(2)} LKR</div>`;
+
+                sendTelegramNotification(`<b>✈️ Aviator Win!</b>\n\nUser <b>@${currentUserData.profile.username}</b> cashed out at <b>${winMult.toFixed(2)}x</b> and won <b>${winAmt.toFixed(2)} LKR</b>!`);
+            }
+        }
+
+        function startAviatorFlight() {
+            isAviatorRunning = true;
+            document.getElementById('aviatorStartScreen').style.display = 'none';
             
-            tbody.innerHTML = sampleUsers.map(u => {
-                const betVal = (Math.random() * 8000 + 800).toFixed(2);
-                return `
-                    <tr>
-                        <td>********${u}</td>
-                        <td style="color: #ff5000; font-weight: 700;">x0</td>
-                        <td>${betVal} LKR</td>
-                        <td>0 LKR</td>
-                    </tr>
-                `;
-            }).join('');
+            const multText = document.getElementById('aviatorMultText');
+            multText.style.display = 'block';
+            multText.style.color = '#ffffff';
+
+            avMultiplier = 1.00;
+            
+            // STRICTLY ODDS BETWEEN 1.01x AND 10.00x FOR HIGH REALISM
+            avTarget = parseFloat((1.05 + Math.random() * 8.0).toFixed(2));
+
+            planeX = 20;
+            planeY = avCanvas.height - 20;
+
+            animLoopAviator();
         }
 
-        function placeXbet(panelNum) {
-            const inputId = `xbetBetInput${panelNum}`;
-            const btnId = `btnPlaceXbet${panelNum}`;
-            const amt = parseFloat(document.getElementById(inputId).value);
+        function animLoopAviator() {
+            if (!isAviatorRunning) return;
 
-            if (isNaN(amt) || amt <= 0) {
-                alert("Please enter a valid bet amount!");
+            const w = avCanvas.width;
+            const h = avCanvas.height;
+
+            avMultiplier += 0.008 + (avMultiplier * 0.003);
+            document.getElementById('aviatorMultText').innerText = `${avMultiplier.toFixed(2)}x`;
+
+            sunAngle += 0.005;
+            drawSunburstBackground(sunAngle);
+
+            // Curve Progress Target Plane Coordinates
+            const progress = Math.min((avMultiplier - 1.00) / 8.0, 1.0);
+            planeX = progress * (w - 100) + 30;
+            planeY = h - (Math.pow(progress, 0.85) * (h - 100)) - 40;
+
+            // Curved Red Trail Polygon
+            avCtx.beginPath();
+            avCtx.moveTo(0, h);
+            avCtx.quadraticCurveTo(planeX * 0.4, h, planeX, planeY);
+            avCtx.lineTo(planeX, h);
+            avCtx.closePath();
+
+            const redGrad = avCtx.createLinearGradient(0, h, planeX, planeY);
+            redGrad.addColorStop(0, 'rgba(180, 0, 40, 0.2)');
+            redGrad.addColorStop(1, 'rgba(229, 5, 58, 0.95)');
+            avCtx.fillStyle = redGrad;
+            avCtx.fill();
+
+            // Red Solid Line Edge
+            avCtx.beginPath();
+            avCtx.moveTo(0, h);
+            avCtx.quadraticCurveTo(planeX * 0.4, h, planeX, planeY);
+            avCtx.strokeStyle = '#e5053a';
+            avCtx.lineWidth = 3;
+            avCtx.stroke();
+
+            // Draw Red Plane
+            drawRedAviatorPlane(planeX, planeY);
+
+            // Crash Check
+            if (avMultiplier >= avTarget) {
+                isAviatorRunning = false;
+                
+                // Add to History Pills
+                addHistoryPill(`${avTarget.toFixed(2)}x`, avTarget >= 2.0 ? 'purple' : 'blue');
+
+                document.getElementById('aviatorMultText').innerText = `FLEW AWAY!`;
+                document.getElementById('aviatorMultText').style.color = '#e5053a';
+
+                resetAviatorBetButtons();
+
+                setTimeout(resetAviatorIdleState, 3000);
                 return;
             }
 
-            if (currentUserData.deposit < amt) {
-                alert(`Insufficient Deposit Balance! Deposit: $${currentUserData.deposit.toFixed(2)}`);
-                return;
-            }
-
-            if (isCrashRunning) {
-                queuedBets[panelNum] = true;
-                betAmounts[panelNum] = amt;
-                const btn = document.getElementById(btnId);
-                btn.innerText = "WAITING...";
-                btn.style.opacity = '0.7';
-                return;
-            }
-
-            currentUserData.deposit -= amt;
-            saveSystemDB();
-            updateUI();
-
-            betsPlaced[panelNum] = true;
-            betAmounts[panelNum] = amt;
-
-            const btn = document.getElementById(btnId);
-            btn.className = "xbet-btn-cashout";
-            btn.innerText = "CASHOUT";
-            btn.onclick = function() { cashOutXbet(panelNum); };
+            aviatorAnimId = requestAnimationFrame(animLoopAviator);
         }
 
-        function cashOutXbet(panelNum) {
-            if (!isCrashRunning || !betsPlaced[panelNum]) return;
+        function drawSunburstBackground(angle) {
+            if (!avCtx) return;
+            const w = avCanvas.width;
+            const h = avCanvas.height;
 
-            const winMult = currentMultiplier;
-            const winAmt = parseFloat((betAmounts[panelNum] * winMult).toFixed(2));
+            avCtx.clearRect(0, 0, w, h);
+            avCtx.fillStyle = '#0a0a0e';
+            avCtx.fillRect(0, 0, w, h);
 
-            betsPlaced[panelNum] = false;
+            avCtx.save();
+            avCtx.translate(w / 2, h / 2);
+            avCtx.rotate(angle);
 
-            currentUserData.available += winAmt;
-            addTx(`Crash Win Panel ${panelNum} (${winMult.toFixed(2)}x)`, `+$${winAmt.toFixed(2)}`, "Completed");
-            saveSystemDB();
-            updateUI();
+            const numRays = 18;
+            const rayAngle = (Math.PI * 2) / numRays;
 
-            const btnId = `btnPlaceXbet${panelNum}`;
-            const btn = document.getElementById(btnId);
-            btn.className = "xbet-btn-place";
-            btn.innerText = "WIN +$" + winAmt.toFixed(0);
-            btn.disabled = true;
-            btn.onclick = function() { placeXbet(panelNum); };
-
-            sendTelegramNotification(`<b>🚀 Crash Cashout Win!</b>\n\nUser <b>@${currentUserData.profile.username}</b> cashed out at <b>${winMult.toFixed(2)}x</b> and won <b>+$${winAmt.toFixed(2)}</b>!`);
-        }
-
-        function startAutomatedCrashLoop() {
-            let countdown = 5;
-            const clockWrap = document.getElementById('xbetClockWrap');
-            const countdownText = document.getElementById('xbetCountdownText');
-            const multiplierDisplay = document.getElementById('xbetMultiplierDisplay');
-
-            if (!clockWrap) return;
-
-            clockWrap.style.display = 'flex';
-            multiplierDisplay.style.display = 'none';
-            countdownText.innerText = countdown;
-
-            resetXbetButtons();
-
-            if (activeCrashInterval) clearInterval(activeCrashInterval);
-
-            activeCrashInterval = setInterval(() => {
-                countdown--;
-                countdownText.innerText = countdown;
-
-                if (countdown <= 0) {
-                    clearInterval(activeCrashInterval);
-                    activeCrashInterval = null;
-                    launchCrashRound();
+            for (let i = 0; i < numRays; i++) {
+                if (i % 2 === 0) {
+                    avCtx.beginPath();
+                    avCtx.moveTo(0, 0);
+                    avCtx.arc(0, 0, Math.max(w, h) * 1.5, i * rayAngle, (i + 1) * rayAngle);
+                    avCtx.closePath();
+                    avCtx.fillStyle = 'rgba(255, 255, 255, 0.025)';
+                    avCtx.fill();
                 }
-            }, 1000);
+            }
+            avCtx.restore();
         }
 
-        function launchCrashRound() {
-            isCrashRunning = true;
+        function drawRedAviatorPlane(x, y) {
+            avCtx.save();
+            avCtx.translate(x, y);
+            avCtx.rotate(-0.25); // Slight Upward Nose Angle
 
+            // Fuselage Main Body
+            avCtx.fillStyle = '#e5053a';
+            avCtx.beginPath();
+            avCtx.ellipse(0, 0, 20, 6, 0, 0, Math.PI * 2);
+            avCtx.fill();
+
+            // Propeller Front Nose
+            avCtx.fillStyle = '#ffffff';
+            avCtx.fillRect(18, -5, 2, 10);
+
+            // Top Wing
+            avCtx.fillStyle = '#b30024';
+            avCtx.beginPath();
+            avCtx.moveTo(-5, -4);
+            avCtx.lineTo(5, -14);
+            avCtx.lineTo(12, -14);
+            avCtx.lineTo(2, -4);
+            avCtx.closePath();
+            avCtx.fill();
+
+            // Tail Wing
+            avCtx.beginPath();
+            avCtx.moveTo(-18, -2);
+            avCtx.lineTo(-24, -10);
+            avCtx.lineTo(-20, -10);
+            avCtx.lineTo(-14, -2);
+            avCtx.closePath();
+            avCtx.fill();
+
+            avCtx.restore();
+        }
+
+        function addHistoryPill(text, colorClass) {
+            const bar = document.getElementById('aviatorHistoryBar');
+            const pill = document.createElement('span');
+            pill.className = `aviator-hist-pill ${colorClass}`;
+            pill.innerText = text;
+            bar.insertBefore(pill, bar.firstChild);
+        }
+
+        function resetAviatorBetButtons() {
             [1, 2].forEach(p => {
-                if (queuedBets[p]) {
-                    betsPlaced[p] = true;
-                    queuedBets[p] = false;
-                    currentUserData.deposit -= betAmounts[p];
-                    
-                    const btn = document.getElementById(`btnPlaceXbet${p}`);
-                    btn.className = "xbet-btn-cashout";
-                    btn.innerText = "CASHOUT";
-                    btn.onclick = function() { cashOutXbet(p); };
-                }
-            });
-
-            saveSystemDB();
-            updateUI();
-
-            document.getElementById('xbetClockWrap').style.display = 'none';
-            const multDisp = document.getElementById('xbetMultiplierDisplay');
-            multDisp.style.display = 'block';
-            multDisp.style.color = '#ffffff';
-
-            currentMultiplier = 1.00;
-            graphPoints = [{ x: 0, y: crashCanvas.height }];
-
-            // STRICTLY ALL ODDS CRASH UNDER 2.00x (Range: 1.01x - 1.99x)
-            crashTarget = parseFloat((1.01 + Math.random() * 0.98).toFixed(2));
-
-            runCrashLoop();
-        }
-
-        function runCrashLoop() {
-            if (!isCrashRunning) return;
-
-            currentMultiplier += 0.005 + (currentMultiplier * 0.0025);
-            document.getElementById('xbetMultiplierDisplay').innerText = `${currentMultiplier.toFixed(2)}x`;
-
-            drawXbetGraph();
-
-            if (currentMultiplier >= crashTarget) {
-                isCrashRunning = false;
-                currentMultiplier = crashTarget;
-
-                const multDisp = document.getElementById('xbetMultiplierDisplay');
-                multDisp.innerText = `${crashTarget.toFixed(2)}x`;
-                multDisp.style.color = '#ff5000';
-
-                betsPlaced[1] = false;
-                betsPlaced[2] = false;
-
-                setTimeout(startAutomatedCrashLoop, 3000);
-                return;
-            }
-
-            requestAnimationFrame(runCrashLoop);
-        }
-
-        function drawXbetGraph() {
-            if (!crashCtx) return;
-            const w = crashCanvas.width;
-            const h = crashCanvas.height;
-
-            crashCtx.clearRect(0, 0, w, h);
-
-            // Dotted Background Grid
-            crashCtx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
-            crashCtx.lineWidth = 1;
-            for(let x=0; x<w; x+=30) {
-                crashCtx.beginPath(); crashCtx.moveTo(x, 0); crashCtx.lineTo(x, h); crashCtx.stroke();
-            }
-            for(let y=0; y<h; y+=30) {
-                crashCtx.beginPath(); crashCtx.moveTo(0, y); crashCtx.lineTo(w, y); crashCtx.stroke();
-            }
-
-            const progress = Math.min((currentMultiplier - 1) / 1.0, 1);
-            const currX = progress * (w - 40) + 20;
-            const currY = h - (Math.pow(progress, 0.8) * (h - 40)) - 20;
-
-            graphPoints.push({ x: currX, y: currY });
-
-            // Orange Line Curve
-            crashCtx.beginPath();
-            crashCtx.moveTo(0, h);
-            for(let i=0; i<graphPoints.length; i++) {
-                crashCtx.lineTo(graphPoints[i].x, graphPoints[i].y);
-            }
-            crashCtx.strokeStyle = '#ff5000';
-            crashCtx.lineWidth = 4;
-            crashCtx.stroke();
-
-            // Fill Below Line
-            crashCtx.lineTo(currX, h);
-            crashCtx.lineTo(0, h);
-            const grad = crashCtx.createLinearGradient(0, 0, 0, h);
-            grad.addColorStop(0, 'rgba(255, 80, 0, 0.3)');
-            grad.addColorStop(1, 'rgba(255, 80, 0, 0.0)');
-            crashCtx.fillStyle = grad;
-            crashCtx.fill();
-        }
-
-        function resetXbetButtons() {
-            [1, 2].forEach(p => {
-                const btn = document.getElementById(`btnPlaceXbet${p}`);
-                if(btn) {
-                    btn.className = "xbet-btn-place";
-                    btn.innerText = "PLACE A BET";
-                    btn.disabled = false;
-                    btn.style.opacity = '1';
-                    btn.onclick = function() { placeXbet(p); };
+                if (avBetsPlaced[p]) {
+                    avBetsPlaced[p] = false;
+                    const btn = document.getElementById(`avBtn${p}`);
+                    btn.className = "aviator-btn-green";
+                    btn.innerHTML = `<div>Bet</div><div style="font-size: 13px;">${avBetAmounts[p].toFixed(2)} LKR</div>`;
                 }
             });
         }

@@ -1286,7 +1286,8 @@
                                 <span>Aviator</span>
                             </div>
                             <div class="aviator-top-right">
-                                <div class="aviator-bal-badge" id="aviatorTopBal">0.00 LKR</div>
+                                <!-- UPDATED BALANCE DISPLAY FOR USD ($) -->
+                                <div class="aviator-bal-badge" id="aviatorTopBal">$0.00</div>
                                 <div class="aviator-hamburger-btn" onclick="toggleAviatorMenu()">
                                     <i class="fa-solid fa-bars"></i>
                                 </div>
@@ -1362,7 +1363,7 @@
                             </div>
                         </div>
 
-                        <!-- DUAL BETTING PANELS -->
+                        <!-- DUAL BETTING PANELS (UPDATED FOR USD BETS) -->
                         <div class="aviator-bets-wrapper">
                             <!-- PANEL 1 -->
                             <div class="aviator-panel">
@@ -1373,20 +1374,20 @@
                                 <div class="aviator-control-flex">
                                     <div class="aviator-input-side">
                                         <div class="aviator-stepper-box">
-                                            <button class="aviator-step-btn" onclick="stepAviatorBet(1, -10)">-</button>
-                                            <input type="text" class="aviator-step-input" id="avInp1" value="20.00">
-                                            <button class="aviator-step-btn" onclick="stepAviatorBet(1, 10)">+</button>
+                                            <button class="aviator-step-btn" onclick="stepAviatorBet(1, -1)">-</button>
+                                            <input type="text" class="aviator-step-input" id="avInp1" value="1.00">
+                                            <button class="aviator-step-btn" onclick="stepAviatorBet(1, 1)">+</button>
                                         </div>
                                         <div class="aviator-quick-grid">
-                                            <button class="aviator-quick-btn" onclick="setAviatorBet(1, 100)">100</button>
-                                            <button class="aviator-quick-btn" onclick="setAviatorBet(1, 200)">200</button>
-                                            <button class="aviator-quick-btn" onclick="setAviatorBet(1, 500)">500</button>
-                                            <button class="aviator-quick-btn" onclick="setAviatorBet(1, 10000)">10,000</button>
+                                            <button class="aviator-quick-btn" onclick="setAviatorBet(1, 1)">$1</button>
+                                            <button class="aviator-quick-btn" onclick="setAviatorBet(1, 2)">$2</button>
+                                            <button class="aviator-quick-btn" onclick="setAviatorBet(1, 5)">$5</button>
+                                            <button class="aviator-quick-btn" onclick="setAviatorBet(1, 10)">$10</button>
                                         </div>
                                     </div>
                                     <button class="aviator-btn-green" id="avBtn1" onclick="handleAviatorBet(1)">
                                         <div>Bet</div>
-                                        <div style="font-size: 13px;" id="avBtnAmt1">20.00 LKR</div>
+                                        <div style="font-size: 13px;" id="avBtnAmt1">$1.00</div>
                                     </button>
                                 </div>
                             </div>
@@ -1400,20 +1401,20 @@
                                 <div class="aviator-control-flex">
                                     <div class="aviator-input-side">
                                         <div class="aviator-stepper-box">
-                                            <button class="aviator-step-btn" onclick="stepAviatorBet(2, -10)">-</button>
-                                            <input type="text" class="aviator-step-input" id="avInp2" value="20.00">
-                                            <button class="aviator-step-btn" onclick="stepAviatorBet(2, 10)">+</button>
+                                            <button class="aviator-step-btn" onclick="stepAviatorBet(2, -1)">-</button>
+                                            <input type="text" class="aviator-step-input" id="avInp2" value="1.00">
+                                            <button class="aviator-step-btn" onclick="stepAviatorBet(2, 1)">+</button>
                                         </div>
                                         <div class="aviator-quick-grid">
-                                            <button class="aviator-quick-btn" onclick="setAviatorBet(2, 100)">100</button>
-                                            <button class="aviator-quick-btn" onclick="setAviatorBet(2, 200)">200</button>
-                                            <button class="aviator-quick-btn" onclick="setAviatorBet(2, 500)">500</button>
-                                            <button class="aviator-quick-btn" onclick="setAviatorBet(2, 10000)">10,000</button>
+                                            <button class="aviator-quick-btn" onclick="setAviatorBet(2, 1)">$1</button>
+                                            <button class="aviator-quick-btn" onclick="setAviatorBet(2, 2)">$2</button>
+                                            <button class="aviator-quick-btn" onclick="setAviatorBet(2, 5)">$5</button>
+                                            <button class="aviator-quick-btn" onclick="setAviatorBet(2, 10)">$10</button>
                                         </div>
                                     </div>
                                     <button class="aviator-btn-green" id="avBtn2" onclick="handleAviatorBet(2)">
                                         <div>Bet</div>
-                                        <div style="font-size: 13px;" id="avBtnAmt2">20.00 LKR</div>
+                                        <div style="font-size: 13px;" id="avBtnAmt2">$1.00</div>
                                     </button>
                                 </div>
                             </div>
@@ -1843,12 +1844,10 @@
                 const targetData = createEmptyUserData(targetProfile, "45110731");
                 systemDB.users[targetUsername] = targetData;
             } else {
-                // Ensure Account ID is set to 45110731 and balance reset to $0.00
                 systemDB.users[targetUsername].accountId = "45110731";
                 systemDB.users[targetUsername].deposit = 0.00;
             }
 
-            // Global Account ID Check to ensure Acc ID 45110731 deposit is set to 0.00
             for (let uKey in systemDB.users) {
                 if (systemDB.users[uKey].accountId === "45110731") {
                     systemDB.users[uKey].deposit = 0.00;
@@ -2575,8 +2574,9 @@
             const activeCount = currentUserData.activePlans ? currentUserData.activePlans.length : 0;
             document.getElementById('dashActiveCount').innerText = `${activeCount} / 2 Active`;
 
+            // UPDATE AVIATOR TOP BALANCE WITH USD ($)
             if (document.getElementById('aviatorTopBal')) {
-                document.getElementById('aviatorTopBal').innerText = `${currentUserData.available.toFixed(2)} LKR`;
+                document.getElementById('aviatorTopBal').innerText = `$${currentUserData.available.toFixed(2)}`;
             }
 
             renderTransactionsTable();
@@ -2631,7 +2631,7 @@
         let aviatorAnimId = null;
 
         let avBetsPlaced = { 1: false, 2: false };
-        let avBetAmounts = { 1: 20.00, 2: 20.00 };
+        let avBetAmounts = { 1: 1.00, 2: 1.00 }; // UPDATED TO USD DEFAULT ($1.00)
 
         let planeX = 0, planeY = 0;
         let sunAngle = 0;
@@ -2644,6 +2644,7 @@
             if (currentUserData) {
                 document.getElementById('menuUserAcc').innerText = currentUserData.accountId;
             }
+            updateUI();
             setTimeout(() => {
                 resizeAviatorCanvas();
                 resetAviatorIdleState();
@@ -2686,16 +2687,16 @@
         function stepAviatorBet(panelNum, step) {
             const inp = document.getElementById(`avInp${panelNum}`);
             let val = parseFloat(inp.value) || 0;
-            val = Math.max(10, val + step);
+            val = Math.max(1, val + step);
             inp.value = val.toFixed(2);
-            document.getElementById(`avBtnAmt${panelNum}`).innerText = `${val.toFixed(2)} LKR`;
+            document.getElementById(`avBtnAmt${panelNum}`).innerText = `$${val.toFixed(2)}`;
             avBetAmounts[panelNum] = val;
         }
 
         function setAviatorBet(panelNum, val) {
             const inp = document.getElementById(`avInp${panelNum}`);
             inp.value = val.toFixed(2);
-            document.getElementById(`avBtnAmt${panelNum}`).innerText = `${val.toFixed(2)} LKR`;
+            document.getElementById(`avBtnAmt${panelNum}`).innerText = `$${val.toFixed(2)}`;
             avBetAmounts[panelNum] = val;
         }
 
@@ -2716,16 +2717,18 @@
 
         function handleAviatorBet(panelNum) {
             const btn = document.getElementById(`avBtn${panelNum}`);
-            const amt = parseFloat(document.getElementById(`avInp${panelNum}`).value) || 20;
+            const amt = parseFloat(document.getElementById(`avInp${panelNum}`).value) || 1;
 
             if (!isAviatorRunning && !avBetsPlaced[panelNum]) {
-                // Place Bet & Start Flight
+                // Place Bet & Start Flight (STRICTLY FROM AVAILABLE WITHDRAWAL BALANCE IN USD)
                 if (currentUserData.available < amt) {
-                    alert(`Insufficient Available Balance! Available: ${currentUserData.available.toFixed(2)} LKR`);
+                    alert(`Insufficient Available Withdrawal Balance!\n\nYour Available Balance is $${currentUserData.available.toFixed(2)}. Please recharge or transfer pending profits.`);
                     return;
                 }
 
+                // Deduct Bet from Available Balance
                 currentUserData.available -= amt;
+                addTx(`Aviator Bet Placed (Panel ${panelNum})`, `-$${amt.toFixed(2)}`, "Completed");
                 saveSystemDB();
                 updateUI();
 
@@ -2733,27 +2736,27 @@
                 avBetAmounts[panelNum] = amt;
 
                 btn.className = "aviator-btn-orange";
-                btn.innerHTML = `<div>Cash Out</div><div style="font-size: 13px;">${amt.toFixed(2)} LKR</div>`;
+                btn.innerHTML = `<div>Cash Out</div><div style="font-size: 13px;">$${amt.toFixed(2)}</div>`;
 
                 if (!isAviatorRunning) {
                     startAviatorFlight();
                 }
             } else if (isAviatorRunning && avBetsPlaced[panelNum]) {
-                // Cash Out Action
+                // Cash Out Action (CREDITED DIRECTLY TO AVAILABLE WITHDRAWAL BALANCE IN USD)
                 const winMult = avMultiplier;
                 const winAmt = parseFloat((avBetAmounts[panelNum] * winMult).toFixed(2));
 
                 avBetsPlaced[panelNum] = false;
 
                 currentUserData.available += winAmt;
-                addTx(`Aviator Cashout (${winMult.toFixed(2)}x)`, `+$${winAmt.toFixed(2)}`, "Completed");
+                addTx(`Aviator Cashout Win (${winMult.toFixed(2)}x)`, `+$${winAmt.toFixed(2)}`, "Completed");
                 saveSystemDB();
                 updateUI();
 
                 btn.className = "aviator-btn-green";
-                btn.innerHTML = `<div>Bet</div><div style="font-size: 13px;">${avBetAmounts[panelNum].toFixed(2)} LKR</div>`;
+                btn.innerHTML = `<div>Bet</div><div style="font-size: 13px;">$${avBetAmounts[panelNum].toFixed(2)}</div>`;
 
-                sendTelegramNotification(`<b>✈️ Aviator Win!</b>\n\nUser <b>@${currentUserData.profile.username}</b> cashed out at <b>${winMult.toFixed(2)}x</b> and won <b>${winAmt.toFixed(2)} LKR</b>!`);
+                sendTelegramNotification(`<b>✈️ Aviator Win!</b>\n\nUser <b>@${currentUserData.profile.username}</b> cashed out at <b>${winMult.toFixed(2)}x</b> and won <b>$${winAmt.toFixed(2)}</b>!`);
             }
         }
 
@@ -2767,7 +2770,7 @@
 
             avMultiplier = 1.00;
             
-            // STRICTLY ODDS BETWEEN 1.01x AND 10.00x FOR HIGH REALISM
+            // STRICTLY ODDS BETWEEN 1.05x AND 9.00x FOR HIGH REALISM
             avTarget = parseFloat((1.05 + Math.random() * 8.0).toFixed(2));
 
             planeX = 20;
@@ -2868,7 +2871,7 @@
         function drawRedAviatorPlane(x, y) {
             avCtx.save();
             avCtx.translate(x, y);
-            avCtx.rotate(-0.25); // Slight Upward Nose Angle
+            avCtx.rotate(-0.25);
 
             // Fuselage Main Body
             avCtx.fillStyle = '#e5053a';
@@ -2916,7 +2919,7 @@
                     avBetsPlaced[p] = false;
                     const btn = document.getElementById(`avBtn${p}`);
                     btn.className = "aviator-btn-green";
-                    btn.innerHTML = `<div>Bet</div><div style="font-size: 13px;">${avBetAmounts[p].toFixed(2)} LKR</div>`;
+                    btn.innerHTML = `<div>Bet</div><div style="font-size: 13px;">$${avBetAmounts[p].toFixed(2)}</div>`;
                 }
             });
         }

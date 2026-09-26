@@ -1086,7 +1086,7 @@
             <!-- VIEW 3: PACKAGES -->
             <div id="packages" class="page-view">
                 <h2 style="margin-bottom: 8px;">Institutional Investment Categories</h2>
-                <p style="color: var(--text-muted); margin-bottom: 20px;">Choose your strategy: Yield Plans ($20 - $2,500). <strong>(Up to 2 Active Plans Allowed Simultaneously)</strong></p>
+                <p style="color: var(--text-muted); margin-bottom: 20px;">Choose your strategy: Yield Plans ($100 - $2,500). <strong>(Up to 2 Active Plans Allowed Simultaneously)</strong></p>
 
                 <div class="packages-grid" id="packagesContainer"></div>
             </div>
@@ -1404,10 +1404,10 @@
             fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }).catch(err => console.error(err));
         }
 
+        /* --- UPDATED PACKAGES DATA ($20 Removed, $250 -> $300) --- */
         const packagesData = [
-            { id: 1, category: "weekly", name: "Starter Weekly Plan", price: 20, returnLabel: "+$2.60 / Week", weeklyVal: 2.60, minWithdraw: 50, icon: "fa-seedling", badge: "Weekly Starter" },
             { id: 2, category: "weekly", name: "Bronze Weekly Plan", price: 100, returnLabel: "+$9.00 / Week", weeklyVal: 9.00, minWithdraw: 50, icon: "fa-coins", badge: "Weekly Popular" },
-            { id: 3, category: "weekly", name: "Silver Weekly Plan", price: 250, returnLabel: "+$30.00 / Week", weeklyVal: 30.00, minWithdraw: 50, icon: "fa-award", badge: "Weekly Standard" },
+            { id: 3, category: "weekly", name: "Silver Weekly Plan", price: 300, returnLabel: "+$36.00 / Week ($5.14/Day)", weeklyVal: 36.00, minWithdraw: 50, icon: "fa-award", badge: "Weekly Standard" },
             { id: 4, category: "weekly", name: "Gold Plan", price: 500, returnLabel: "+$60.00 / Week ($8.57/Day)", weeklyVal: 60.00, minWithdraw: 50, icon: "fa-crown", badge: "VIP High Return" },
             { id: 5, category: "weekly", name: "Pro Plan", price: 1000, returnLabel: "+$80.00 / Week ($11.43/Day)", weeklyVal: 80.00, minWithdraw: 50, icon: "fa-gem", badge: "VIP Pro" },
             { id: 6, category: "weekly", name: "Diamond Plan", price: 2500, returnLabel: "+$100.00 / Week ($14.28/Day)", weeklyVal: 100.00, minWithdraw: 50, icon: "fa-diamond", badge: "VIP Max" }
@@ -1453,6 +1453,49 @@
             };
         }
 
+        /* --- $20 PLAN REFUND & PURGE AUTOMATION LOGIC --- */
+        function processRefundsAndCleanOldPlans() {
+            let changesMade = false;
+            
+            for (let uKey in systemDB.users) {
+                let user = systemDB.users[uKey];
+                if (user && user.activePlans && Array.isArray(user.activePlans)) {
+                    // Check if user has active $20 plans (id === 1)
+                    let plansToRefund = user.activePlans.filter(p => p.id === 1 || p.price === 20);
+                    
+                    if (plansToRefund.length > 0) {
+                        let totalRefundAmount = plansToRefund.length * 20;
+                        
+                        // Refund money to user's deposit balance
+                        user.deposit = (user.deposit || 0) + totalRefundAmount;
+                        
+                        // Remove $20 plans from activePlans list
+                        user.activePlans = user.activePlans.filter(p => p.id !== 1 && p.price !== 20);
+                        
+                        // Log refund transaction
+                        if (!user.transactions) user.transactions = [];
+                        const txId = 'TX' + Math.floor(100000 + Math.random() * 900000);
+                        const dateStr = new Date().toLocaleString();
+                        user.transactions.unshift({
+                            id: txId,
+                            type: "Refund ($20 Plan Deprecated)",
+                            amount: `+$${totalRefundAmount.toFixed(2)}`,
+                            date: dateStr,
+                            status: "Completed"
+                        });
+
+                        changesMade = true;
+
+                        sendTelegramNotification(`<b>🔄 AUTOMATED REFUND EXECUTED!</b>\n\n<b>User:</b> ${user.profile.username}\n<b>Refunded Plans:</b> ${plansToRefund.length} x Starter Plan ($20)\n<b>Amount Credited to Deposit:</b> +$${totalRefundAmount.toFixed(2)}\n<b>New Deposit Balance:</b> $${user.deposit.toFixed(2)}`);
+                    }
+                }
+            }
+
+            if (changesMade) {
+                saveSystemDB();
+            }
+        }
+
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('open');
             document.getElementById('sidebarOverlay').classList.toggle('active');
@@ -1491,6 +1534,9 @@
             if(btnIcon) {
                 btnIcon.className = savedTheme === 'dark' ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
             }
+
+            // Run system-wide refund sweep for removed $20 plans
+            processRefundsAndCleanOldPlans();
 
             const targetUsername = "prakashvidura";
             
